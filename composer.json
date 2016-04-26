@@ -1,5 +1,5 @@
 {
-    "name": "endouble/symfony3-coding-standard",
+    "name": "endouble/symfony3-custom-coding-standard",
     "type": "coding-standard",
     "description": "Customized CodeSniffer ruleset for the Symfony3 projects",
     "keywords": ["Symfony3", "coding standard", "phpcs"],
@@ -9,10 +9,6 @@
         {
             "name": "David Joos",
             "email": "david.joos@escapestudios.com"
-        },
-        {
-            "name": "Community contributors",
-            "homepage": "https://github.com/escapestudios/Symfony2-coding-standard/graphs/contributors"
         }
     ],
     "extra": {
@@ -21,10 +17,6 @@
         }
     },
     "minimum-stability": "dev",
-    "support" : {
-        "source": "https://github.com/escapestudios/Symfony2-coding-standard",
-        "issues": "https://github.com/escapestudios/Symfony2-coding-standard/issues"
-    },
     "require": {
         "squizlabs/php_codesniffer": "~2.0"
     }
