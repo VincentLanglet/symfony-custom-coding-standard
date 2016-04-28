@@ -41,7 +41,6 @@
     <rule ref="Squiz.ControlStructures.LowercaseDeclaration"/>
     <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
     <rule ref="Squiz.Scope.MemberVarScope"/>
-    <rule ref="Squiz.Strings.ConcatenationSpacing"/>
 
     <!-- We provide our own subclass of PEAR's ClassComment and FunctionComment sniff, but these will do: -->
     <rule ref="PEAR.Commenting.InlineComment"/>
@@ -92,7 +91,15 @@
         <severity>0</severity>
     </rule>
 
-    <rule ref="Symfony3Custom.Commenting.ClassComment.SpacingBeforeTags">
-        <message>There should always be a description, followed by a blank line, before the tags of a class comment.</message>
+    <!-- Endouble customizing -->
+    <rule ref="Symfony3Custom.Commenting">
+        <exclude name="Symfony3Custom.Commenting.ClassComment"/>
     </rule>
+
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing" value="1"/>
+        </properties>
+    </rule>
+
 </ruleset>

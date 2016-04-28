@@ -1,8 +1,8 @@
-[![Build Status](https://secure.travis-ci.org/escapestudios/Symfony2-coding-standard.png)](http://travis-ci.org/escapestudios/Symfony2-coding-standard)
+# Symfony3 Custom PHP CodeSniffer Coding Standard
 
-# Symfony2 PHP CodeSniffer Coding Standard
-
-A coding standard to check against the [Symfony coding standards](http://symfony.com/doc/current/contributing/code/standards.html), originally shamelessly copied from the -disappeared- opensky/Symfony2-coding-standard repository.
+This is a fork of https://github.com/djoos/Symfony2-coding-standard
+These are the Symfony2 standards, but tweaked to meet some needs we have in our CSB project, for example to comply with 
+[PSR-12](https://github.com/php-fig/fig-standards/blob/master/proposed/extended-coding-style-guide.md) for PHP 7
 
 ## Installation
 
@@ -10,42 +10,51 @@ A coding standard to check against the [Symfony coding standards](http://symfony
 
 This standard can be installed with the [Composer](https://getcomposer.org/) dependency manager.
 
-1. [Install Composer](https://getcomposer.org/doc/00-intro.md)
+1. Add the repository to your composer.json: 
+```json
+ "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:Endouble/Symfony3-custom-coding-standard"
+        }
+```
 
-2. Install the coding standard as a dependency of your project
+2. Add the coding standard as a dependency of your project
 
-        composer require --dev escapestudios/symfony2-coding-standard:~2.0
+```json
+ "require-dev": {
+        "endouble/symfony3-custom-coding-standard": "^2.10"
+    },
+```
 
-3. Add the coding standard to the PHP_CodeSniffer install path
+3. Add the coding standard to the PHP_CodeSniffer install path 
 
-        vendor/bin/phpcs --config-set installed_paths vendor/escapestudios/symfony2-coding-standard
+The path is relative to the php_codesniffer install path. This is important to make it work both in your vagrant, local machine and PHPStorm
 
-4. Check the installed coding standards for "Symfony2"
-
-        vendor/bin/phpcs -i
-
-5. Done!
-
-        vendor/bin/phpcs /path/to/code
-
-### Stand-alone
-
-1. Install [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer)
-
-2. Checkout this repository 
-
-        git clone git://github.com/escapestudios/Symfony2-coding-standard.git
-
-3. Add the coding standard to the PHP_CodeSniffer install path
-
-        phpcs --config-set installed_paths /path/to/Symfony2-coding-standard
-
-   Or copy/symlink this repository's "Symfony2"-folder inside the phpcs `Standards` directory
+        bin/phpcs --config-set installed_paths ../../endouble/symfony3-custom-coding-standard
 
 4. Check the installed coding standards for "Symfony2"
 
-        phpcs -i
+        bin/phpcs -i
 
 5. Done!
 
-        phpcs /path/to/code
+       bin/phpcs --standard=Symfony3Custom /path/to/code
+       
+6. (optional) Set up PHPStorm
+
+- configure code sniffer under Languages & Frameworks -> PHP -> Code Sniffer
+- Go to Editor -> Inspections -> PHP Code sniffer, refresh the standards and select Symfony3Custom
+       
+## Customizations
+
+The following adjustments have been made to the original standard:
+
+In Sniff/WhiteSpace/AssignmentSpacingSniff:
+- Added an exception for ```declare(strict_types=1);``` to comply with [PRS-12](https://github.com/php-fig/fig-standards/blob/master/proposed/extended-coding-style-guide.md#3-declare-statements-namespace-and-use-declarations) 
+
+In ruleset.xml
+- Disabled the class comment rule
+- Changed the concatenation spacing rule, for readability, to require 1 space around concatenation dot, instead of no spaces as the [Symfony](https://symfony.com/doc/current/contributing/code/standards.html#structure) standard requires.
+ 
+       
