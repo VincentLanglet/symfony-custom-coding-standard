@@ -143,7 +143,8 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
 
         $found = $startLine - $prevLine - 1;
 
-        if ($found !== 1) {
+        // Skip for class opening
+        if ($found !== 1 && !($found === 0 && $tokens[$before]['type'] === 'T_OPEN_CURLY_BRACKET')) {
             if ($found < 0) {
                 $found = 0;
             }
