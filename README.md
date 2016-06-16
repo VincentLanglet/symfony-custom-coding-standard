@@ -53,8 +53,16 @@ The following adjustments have been made to the original standard:
 In Sniff/WhiteSpace/AssignmentSpacingSniff:
 - Added an exception for ```declare(strict_types=1);``` to comply with [PRS-12](https://github.com/php-fig/fig-standards/blob/master/proposed/extended-coding-style-guide.md#3-declare-statements-namespace-and-use-declarations) 
 
+In Sniff/WhiteSpace/FunctionalClosingBraceSniff:
+- copied from Squiz and adapted to have no blank line at the end of a function
+
+In Sniff/Commenting/FunctionCommentSniff:
+- check for 1 blank line above a docblock
+- don't check docblocks for test and setUp methods (PHPunit, would be blank)
+- do check protected and private methods for docblocks
+
 In ruleset.xml
 - Disabled the class comment rule
 - Changed the concatenation spacing rule, for readability, to require 1 space around concatenation dot, instead of no spaces as the [Symfony](https://symfony.com/doc/current/contributing/code/standards.html#structure) standard requires.
- 
+- Re-enabled the blank line check from superfluousWhitespace (disabled in PSR-2)
        
