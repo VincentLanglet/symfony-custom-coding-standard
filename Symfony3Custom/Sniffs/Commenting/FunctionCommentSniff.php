@@ -55,7 +55,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
                 T_DOC_COMMENT,
                 T_CLASS,
                 T_FUNCTION,
-                T_OPEN_TAG
+                T_OPEN_TAG,
             ),
             ($stackPtr - 1)
         )) {
@@ -65,9 +65,9 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
         $tokens = $phpcsFile->getTokens();
         $code = $tokens[$commentEnd]['code'];
 
-        // a comment is not required on protected/private methods
-        $method = $phpcsFile->getMethodProperties($stackPtr);
-        $commentRequired = 'public' == $method['scope'];
+        $name = $phpcsFile->getDeclarationName($stackPtr);
+
+        $commentRequired = strpos($name, 'test') !== 0 && $name !== 'setUp';
 
         if (($code === T_COMMENT && !$commentRequired)
             || ($code !== T_DOC_COMMENT && !$commentRequired)
@@ -126,7 +126,51 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
                 }
             }
         }
+    }
 
+    /**
+     * @param PHP_CodeSniffer_File $phpcsFile
+     * @param int                  $stackPtr
+     * @param int                  $commentStart
+     */
+    protected function processWhitespace(PHP_CodeSniffer_File $phpcsFile, int $stackPtr, int $commentStart)
+    {
+        $tokens = $phpcsFile->getTokens();
+        $before = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
+
+        $startLine = $tokens[$commentStart]['line'];
+        $prevLine = $tokens[$before]['line'];
+
+        $found = $startLine - $prevLine - 1;
+
+        if ($found !== 1) {
+            if ($found < 0) {
+                $found = 0;
+            }
+
+            $error = 'Expected 1 blank line before docblock; %s found';
+            $data = array($found);
+            $fix = $phpcsFile->addFixableError($error, $commentStart, 'SpacingBeforeDocblock', $data);
+
+            if ($fix === true) {
+                if ($found > 1) {
+                    $phpcsFile->fixer->beginChangeset();
+                    for ($i = ($before + 1); $i < ($commentStart - 1); $i++) {
+                        $phpcsFile->fixer->replaceToken($i, '');
+                    }
+
+                    $phpcsFile->fixer->replaceToken($i, $phpcsFile->eolChar);
+                    $phpcsFile->fixer->endChangeset();
+                } else {
+                    // Try and maintain indentation.
+                    if ($tokens[($commentStart - 1)]['code'] === T_WHITESPACE) {
+                        $phpcsFile->fixer->addNewlineBefore($commentStart - 1);
+                    } else {
+                        $phpcsFile->fixer->addNewlineBefore($commentStart);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -172,7 +216,10 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
             return;
         }
 
+        $this->processWhitespace($phpcsFile, $stackPtr, $commentStart);
+
         parent::processParams($phpcsFile, $stackPtr, $commentStart);
+
     }
 
     /**
