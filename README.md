@@ -61,6 +61,9 @@ In Sniff/Commenting/FunctionCommentSniff:
 - don't check docblocks for test and setUp methods (PHPunit, would be blank)
 - do check protected and private methods for docblocks
 
+In Sniff/NamingConventions/ValidClassNameSniff
+- remove the abstract class name rule
+
 In ruleset.xml
 - Disabled the class comment rule
 - Changed the concatenation spacing rule, for readability, to require 1 space around concatenation dot, instead of no spaces as the [Symfony](https://symfony.com/doc/current/contributing/code/standards.html#structure) standard requires.

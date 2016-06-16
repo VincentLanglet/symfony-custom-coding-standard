@@ -125,27 +125,6 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidClassNameSniff
                 break;
             }
 
-            /*
-             * Prefix abstract classes with Abstract.
-             */
-            if ('T_ABSTRACT' == $tokens[$stackPtr]['type']) {
-                $name = $phpcsFile->findNext(T_STRING, $stackPtr);
-                $function = $phpcsFile->findNext(T_FUNCTION, $stackPtr);
-                
-                // making sure we're not dealing with an abstract function
-                if ($name && (is_null($function)
-                    || $name < $function)
-                    && substr($tokens[$name]['content'], 0, 8) != 'Abstract'
-                ) {
-                    $phpcsFile->addError(
-                        'Abstract class name is not prefixed with "Abstract"',
-                        $stackPtr,
-                        'InvalidAbstractName'
-                    );
-                }
-                break;
-            }
-
             $stackPtr++;
         }
 
