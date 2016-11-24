@@ -51,7 +51,7 @@ The path is relative to the php_codesniffer install path. This is important to m
 The following adjustments have been made to the original standard:
 
 In Sniff/WhiteSpace/AssignmentSpacingSniff:
-- Added an exception for ```declare(strict_types=1);``` to comply with [PRS-12](https://github.com/php-fig/fig-standards/blob/master/proposed/extended-coding-style-guide.md#3-declare-statements-namespace-and-use-declarations) 
+- Added an exception for ```declare(strict_types=1);``` to comply with [PSR-12](https://github.com/php-fig/fig-standards/blob/master/proposed/extended-coding-style-guide.md#3-declare-statements-namespace-and-use-declarations) 
 
 In Sniff/WhiteSpace/FunctionalClosingBraceSniff:
 - copied from Squiz and adapted to have no blank line at the end of a function
