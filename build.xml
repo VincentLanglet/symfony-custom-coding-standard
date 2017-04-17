@@ -3,17 +3,7 @@
     <available property="composer.exists" file="${composer.path}" />
     <available property="symlink.exists" file="${phpcs.symlink.path}" />
 
-    <target name="test" depends="vendor,lint,phpunit,phpcs" />
-    <target name="ci" depends="vendor,lint,phpunit" />
-
-    <target name="prepare" depends="clean" description="Prepare for build">
-        <mkdir dir="${basedir}/build/coverage" />
-        <mkdir dir="${basedir}/build/logs" />
-    </target>
-
-    <target name="clean" description="Cleanup build artifacts">
-        <delete dir="${basedir}/build" />
-    </target>
+    <target name="test" depends="vendor,lint,phpunit" />
 
     <target name="vendor" description="Load composer repositories" depends="composer">
         <exec executable="composer" failonerror="true">
@@ -35,23 +25,15 @@
         </apply>
     </target>
 
-    <target name="symlink-this-coding-standard" description="Symlink this coding standard" unless="symlink.exists">
-        <symlink link="${basedir}/${phpcs.symlink.path}" resource="${basedir}/Symfony3Custom"/>
-    </target>
-
     <target name="phpunit" depends="symlink-this-coding-standard" description="Run unit tests with PHPUnit">
         <exec executable="${phpunit.executable}" failonerror="true" >
+            <arg value="--verbose" />
             <arg value="--filter=Symfony3Custom_*" />
             <arg value="${phpcs.dir}/tests/AllTests.php" />
         </exec>
     </target>
 
-    <target name="phpcs" description="Find coding standard violations using PHP Code Sniffer">
-        <exec executable="phpcs" failonerror="true">
-            <arg value="--standard=${phpcs.standard}" />
-            <arg value="--extensions=php" />
-            <arg value="--ignore=vendor/*" /> 
-            <arg path="${basedir}" />
-        </exec>
+    <target name="symlink-this-coding-standard" description="Symlink this coding standard" unless="symlink.exists">
+        <symlink link="${basedir}/${phpcs.symlink.path}" resource="${basedir}/Symfony3Custom"/>
     </target>
 </project>

@@ -6,4 +6,4 @@ machine:
 
 test:
   override:
-    - ant ci
+    - ant test
