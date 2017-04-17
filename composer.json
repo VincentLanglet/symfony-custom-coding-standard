@@ -1,9 +1,9 @@
 {
-    "name": "endouble/symfony3-custom-coding-standard",
+    "name": "vincentlanglet/symfony3-custom-coding-standard",
     "type": "coding-standard",
     "description": "Customized CodeSniffer ruleset for the Symfony3 projects",
     "keywords": ["Symfony3", "coding standard", "phpcs"],
-    "homepage": "https://github.com/Endouble/Symfony3-coding-standard",
+    "homepage": "https://github.com/VincentLanglet/Symfony3-coding-standard",
     "license": "MIT",
     "authors": [
         {
