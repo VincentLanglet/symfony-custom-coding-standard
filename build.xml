@@ -26,7 +26,7 @@
     </target>
 
     <target name="phpunit" depends="symlink-this-coding-standard" description="Run unit tests with PHPUnit">
-        <exec executable="${phpunit.executable}" failonerror="true" >
+        <exec executable="phpunit" failonerror="true" >
             <arg value="--verbose" />
             <arg value="--filter=Symfony3Custom_*" />
             <arg value="${phpcs.dir}/tests/AllTests.php" />

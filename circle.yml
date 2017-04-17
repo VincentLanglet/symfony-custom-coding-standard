@@ -5,5 +5,8 @@ machine:
     version: 7.1.0
 
 test:
+  pre:
+    - composer global require "phpunit/phpunit=5.7.*"
+
   override:
     - ant test
