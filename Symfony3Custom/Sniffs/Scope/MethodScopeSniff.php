@@ -1,17 +1,5 @@
 <?php
 
-/**
- * This file is part of the Symfony3Custom-coding-standard (phpcs standard)
- *
- * PHP version 5
- *
- * @category PHP
- * @package  Symfony3Custom-coding-standard
- * @author   Authors <Symfony3Custom-coding-standard@escapestudios.github.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     https://github.com/escapestudios/Symfony3Custom-coding-standard
- */
-
 if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false) {
     throw new PHP_CodeSniffer_Exception(
         'Class PHP_CodeSniffer_Standards_AbstractScopeSniff not found'
@@ -20,14 +8,6 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false
 
 /**
  * Verifies that class members have scope modifiers.
- *
- * PHP version 5
- *
- * @category PHP
- * @package  Symfony3Custom-coding-standard
- * @author   Authors <Symfony3Custom-coding-standard@escapestudios.github.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
 class Symfony3Custom_Sniffs_Scope_MethodScopeSniff
     extends PHP_CodeSniffer_Standards_AbstractScopeSniff

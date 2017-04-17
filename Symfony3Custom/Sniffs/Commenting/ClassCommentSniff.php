@@ -1,17 +1,5 @@
 <?php
 
-/**
- * This file is part of the Symfony3Custom-coding-standard (phpcs standard)
- *
- * PHP version 5
- *
- * @category PHP
- * @package  Symfony3Custom-coding-standard
- * @author   Authors <Symfony3Custom-coding-standard@escapestudios.github.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     https://github.com/escapestudios/Symfony3Custom-coding-standard
- */
-
 if (class_exists('PHP_CodeSniffer_Tokenizers_Comment', true) === false) {
     $error = 'Class PHP_CodeSniffer_Tokenizers_Comment not found';
     throw new PHP_CodeSniffer_Exception($error);
@@ -35,14 +23,6 @@ if (class_exists('PEAR_Sniffs_Commenting_ClassCommentSniff', true) === false) {
  *  <li>Check the indentation of each tag.</li>
  *  <li>Check required and optional tags and the format of their content.</li>
  * </ul>
- *
- * PHP version 5
- *
- * @category PHP
- * @package  Symfony3Custom-coding-standard
- * @author   Authors <Symfony3Custom-coding-standard@escapestudios.github.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     http://pear.php.net/package/PHP_CodeSniffer
  */
 class Symfony3Custom_Sniffs_Commenting_ClassCommentSniff
     extends PEAR_Sniffs_Commenting_ClassCommentSniff
