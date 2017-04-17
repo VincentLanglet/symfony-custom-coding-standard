@@ -67,7 +67,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
 
         $name = $phpcsFile->getDeclarationName($stackPtr);
 
-        $commentRequired = strpos($name, 'test') !== 0 && $name !== 'setUp';
+        $commentRequired = strpos($name, 'test') !== 0 && $name !== 'setUp' && $name !== 'tearDown';
 
         if (($code === T_COMMENT && !$commentRequired)
             || ($code !== T_DOC_COMMENT && !$commentRequired)

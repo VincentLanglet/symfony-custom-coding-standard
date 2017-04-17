@@ -58,7 +58,7 @@ In Sniff/WhiteSpace/FunctionalClosingBraceSniff:
 
 In Sniff/Commenting/FunctionCommentSniff:
 - check for 1 blank line above a docblock
-- don't check docblocks for test and setUp methods (PHPunit, would be blank)
+- don't check docblocks for test, setUp and tearDown methods (PHPunit, would be blank)
 - do check protected and private methods for docblocks
 
 In Sniff/NamingConventions/ValidClassNameSniff
