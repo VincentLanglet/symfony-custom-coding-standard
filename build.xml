@@ -1,10 +1,10 @@
-<project name="Symfony2-coding-standard" default="test">
+<project name="Symfony3-custom-coding-standard" default="test">
     <property file="build.properties" />
     <available property="composer.exists" file="${composer.path}" />
     <available property="symlink.exists" file="${phpcs.symlink.path}" />
 
     <target name="test" depends="vendor,lint,phpunit,phpcs" />
-    <target name="travis" depends="vendor,lint,phpunit" />
+    <target name="ci" depends="vendor,lint,phpunit" />
 
     <target name="prepare" depends="clean" description="Prepare for build">
         <mkdir dir="${basedir}/build/coverage" />
@@ -36,12 +36,12 @@
     </target>
 
     <target name="symlink-this-coding-standard" description="Symlink this coding standard" unless="symlink.exists">
-        <symlink link="${basedir}/${phpcs.symlink.path}" resource="${basedir}/Symfony2"/>
+        <symlink link="${basedir}/${phpcs.symlink.path}" resource="${basedir}/Symfony3Custom"/>
     </target>
 
     <target name="phpunit" depends="symlink-this-coding-standard" description="Run unit tests with PHPUnit">
         <exec executable="phpunit" failonerror="true" >
-            <arg value="--filter=Symfony2_*" />
+            <arg value="--filter=Symfony3Custom_*" />
             <arg value="${phpcs.dir}/tests/AllTests.php" />
         </exec>
     </target>

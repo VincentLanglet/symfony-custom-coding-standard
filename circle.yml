@@ -1,0 +1,12 @@
+machine:
+  pre:
+    - sudo apt-get update; USE_PRECOMPILE=true sudo -E circleci-install php 7.1.0
+  php:
+    version: 7.1.0
+
+test:
+  pre:
+    - composer global require "phpunit/phpunit=5.7.*"
+
+  override:
+    - ant ci

@@ -1,27 +1,27 @@
 <?php
 
 /**
- * @param string $test
+ * @param string $test Test Argument
  */
-function test($test)
+function functionTest($test)
 {
     return 42;
 }
 
 /**
- * @param string $test
+ * @param string $test Test Argument
  *
  * @return int
  */
-function test($test)
+function functionTest($test)
 {
     return 42;
 }
 
 /**
- * @param array $tab
+ * @param array $tab Test Argument
  */
-function testWithCallBack($tab)
+function functionTestWithCallBack($tab)
 {
     $thing = array_map(function ($t) {
         return $t[0];
