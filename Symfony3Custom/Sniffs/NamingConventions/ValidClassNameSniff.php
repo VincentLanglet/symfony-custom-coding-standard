@@ -111,8 +111,7 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidClassNameSniff
                 $function = $phpcsFile->findNext(T_FUNCTION, $stackPtr);
 
                 // making sure we're not dealing with an abstract function
-                if ($name && (is_null($function)
-                    || $name < $function)
+                if ($name && (false === $function || $name < $function)
                     && substr($tokens[$name]['content'], 0, 8) != 'Abstract'
                 ) {
                     $phpcsFile->addError(
