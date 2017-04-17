@@ -1,6 +1,3 @@
-cache.properties
-phpunit.xml
-composer.lock
+.idea/
 composer.phar
 vendor/
-build/

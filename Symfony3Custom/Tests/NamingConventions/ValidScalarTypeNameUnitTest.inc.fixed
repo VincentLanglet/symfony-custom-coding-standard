@@ -1,0 +1,51 @@
+<?php
+
+echo (bool) $a;
+echo (int) $a;
+echo (float) $a;
+echo ( float ) $a;
+
+/**
+ * @param bool  $a
+ * @param int   $b
+ * @param float $c
+ *
+ * @return bool
+ * @return int
+ * @return float
+ */
+
+/** @var bool $a */
+/** @var int $b */
+/** @var float $c */
+
+// Only PHPDoc comments are checked
+/* @var boolean $a */
+
+
+echo ( int ) $a;
+echo (bool) $a;
+echo (bool) $a;
+echo (int) $a;
+echo (float) $a;
+echo (float) $a;
+
+/**
+ * @param bool $a
+ * @param bool $a
+ * @param int $b
+ * @param float  $c
+ * @param float    $c
+ *
+ * @return bool
+ * @return bool
+ * @return int
+ * @return float
+ * @return float
+ */
+
+/** @var bool $a */
+/** @var bool $a */
+/** @var int $b */
+/** @var float $c */
+/** @var float $c */

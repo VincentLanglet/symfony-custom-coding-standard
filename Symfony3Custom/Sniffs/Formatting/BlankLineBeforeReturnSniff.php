@@ -1,29 +1,9 @@
 <?php
 
 /**
- * This file is part of the Symfony3Custom-coding-standard (phpcs standard)
- *
- * PHP version 5
- *
- * @category PHP
- * @package  Symfony3Custom-coding-standard
- * @author   Authors <Symfony3Custom-coding-standard@escapestudios.github.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     https://github.com/escapestudios/Symfony3Custom-coding-standard
- */
-
-/**
  * Throws errors if there's no blank line before return statements.
  * Symfony coding standard specifies: "Add a blank line before return statements,
  * unless the return is alone inside a statement-group (like an if statement);"
- *
- * PHP version 5
- *
- * @category PHP
- * @package  Symfony3Custom-coding-standard
- * @author   Authors <Symfony3Custom-coding-standard@escapestudios.github.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     https://github.com/escapestudios/Symfony3Custom-coding-standard
  */
 class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff
     implements PHP_CodeSniffer_Sniff

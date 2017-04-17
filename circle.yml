@@ -9,4 +9,4 @@ test:
     - composer global require "phpunit/phpunit=5.7.*"
 
   override:
-    - ant ci
+    - ant test

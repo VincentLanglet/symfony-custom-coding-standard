@@ -1,29 +1,7 @@
 <?php
 
 /**
- * This file is part of the Symfony3Custom-coding-standard (phpcs standard)
- *
- * PHP version 5
- *
- * @category PHP
- * @package  Symfony3Custom-coding-standard
- * @author   Authors <Symfony3Custom-coding-standard@escapestudios.github.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     https://github.com/escapestudios/Symfony3Custom-coding-standard
- */
-
-/**
- * Symfony3Custom_Sniffs_WhiteSpace_BinaryOperatorSpacingSniff.
- *
  * Throws warnings if a binary operator isn't surrounded with whitespace.
- *
- * PHP version 5
- *
- * @category PHP
- * @package  Symfony3Custom-coding-standard
- * @author   Authors <Symfony3Custom-coding-standard@escapestudios.github.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     https://github.com/escapestudios/Symfony3Custom-coding-standard
  */
 class Symfony3Custom_Sniffs_WhiteSpace_BinaryOperatorSpacingSniff
     implements PHP_CodeSniffer_Sniff

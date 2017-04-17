@@ -1,28 +1,7 @@
 <?php
-/**
- * This file is part of the Symfony3Custom-coding-standard (phpcs standard)
- *
- * PHP version 5
- *
- * @category PHP
- * @package  PHP_CodeSniffer-Symfony3Custom
- * @author   wicliff wolda <dev@bloody-wicked.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @version  GIT: master
- * @link     https://github.com/escapestudios/Symfony3Custom-coding-standard
- */
 
 /**
- * Symfony3Custom_Sniffs_WhiteSpace_MultiLineArrayCommaSniff.
- *
- * Throws warnings if the last item in a multi line array does not have a
- * trailing comma
- *
- * @category PHP
- * @package  PHP_CodeSniffer-Symfony3Custom
- * @author   wicliff wolda <dev@bloody-wicked.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     https://github.com/escapestudios/Symfony3Custom-coding-standard
+ * Throws warnings if the last item in a multi line array does not have a trailing comma
  */
 class Symfony3Custom_Sniffs_Arrays_MultiLineArrayCommaSniff
     implements PHP_CodeSniffer_Sniff

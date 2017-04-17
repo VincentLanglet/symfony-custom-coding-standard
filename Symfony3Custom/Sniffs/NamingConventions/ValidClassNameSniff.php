@@ -1,29 +1,7 @@
 <?php
 
 /**
- * This file is part of the Symfony3Custom-coding-standard (phpcs standard)
- *
- * PHP version 5
- *
- * @category PHP
- * @package  Symfony3Custom-coding-standard
- * @author   Authors <Symfony3Custom-coding-standard@escapestudios.github.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     https://github.com/escapestudios/Symfony3Custom-coding-standard
- */
-
-/**
- * Symfony3Custom_Sniffs_NamingConventions_ValidClassNameSniff.
- *
  * Throws errors if symfony's naming conventions are not met.
- *
- * PHP version 5
- *
- * @category PHP
- * @package  Symfony3Custom-coding-standard
- * @author   Authors <Symfony3Custom-coding-standard@escapestudios.github.com>
- * @license  http://spdx.org/licenses/MIT MIT License
- * @link     https://github.com/escapestudios/Symfony3Custom-coding-standard
  */
 class Symfony3Custom_Sniffs_NamingConventions_ValidClassNameSniff
     implements PHP_CodeSniffer_Sniff
@@ -133,8 +111,7 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidClassNameSniff
                 $function = $phpcsFile->findNext(T_FUNCTION, $stackPtr);
 
                 // making sure we're not dealing with an abstract function
-                if ($name && (is_null($function)
-                    || $name < $function)
+                if ($name && (false === $function || $name < $function)
                     && substr($tokens[$name]['content'], 0, 8) != 'Abstract'
                 ) {
                     $phpcsFile->addError(
