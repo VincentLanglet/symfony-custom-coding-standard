@@ -18,7 +18,6 @@
 class Symfony3Custom_Sniffs_Classes_PropertyDeclarationSniff
     implements PHP_CodeSniffer_Sniff
 {
-
     /**
      * A list of tokenizers this sniff supports.
      *
