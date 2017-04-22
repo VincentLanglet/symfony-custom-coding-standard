@@ -3,8 +3,7 @@
 /**
  * Throws a warning if an object isn't instantiated using parenthesis.
  */
-class Symfony3Custom_Sniffs_Objects_ObjectInstantiationSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_Objects_ObjectInstantiationSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of tokenizers this sniff supports.
@@ -12,9 +11,8 @@ class Symfony3Custom_Sniffs_Objects_ObjectInstantiationSniff
      * @var array
      */
     public $supportedTokenizers = array(
-                                   'PHP',
-                                  );
-
+        'PHP',
+    );
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -24,8 +22,8 @@ class Symfony3Custom_Sniffs_Objects_ObjectInstantiationSniff
     public function register()
     {
         return array(
-                T_NEW,
-               );
+            T_NEW,
+        );
     }
 
     /**

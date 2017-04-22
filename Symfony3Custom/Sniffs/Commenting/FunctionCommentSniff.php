@@ -15,8 +15,7 @@ if (class_exists('PEAR_Sniffs_Commenting_FunctionCommentSniff', true) === false)
  *   </li>
  * </ul>
  */
-class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
-    extends PEAR_Sniffs_Commenting_FunctionCommentSniff
+class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting_FunctionCommentSniff
 {
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -90,6 +89,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
                 $stackPtr,
                 $tokens[$stackPtr]['scope_closer']
             );
+
             for ($i = $start; $i < $tokens[$stackPtr]['scope_closer']; ++$i) {
                 // Skip closures
                 if ($tokens[$i]['code'] === T_CLOSURE) {
@@ -114,8 +114,11 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
      * @param int                  $stackPtr
      * @param int                  $commentStart
      */
-    protected function processWhitespace(PHP_CodeSniffer_File $phpcsFile, int $stackPtr, int $commentStart)
-    {
+    protected function processWhitespace(
+        PHP_CodeSniffer_File $phpcsFile,
+        $stackPtr,
+        $commentStart
+    ) {
         $tokens = $phpcsFile->getTokens();
         $before = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
 
@@ -137,11 +140,11 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
             if ($fix === true) {
                 if ($found > 1) {
                     $phpcsFile->fixer->beginChangeset();
+
                     for ($i = ($before + 1); $i < ($commentStart - 1); $i++) {
                         $phpcsFile->fixer->replaceToken($i, '');
                     }
 
-                    $phpcsFile->fixer->replaceToken($i, $phpcsFile->eolChar);
                     $phpcsFile->fixer->endChangeset();
                 } else {
                     // Try and maintain indentation.
@@ -162,7 +165,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
      * @param int                  $stackPtr  The position of the current token
      *                                        in the stack passed in $tokens.
      *
-     * @return boolean True if the comment is an inheritdoc
+     * @return bool True if the comment is an inheritdoc
      */
     protected function isInheritDoc(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
@@ -201,7 +204,6 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
         $this->processWhitespace($phpcsFile, $stackPtr, $commentStart);
 
         parent::processParams($phpcsFile, $stackPtr, $commentStart);
-
     }
 
     /**
@@ -210,7 +212,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff
      * @param array $tokens    Array of tokens
      * @param int   $returnPos Stack position of the T_RETURN token to process
      *
-     * @return boolean True if the return does not return anything
+     * @return bool True if the return does not return anything
      */
     protected function isMatchingReturn($tokens, $returnPos)
     {

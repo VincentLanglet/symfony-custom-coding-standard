@@ -6,8 +6,7 @@
  * A sniff unit test checks a .inc file for expected violations of a single
  * coding standard. Expected errors and warnings are stored in this class.
  */
-class Symfony3Custom_Tests_Commenting_ClassCommentUnitTest
-    extends AbstractSniffUnitTest
+class Symfony3Custom_Tests_Commenting_ClassCommentUnitTest extends AbstractSniffUnitTest
 {
     /**
      * Returns the lines where errors should occur.

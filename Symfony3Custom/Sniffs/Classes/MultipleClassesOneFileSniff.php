@@ -4,8 +4,7 @@
  * Throws errors if multiple classes are defined in a single file.
  * Symfony coding standard specifies: "Define one class per file;"
  */
-class Symfony3Custom_Sniffs_Classes_MultipleClassesOneFileSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_Classes_MultipleClassesOneFileSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * The number of times the T_CLASS token is encountered in the file.

@@ -9,8 +9,7 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false
 /**
  * Verifies that class members have scope modifiers.
  */
-class Symfony3Custom_Sniffs_Scope_MethodScopeSniff
-    extends PHP_CodeSniffer_Standards_AbstractScopeSniff
+class Symfony3Custom_Sniffs_Scope_MethodScopeSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
 {
     /**
      * Constructs a Symfony3Custom_Sniffs_Scope_MethodScopeSniff.
@@ -18,7 +17,6 @@ class Symfony3Custom_Sniffs_Scope_MethodScopeSniff
     public function __construct()
     {
         parent::__construct(array(T_CLASS), array(T_FUNCTION));
-
     }
 
     /**
@@ -55,6 +53,5 @@ class Symfony3Custom_Sniffs_Scope_MethodScopeSniff
             $data  = array($methodName);
             $phpcsFile->addError($error, $stackPtr, 'Missing', $data);
         }
-
     }
 }

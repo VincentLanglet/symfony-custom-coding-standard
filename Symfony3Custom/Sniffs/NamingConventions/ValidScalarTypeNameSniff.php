@@ -3,8 +3,7 @@
 /**
  * Throws errors if scalar type name are not valid.
  */
-class Symfony3Custom_Sniffs_NamingConventions_ValidScalarTypeNameSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_NamingConventions_ValidScalarTypeNameSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * Types to replace: key is type to replace, value is type to replace with.

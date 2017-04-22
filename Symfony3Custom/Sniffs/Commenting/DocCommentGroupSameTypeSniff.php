@@ -3,8 +3,7 @@
 /**
  * Throws errors if comments are not grouped by type with one blank line between them.
  */
-class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of tokenizers this sniff supports.
@@ -42,15 +41,17 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff
             if (false !== $previousString) {
                 $previousStringLine = $tokens[$previousString]['line'];
                 $commentTagLine = $tokens[$commentTag]['line'];
+
                 if ($previousType === $currentType) {
                     if ($previousStringLine !== $commentTagLine - 1) {
                         $fix = $phpcsFile->addFixableError(
                             'Expected no empty lines '
-                            .'between annotations of the same type',
+                            . 'between annotations of the same type',
                             $commentTag,
                             'SameType'
                         );
-                        if ($fix) {
+
+                        if ($fix === true) {
                             $phpcsFile->fixer->beginChangeset();
                             $this->removeLines(
                                 $phpcsFile,
@@ -65,11 +66,12 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff
                     if ($previousStringLine !== $commentTagLine - 2) {
                         $fix = $phpcsFile->addFixableError(
                             'Expected exactly one empty line '
-                            .'between annotations of different types',
+                            . 'between annotations of different types',
                             $commentTag,
                             'DifferentType'
                         );
-                        if ($fix) {
+
+                        if ($fix === true) {
                             $phpcsFile->fixer->beginChangeset();
                             if ($previousStringLine === $commentTagLine - 1) {
                                 $firstOnLine = $phpcsFile->findFirstOnLine(
@@ -87,7 +89,7 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff
                                 );
                                 $phpcsFile->fixer->addContentBefore(
                                     $firstOnLine,
-                                    $content.$phpcsFile->eolChar
+                                    $content . $phpcsFile->eolChar
                                 );
                             } else {
                                 $this->removeLines(
@@ -120,10 +122,14 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff
      * @return void
      */
     protected function removeLines(
-        PHP_CodeSniffer_File $phpcsFile, $fromPtr, $fromLine, $toLine
+        PHP_CodeSniffer_File $phpcsFile,
+        $fromPtr,
+        $fromLine,
+        $toLine
     ) {
         $tokens = $phpcsFile->getTokens();
-        for ($i = $fromPtr; ; $i++) {
+
+        for ($i = $fromPtr;; $i++) {
             if ($tokens[$i]['line'] > $toLine) {
                 break;
             }
