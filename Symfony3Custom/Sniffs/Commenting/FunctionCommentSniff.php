@@ -140,11 +140,11 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             if ($fix === true) {
                 if ($found > 1) {
                     $phpcsFile->fixer->beginChangeset();
+
                     for ($i = ($before + 1); $i < ($commentStart - 1); $i++) {
                         $phpcsFile->fixer->replaceToken($i, '');
                     }
 
-                    $phpcsFile->fixer->replaceToken($i, $phpcsFile->eolChar);
                     $phpcsFile->fixer->endChangeset();
                 } else {
                     // Try and maintain indentation.

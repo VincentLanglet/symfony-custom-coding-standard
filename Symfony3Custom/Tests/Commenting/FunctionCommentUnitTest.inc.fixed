@@ -7,6 +7,7 @@ function functionTest1($test)
 {
     return 42;
 }
+
 /**
  * @return int
  */
@@ -24,7 +25,6 @@ function functionTest3($test)
 {
     return 42;
 }
-
 
 /**
  * @param array $tab Test Argument
@@ -45,6 +45,7 @@ class classToTestIndentation
     {
         return 42;
     }
+
     /**
      * @return int
      */
@@ -52,7 +53,6 @@ class classToTestIndentation
     {
         return 42;
     }
-
 
     /**
      * @param array $tab Test Argument

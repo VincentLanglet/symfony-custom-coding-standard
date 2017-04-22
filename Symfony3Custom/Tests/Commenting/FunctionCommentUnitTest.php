@@ -21,6 +21,11 @@ class Symfony3Custom_Tests_Commenting_FunctionCommentUnitTest
     {
         return array(
             5 => 1,
+            10 => 2,
+            29 => 1,
+            43 => 1,
+            48 => 2,
+            57 => 1,
         );
     }
 
