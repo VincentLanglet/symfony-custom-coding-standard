@@ -5,7 +5,7 @@ $arr = array('foo', 'bar');
 
 $arr = array(
         'foo',
-        'bar'
+        'bar',
 );
 
 $arr = array(
@@ -21,7 +21,7 @@ $arr = ['foo', 'bar'];
 
 $arr = [
         'foo',
-        'bar'
+        'bar',
 ];
 
 $arr = [
@@ -37,7 +37,7 @@ $arr = array('foo', 'bar' /* baz */);
 
 $arr = array(
         'foo',
-        'bar' //baz
+        'bar', //baz
 );
 
 $arr = array(
@@ -47,7 +47,7 @@ $arr = array(
 
 $arr = array(
         'foo',
-        'bar' /* baz */
+        'bar', /* baz */
 );
 
 $arr = array(
@@ -64,7 +64,7 @@ $arr = ['foo', 'bar' /* baz */];
 
 $arr = [
         'foo',
-        'bar' //baz
+        'bar', //baz
 ];
 
 $arr = [
@@ -74,7 +74,7 @@ $arr = [
 
 $arr = [
         'foo',
-        'bar' /* baz */
+        'bar', /* baz */
 ];
 
 $arr = [

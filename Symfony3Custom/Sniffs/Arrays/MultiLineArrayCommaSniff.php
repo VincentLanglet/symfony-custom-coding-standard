@@ -72,11 +72,18 @@ class Symfony3Custom_Sniffs_Arrays_MultiLineArrayCommaSniff
                     if ($tokens[$lastComma]['code'] !== T_WHITESPACE
                         && $tokens[$lastComma]['code'] !== T_COMMENT
                     ) {
-                        $phpcsFile->addError(
+                        $fix = $phpcsFile->addFixableError(
                             'Add a comma after each item in a multi-line array',
                             $stackPtr,
                             'Invalid'
                         );
+
+                        if ($fix === true) {
+                            $ptr = $phpcsFile->findPrevious(array(T_WHITESPACE, T_COMMENT), $closePtr-1, $stackPtr, true);
+                            $phpcsFile->fixer->addContent($ptr, ',');
+                            $phpcsFile->fixer->endChangeset();
+                        }
+
                         break;
                     }
                 }
