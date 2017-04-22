@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Unit test class for the MultiLineArrayComma sniff.
+ * Unit test class for the MultipleClassesOneFile sniff.
  *
  * A sniff unit test checks a .inc file for expected violations of a single
  * coding standard. Expected errors and warnings are stored in this class.
  */
-class Symfony3Custom_Tests_Arrays_MultiLineArrayCommaUnitTest
+class Symfony3Custom_Tests_Classes_MultipleClassesOneFileUnitTest
     extends AbstractSniffUnitTest
 {
     /**
@@ -20,12 +20,7 @@ class Symfony3Custom_Tests_Arrays_MultiLineArrayCommaUnitTest
     public function getErrorList()
     {
         return array(
-            6  => 1,
-            22 => 1,
-            38 => 1,
-            48 => 1,
-            65 => 1,
-            75 => 1,
+            7  => 1,
         );
     }
 

@@ -50,20 +50,42 @@ class Symfony3Custom_Sniffs_Arrays_MultiLineArrayCommaSniff
         }
 
         if ($open['line'] <> $tokens[$closePtr]['line']) {
-            $lastComma = $phpcsFile->findPrevious(T_COMMA, $closePtr);
+            $arrayIsNotEmpty = $phpcsFile->findPrevious(
+                array(
+                    T_WHITESPACE,
+                    T_COMMENT,
+                    T_ARRAY,
+                    T_OPEN_PARENTHESIS,
+                    T_OPEN_SHORT_ARRAY,
+                ),
+                $closePtr - 1,
+                $stackPtr,
+                true
+            );
 
-            while ($lastComma < $closePtr -1) {
-                $lastComma++;
+            if ($arrayIsNotEmpty !== false) {
+                $lastComma = $phpcsFile->findPrevious(T_COMMA, $closePtr);
 
-                if ($tokens[$lastComma]['code'] !== T_WHITESPACE
-                    && $tokens[$lastComma]['code'] !== T_COMMENT
-                ) {
-                    $phpcsFile->addError(
-                        'Add a comma after each item in a multi-line array',
-                        $stackPtr,
-                        'Invalid'
-                    );
-                    break;
+                while ($lastComma < $closePtr - 1) {
+                    $lastComma++;
+
+                    if ($tokens[$lastComma]['code'] !== T_WHITESPACE
+                        && $tokens[$lastComma]['code'] !== T_COMMENT
+                    ) {
+                        $fix = $phpcsFile->addFixableError(
+                            'Add a comma after each item in a multi-line array',
+                            $stackPtr,
+                            'Invalid'
+                        );
+
+                        if ($fix === true) {
+                            $ptr = $phpcsFile->findPrevious(array(T_WHITESPACE, T_COMMENT), $closePtr-1, $stackPtr, true);
+                            $phpcsFile->fixer->addContent($ptr, ',');
+                            $phpcsFile->fixer->endChangeset();
+                        }
+
+                        break;
+                    }
                 }
             }
         }

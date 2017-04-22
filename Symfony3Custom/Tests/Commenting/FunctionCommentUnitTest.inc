@@ -3,7 +3,7 @@
 /**
  * @param string $test Test Argument
  */
-function functionTest($test)
+function functionTest1($test)
 {
     return 42;
 }
@@ -13,7 +13,7 @@ function functionTest($test)
  *
  * @return int
  */
-function functionTest($test)
+function functionTest2($test)
 {
     return 42;
 }
