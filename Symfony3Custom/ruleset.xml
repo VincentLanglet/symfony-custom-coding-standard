@@ -11,8 +11,8 @@
     <rule ref="PSR1"/>
     <!-- Include the whole PSR-2 standard -->
     <rule ref="PSR2"/>
-    <!--
 
+    <!--
     See the [documented coding standard](http://symfony.com/doc/current/contributing/code/standards.html)
 
     This CodeSniffer standard does not yet enforce the following:
@@ -26,9 +26,7 @@
     # Naming Conventions
 
     * Use underscores for option, argument, parameter names;
-
     -->
-
     <rule ref="Generic.ControlStructures.InlineControlStructure"/>
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
     <rule ref="Generic.Functions.CallTimePassByReference"/>
@@ -69,7 +67,7 @@
         <severity>0</severity>
     </rule>
 
-    <!-- In practice, Symfony3Custom spaces multiline function calls differently than Zend -->
+    <!-- In practice, Symfony spaces multiline function calls differently than Zend -->
     <rule ref="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket">
         <severity>0</severity>
     </rule>
@@ -80,6 +78,7 @@
         <severity>0</severity>
     </rule>
 
+    <!-- Params comments are not required -->
     <rule ref="Symfony3Custom.Commenting.FunctionComment.MissingParamComment">
         <severity>0</severity>
     </rule>
@@ -88,11 +87,7 @@
         <severity>0</severity>
     </rule>
 
-    <!-- Endouble customizing -->
-    <rule ref="Symfony3Custom.Commenting">
-        <exclude name="Symfony3Custom.Commenting.ClassComment"/>
-    </rule>
-
+    <!-- Some customizing -->
     <rule ref="Squiz.Strings.ConcatenationSpacing">
         <properties>
             <property name="spacing" value="1"/>
@@ -111,7 +106,6 @@
             <property name="ignoreBlankLines" value="false"/>
         </properties>
     </rule>
-    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines">
-        <severity>5</severity>
-    </rule>
+
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines" />
 </ruleset>
