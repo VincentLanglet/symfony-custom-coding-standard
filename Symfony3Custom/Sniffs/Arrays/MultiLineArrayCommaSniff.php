@@ -3,8 +3,7 @@
 /**
  * Throws warnings if the last item in a multi line array does not have a trailing comma
  */
-class Symfony3Custom_Sniffs_Arrays_MultiLineArrayCommaSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_Arrays_MultiLineArrayCommaSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of tokenizers this sniff supports.
@@ -12,8 +11,8 @@ class Symfony3Custom_Sniffs_Arrays_MultiLineArrayCommaSniff
      * @var array
      */
     public $supportedTokenizers = array(
-                                   'PHP',
-                                  );
+        'PHP',
+    );
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -23,10 +22,9 @@ class Symfony3Custom_Sniffs_Arrays_MultiLineArrayCommaSniff
     public function register()
     {
         return array(
-                T_ARRAY,
-                T_OPEN_SHORT_ARRAY,
-               );
-
+            T_ARRAY,
+            T_OPEN_SHORT_ARRAY,
+        );
     }
 
     /**
@@ -79,7 +77,12 @@ class Symfony3Custom_Sniffs_Arrays_MultiLineArrayCommaSniff
                         );
 
                         if ($fix === true) {
-                            $ptr = $phpcsFile->findPrevious(array(T_WHITESPACE, T_COMMENT), $closePtr-1, $stackPtr, true);
+                            $ptr = $phpcsFile->findPrevious(
+                                array(T_WHITESPACE, T_COMMENT),
+                                $closePtr - 1,
+                                $stackPtr,
+                                true
+                            );
                             $phpcsFile->fixer->addContent($ptr, ',');
                             $phpcsFile->fixer->endChangeset();
                         }
@@ -89,7 +92,5 @@ class Symfony3Custom_Sniffs_Arrays_MultiLineArrayCommaSniff
                 }
             }
         }
-
     }
-
 }

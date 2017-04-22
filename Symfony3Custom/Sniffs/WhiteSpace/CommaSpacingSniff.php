@@ -3,8 +3,7 @@
 /**
  * Throws warnings if comma isn't followed by a whitespace.
  */
-class Symfony3Custom_Sniffs_WhiteSpace_CommaSpacingSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_WhiteSpace_CommaSpacingSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of tokenizers this sniff supports.
@@ -25,7 +24,6 @@ class Symfony3Custom_Sniffs_WhiteSpace_CommaSpacingSniff
         return array(
             T_COMMA,
         );
-
     }
 
     /**
@@ -55,6 +53,5 @@ class Symfony3Custom_Sniffs_WhiteSpace_CommaSpacingSniff
                 $phpcsFile->fixer->addContent($stackPtr, ' ');
             }
         }
-
     }
 }

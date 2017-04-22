@@ -3,8 +3,7 @@
 /**
  * Checks that there is no empty line before the closing brace of a function.
  */
-class Symfony3Custom_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff implements PHP_CodeSniffer_Sniff
 {
 
     /**
@@ -13,10 +12,9 @@ class Symfony3Custom_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff
      * @var array
      */
     public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                  );
-
+        'PHP',
+        'JS',
+    );
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -26,12 +24,10 @@ class Symfony3Custom_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff
     public function register()
     {
         return array(
-                T_FUNCTION,
-                T_CLOSURE,
-               );
-
-    }//end register()
-
+            T_FUNCTION,
+            T_CLOSURE,
+        );
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -59,8 +55,10 @@ class Symfony3Custom_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff
             // In this case, the opening and closing brace must be
             // right next to each other.
             if ($tokens[$stackPtr]['scope_closer'] !== ($tokens[$stackPtr]['scope_opener'] + 1)) {
-                $error = 'The opening and closing braces of empty functions must be directly next to each other; e.g., function () {}';
+                $error = 'The opening and closing braces of empty functions'
+                    . 'must be directly next to each other; e.g., function () {}';
                 $fix   = $phpcsFile->addFixableError($error, $closeBrace, 'SpacingBetween');
+
                 if ($fix === true) {
                     $phpcsFile->fixer->beginChangeset();
                     for ($i = ($tokens[$stackPtr]['scope_opener'] + 1); $i < $closeBrace; $i++) {
@@ -81,6 +79,7 @@ class Symfony3Custom_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff
         if ($found < 0) {
             $error = 'Closing brace of nested function must be on a new line';
             $fix = $phpcsFile->addFixableError($error, $closeBrace, 'ContentBeforeClose');
+
             if ($fix === true) {
                 $phpcsFile->fixer->addNewlineBefore($closeBrace);
             }
@@ -110,12 +109,8 @@ class Symfony3Custom_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff
                     }
 
                     $phpcsFile->fixer->endChangeset();
-                }//end if
+                }
             }
-        }//end if
-
-
-    }//end process()
-
-
-}//end class
+        }
+    }
+}

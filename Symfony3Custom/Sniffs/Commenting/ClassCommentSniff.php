@@ -24,8 +24,7 @@ if (class_exists('PEAR_Sniffs_Commenting_ClassCommentSniff', true) === false) {
  *  <li>Check required and optional tags and the format of their content.</li>
  * </ul>
  */
-class Symfony3Custom_Sniffs_Commenting_ClassCommentSniff
-    extends PEAR_Sniffs_Commenting_ClassCommentSniff
+class Symfony3Custom_Sniffs_Commenting_ClassCommentSniff extends PEAR_Sniffs_Commenting_ClassCommentSniff
 {
     /**
      * Tags in correct order and related info.

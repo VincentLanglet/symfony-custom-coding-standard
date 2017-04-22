@@ -3,8 +3,7 @@
 /**
  * Throws warnings if a file contains trailing whitespace.
  */
-class Symfony3Custom_Sniffs_WhiteSpace_DiscourageFitzinatorSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_WhiteSpace_DiscourageFitzinatorSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of tokenizers this sniff supports.
@@ -12,11 +11,10 @@ class Symfony3Custom_Sniffs_WhiteSpace_DiscourageFitzinatorSniff
      * @var array
      */
     public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                   'CSS',
-                                  );
-
+        'PHP',
+        'JS',
+        'CSS',
+    );
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -26,7 +24,6 @@ class Symfony3Custom_Sniffs_WhiteSpace_DiscourageFitzinatorSniff
     public function register()
     {
         return array(T_WHITESPACE);
-
     }
 
     /**

@@ -5,8 +5,7 @@
  * Symfony coding standard specifies: "Add a blank line before return statements,
  * unless the return is alone inside a statement-group (like an if statement);"
  */
-class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of tokenizers this sniff supports.
@@ -39,9 +38,9 @@ class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens          = $phpcsFile->getTokens();
-        $current         = $stackPtr;
-        $previousLine    = $tokens[$stackPtr]['line'] - 1;
+        $tokens = $phpcsFile->getTokens();
+        $current = $stackPtr;
+        $previousLine = $tokens[$stackPtr]['line'] - 1;
         $prevLineTokens  = array();
 
         while ($current >= 0 && $tokens[$current]['line'] >= $previousLine) {
@@ -61,7 +60,7 @@ class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff
             || $prevLineTokens[0] === 'T_COLON')
         ) {
             return;
-        } else if (count($prevLineTokens) > 0) {
+        } elseif (count($prevLineTokens) > 0) {
             $fix = $phpcsFile->addFixableError(
                 'Missing blank line before return statement',
                 $stackPtr,
@@ -71,7 +70,7 @@ class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff
             if ($fix === true) {
                 $phpcsFile->fixer->beginChangeset();
                 $i = 1;
-                while($tokens[$stackPtr-$i]['type'] == "T_WHITESPACE") {
+                while ($tokens[$stackPtr-$i]['type'] == "T_WHITESPACE") {
                     $i++;
                 }
                 $phpcsFile->fixer->addNewLine($stackPtr-$i);

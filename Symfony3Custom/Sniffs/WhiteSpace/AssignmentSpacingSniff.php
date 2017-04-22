@@ -3,8 +3,7 @@
 /**
  * Throws warnings if an assignment operator isn't surrounded with whitespace.
  */
-class Symfony3Custom_Sniffs_WhiteSpace_AssignmentSpacingSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_WhiteSpace_AssignmentSpacingSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of tokenizers this sniff supports.
@@ -12,8 +11,8 @@ class Symfony3Custom_Sniffs_WhiteSpace_AssignmentSpacingSniff
      * @var array
      */
     public $supportedTokenizers = array(
-                                   'PHP',
-                                  );
+        'PHP',
+    );
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -23,7 +22,6 @@ class Symfony3Custom_Sniffs_WhiteSpace_AssignmentSpacingSniff
     public function register()
     {
         return PHP_CodeSniffer_Tokens::$assignmentTokens;
-
     }
 
     /**

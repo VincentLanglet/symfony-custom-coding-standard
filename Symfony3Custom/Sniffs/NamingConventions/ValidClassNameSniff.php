@@ -3,8 +3,7 @@
 /**
  * Throws errors if symfony's naming conventions are not met.
  */
-class Symfony3Custom_Sniffs_NamingConventions_ValidClassNameSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_NamingConventions_ValidClassNameSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of tokenizers this sniff supports.
@@ -26,7 +25,7 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidClassNameSniff
             T_INTERFACE,
             T_TRAIT,
             T_EXTENDS,
-            T_ABSTRACT
+            T_ABSTRACT,
         );
     }
 
@@ -41,11 +40,10 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidClassNameSniff
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens   = $phpcsFile->getTokens();
-        $line     = $tokens[$stackPtr]['line'];
+        $tokens = $phpcsFile->getTokens();
+        $line = $tokens[$stackPtr]['line'];
 
         while ($tokens[$stackPtr]['line'] == $line) {
-
             /*
              * Suffix interfaces with Interface;
              */
@@ -110,7 +108,7 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidClassNameSniff
                 $name = $phpcsFile->findNext(T_STRING, $stackPtr);
                 $function = $phpcsFile->findNext(T_FUNCTION, $stackPtr);
 
-                // making sure we're not dealing with an abstract function
+                // Making sure we're not dealing with an abstract function
                 if ($name && (false === $function || $name < $function)
                     && substr($tokens[$name]['content'], 0, 8) != 'Abstract'
                 ) {

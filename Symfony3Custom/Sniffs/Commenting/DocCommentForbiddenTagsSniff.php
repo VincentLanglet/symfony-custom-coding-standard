@@ -3,15 +3,17 @@
 /**
  * Throws errors if forbidden tags are met.
  */
-class Symfony3Custom_Sniffs_Commenting_DocCommentForbiddenTagsSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_Commenting_DocCommentForbiddenTagsSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of PHPDoc tags that are forbidden.
      *
      * @var array
      */
-    public $tags = array('@package', '@subpackage');
+    public $tags = array(
+        '@package',
+        '@subpackage',
+    );
 
     /**
      * A list of tokenizers this sniff supports.

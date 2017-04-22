@@ -3,8 +3,7 @@
 /**
  * Throws warnings if properties are declared after methods
  */
-class Symfony3Custom_Sniffs_Classes_PropertyDeclarationSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_Classes_PropertyDeclarationSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of tokenizers this sniff supports.
@@ -54,7 +53,7 @@ class Symfony3Custom_Sniffs_Classes_PropertyDeclarationSniff
         $wantedTokens = array(
             T_PUBLIC,
             T_PROTECTED,
-            T_PRIVATE
+            T_PRIVATE,
         );
 
         while ($scope) {
@@ -73,5 +72,4 @@ class Symfony3Custom_Sniffs_Classes_PropertyDeclarationSniff
             }
         }
     }
-
 }

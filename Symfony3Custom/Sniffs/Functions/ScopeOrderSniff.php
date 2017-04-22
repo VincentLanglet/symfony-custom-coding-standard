@@ -3,10 +3,8 @@
 /**
  * Throws warnings if properties are declared after methods
  */
-class Symfony3Custom_Sniffs_Functions_ScopeOrderSniff
-    implements PHP_CodeSniffer_Sniff
+class Symfony3Custom_Sniffs_Functions_ScopeOrderSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
      * A list of tokenizers this sniff supports.
      *
@@ -83,11 +81,11 @@ class Symfony3Custom_Sniffs_Functions_ScopeOrderSniff
                         $whitelisted
                     )
                 ) {
-                    $current = array_keys($scopes,  $tokens[$scope]['code']);
+                    $current = array_keys($scopes, $tokens[$scope]['code']);
                     $current = $current[0];
 
                     $error = 'Declare public methods first,'
-                    .'then protected ones and finally private ones';
+                    . 'then protected ones and finally private ones';
 
                     if (isset($previous) && $current < $previous) {
                         $phpcsFile->addError(
@@ -102,5 +100,4 @@ class Symfony3Custom_Sniffs_Functions_ScopeOrderSniff
             }
         }
     }
-
 }
