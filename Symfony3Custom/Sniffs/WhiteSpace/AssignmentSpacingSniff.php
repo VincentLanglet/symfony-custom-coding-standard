@@ -43,11 +43,20 @@ class Symfony3Custom_Sniffs_WhiteSpace_AssignmentSpacingSniff
                 || $tokens[$stackPtr + 1]['code'] !== T_WHITESPACE)
             && $tokens[$stackPtr - 1]['content'] !== 'strict_types'
         ) {
-            $phpcsFile->addError(
+            $fix = $phpcsFile->addFixableError(
                 'Add a single space around assignment operators',
                 $stackPtr,
                 'Invalid'
             );
+
+            if ($fix === true) {
+                if ($tokens[$stackPtr -1]['code'] !== T_WHITESPACE) {
+                    $phpcsFile->fixer->addContentBefore($stackPtr, ' ');
+                }
+                if ($tokens[$stackPtr +1]['code'] !== T_WHITESPACE) {
+                    $phpcsFile->fixer->addContent($stackPtr, ' ');
+                }
+            }
         }
     }
 }
