@@ -13,6 +13,9 @@ $arr = array(
         'bar'
 );
 
+$arr = array(
+);
+
 // short array syntax
 $arr = ['foo', 'bar'];
 
@@ -24,6 +27,9 @@ $arr = [
 $arr = [
         'foo'
         'bar'
+];
+
+$arr = [
 ];
 
 // classic array syntax with comments
@@ -49,6 +55,10 @@ $arr = array(
         'bar' /* baz */
 );
 
+$arr = array(
+    // foo => bar
+);
+
 // short array syntax with comments
 $arr = ['foo', 'bar' /* baz */];
 
@@ -70,4 +80,8 @@ $arr = [
 $arr = [
         'foo'
         'bar' /* baz */
+];
+
+$arr = [
+    // foo => bar
 ];
