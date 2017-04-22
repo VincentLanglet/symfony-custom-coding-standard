@@ -19,7 +19,13 @@
             "email": "vincentl@theodo.fr"
         }
     ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
     "require": {
-        "squizlabs/php_codesniffer": "dev-master"
+        "squizlabs/php_codesniffer": "2.x-dev"
     }
 }
