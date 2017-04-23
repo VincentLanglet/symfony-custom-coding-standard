@@ -28,31 +28,34 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        if (false === $commentEnd = $phpcsFile->findPrevious(
-            array(
-                T_COMMENT,
-                T_DOC_COMMENT,
-                T_CLASS,
-                T_FUNCTION,
-                T_OPEN_TAG,
-            ),
-            ($stackPtr - 1)
-        )
-        ) {
-            return;
+        $tokens = $phpcsFile->getTokens();
+        $find   = PHP_CodeSniffer_Tokens::$methodPrefixes;
+        $find[] = T_WHITESPACE;
+
+        $commentEnd = $phpcsFile->findPrevious($find, ($stackPtr - 1), null, true);
+        if ($tokens[$commentEnd]['code'] === T_COMMENT) {
+            // Inline comments might just be closing comments for
+            // control structures or functions instead of function comments
+            // using the wrong comment type. If there is other code on the line,
+            // assume they relate to that code.
+            $prev = $phpcsFile->findPrevious($find, ($commentEnd - 1), null, true);
+            if ($prev !== false && $tokens[$prev]['line'] === $tokens[$commentEnd]['line']) {
+                $commentEnd = $prev;
+            }
         }
 
-        $tokens = $phpcsFile->getTokens();
-        $code = $tokens[$commentEnd]['code'];
-
-        $name = $phpcsFile->getDeclarationName($stackPtr);
-
-        $commentRequired = strpos($name, 'test') !== 0 && $name !== 'setUp' && $name !== 'tearDown';
-
-        if (($code === T_COMMENT && !$commentRequired)
-            || ($code !== T_DOC_COMMENT && !$commentRequired)
+        if ($tokens[$commentEnd]['code'] !== T_DOC_COMMENT_CLOSE_TAG
+            && $tokens[$commentEnd]['code'] !== T_COMMENT
         ) {
-            return;
+            $name = $phpcsFile->getDeclarationName($stackPtr);
+
+            $commentRequired = strpos($name, 'test') !== 0
+                && $name !== 'setUp'
+                && $name !== 'tearDown';
+
+            if (! $commentRequired) {
+                return;
+            }
         }
 
         parent::process($phpcsFile, $stackPtr);

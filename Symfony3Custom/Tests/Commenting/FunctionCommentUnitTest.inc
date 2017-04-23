@@ -72,3 +72,16 @@ function functionTestInherit($test)
 {
     return 42;
 }
+
+function testToIgnore($test)
+{
+    return 42;
+}
+
+/**
+ * @param string $test should not be ignore
+ */
+function testToNotIgnore($test)
+{
+    return 42;
+}
