@@ -22,12 +22,13 @@ class Symfony3Custom_Tests_Commenting_DocCommentGroupSameTypeUnitTest extends Ab
             5 => 1,
             7 => 1,
             8 => 1,
-            11 => 1,
+            9 => 1,
             12 => 1,
             13 => 1,
-            18 => 1,
-            27 => 1,
-            31 => 1,
+            14 => 1,
+            19 => 1,
+            28 => 1,
+            32 => 1,
         );
     }
 

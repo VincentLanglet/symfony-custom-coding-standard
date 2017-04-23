@@ -5,6 +5,7 @@
  * @see http://doc.example.com/
  *
  * @see SomeClass::someMethod()
+ * @Route()
  * @param string $a
  *
  *

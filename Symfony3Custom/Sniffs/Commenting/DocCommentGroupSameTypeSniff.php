@@ -31,6 +31,7 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
         $previousType = '';
         foreach ($tokens[$stackPtr]['comment_tags'] as $commentTag) {
             $currentType = $tokens[$commentTag]['content'];
+            $commentTagLine = $tokens[$commentTag]['line'];
 
             $previousString = $phpcsFile->findPrevious(
                 T_DOC_COMMENT_STRING,
@@ -40,10 +41,15 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
 
             if (false !== $previousString) {
                 $previousStringLine = $tokens[$previousString]['line'];
-                $commentTagLine = $tokens[$commentTag]['line'];
+
+                if (isset($previousTagLine)) {
+                    $previousLine = max($previousStringLine, $previousTagLine);
+                } else {
+                    $previousLine = $previousStringLine;
+                }
 
                 if ($previousType === $currentType) {
-                    if ($previousStringLine !== $commentTagLine - 1) {
+                    if ($previousLine !== $commentTagLine - 1) {
                         $fix = $phpcsFile->addFixableError(
                             'Expected no empty lines '
                             . 'between annotations of the same type',
@@ -56,14 +62,14 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                             $this->removeLines(
                                 $phpcsFile,
                                 $previousString,
-                                $previousStringLine + 1,
+                                $previousLine + 1,
                                 $commentTagLine - 1
                             );
                             $phpcsFile->fixer->endChangeset();
                         }
                     }
                 } else {
-                    if ($previousStringLine !== $commentTagLine - 2) {
+                    if ($previousLine !== $commentTagLine - 2) {
                         $fix = $phpcsFile->addFixableError(
                             'Expected exactly one empty line '
                             . 'between annotations of different types',
@@ -73,7 +79,8 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
 
                         if ($fix === true) {
                             $phpcsFile->fixer->beginChangeset();
-                            if ($previousStringLine === $commentTagLine - 1) {
+
+                            if ($previousLine === $commentTagLine - 1) {
                                 $firstOnLine = $phpcsFile->findFirstOnLine(
                                     array(),
                                     $commentTag,
@@ -95,7 +102,7 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                                 $this->removeLines(
                                     $phpcsFile,
                                     $previousString,
-                                    $previousStringLine + 2,
+                                    $previousLine + 2,
                                     $commentTagLine - 1
                                 );
                             }
@@ -106,6 +113,7 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
             }
 
             $previousType = $currentType;
+            $previousTagLine = $commentTagLine;
         }
     }
 
