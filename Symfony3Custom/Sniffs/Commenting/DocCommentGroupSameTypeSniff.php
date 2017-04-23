@@ -87,7 +87,8 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                 $previousLine = max($previousStringLine, $previousTagLine);
 
                 $currentIsCustom = ! in_array($currentType, $this->tags);
-                $previousIsCustom = ! in_array($previousType, $this->tags);
+                $previousIsCustom = ($previousType !== '')
+                    && ! in_array($previousType, $this->tags);
 
                 if (($previousType === $currentType)
                     || ($currentIsCustom && $previousIsCustom)
