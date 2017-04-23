@@ -44,21 +44,68 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             }
         }
 
+        $name = $phpcsFile->getDeclarationName($stackPtr);
+        $commentRequired = strpos($name, 'test') !== 0
+            && $name !== 'setUp'
+            && $name !== 'tearDown';
+
         if ($tokens[$commentEnd]['code'] !== T_DOC_COMMENT_CLOSE_TAG
             && $tokens[$commentEnd]['code'] !== T_COMMENT
         ) {
-            $name = $phpcsFile->getDeclarationName($stackPtr);
+            $hasComment = false;
+            $phpcsFile->recordMetric($stackPtr, 'Function has doc comment', 'no');
 
-            $commentRequired = strpos($name, 'test') !== 0
-                && $name !== 'setUp'
-                && $name !== 'tearDown';
-
-            if (! $commentRequired) {
+            if ($commentRequired) {
+                $phpcsFile->addError('Missing function doc comment', $stackPtr, 'Missing');
                 return;
+            } else {
+                // The comment may not be required, we'll see in next checks
+            }
+        } else {
+            $hasComment = true;
+            $phpcsFile->recordMetric($stackPtr, 'Function has doc comment', 'yes');
+        }
+
+        $commentStart = null;
+        if ($hasComment) {
+            if ($tokens[$commentEnd]['code'] === T_COMMENT) {
+                $phpcsFile->addError('You must use "/**" style comments for a function comment', $stackPtr, 'WrongStyle');
+
+                return;
+            }
+
+            if ($tokens[$commentEnd]['line'] !== ($tokens[$stackPtr]['line'] - 1)) {
+                $error = 'There must be no blank lines after the function comment';
+                $phpcsFile->addError($error, $commentEnd, 'SpacingAfter');
+            }
+
+            $commentStart = $tokens[$commentEnd]['comment_opener'];
+            foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
+                if ($tokens[$tag]['content'] === '@see') {
+                    // Make sure the tag isn't empty.
+                    $string = $phpcsFile->findNext(T_DOC_COMMENT_STRING, $tag, $commentEnd);
+                    if ($string === false || $tokens[$string]['line'] !== $tokens[$tag]['line']) {
+                        $error = 'Content missing for @see tag in function comment';
+                        $phpcsFile->addError($error, $tag, 'EmptySees');
+                    }
+                }
             }
         }
 
-        parent::process($phpcsFile, $stackPtr);
+        $this->processReturn($phpcsFile, $stackPtr, $commentStart);
+
+        $realParams = $phpcsFile->getMethodParameters($stackPtr);
+        if ($hasComment) {
+            // These checks need function comment
+            $this->processParams($phpcsFile, $stackPtr, $commentStart);
+            $this->processThrows($phpcsFile, $stackPtr, $commentStart);
+        } elseif (count($realParams) > 0) {
+            foreach ($realParams as $neededParam) {
+                $error = 'Doc comment for parameter "%s" missing';
+                $data  = array($neededParam['name']);
+                $phpcsFile->addError($error, $stackPtr, 'MissingParamTag', $data);
+            }
+        }
     }
 
     /**
@@ -67,7 +114,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
      * @param PHP_CodeSniffer_File $phpcsFile    The file being scanned.
      * @param int                  $stackPtr     The position of the current token
      *                                           in the stack passed in $tokens.
-     * @param int                  $commentStart The position in the stack
+     * @param int|null             $commentStart The position in the stack
      *                                           where the comment started.
      *
      * @return void
@@ -77,8 +124,10 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
         $stackPtr,
         $commentStart
     ) {
-
-        if ($this->isInheritDoc($phpcsFile, $stackPtr)) {
+        // Check for inheritDoc if there is comment
+        if ((null !== $commentStart)
+            && $this->isInheritDoc($phpcsFile, $stackPtr)
+        ) {
             return;
         }
 
@@ -105,7 +154,15 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                 if ($tokens[$i]['code'] === T_RETURN
                     && $this->isMatchingReturn($tokens, $i)
                 ) {
-                    parent::processReturn($phpcsFile, $stackPtr, $commentStart);
+                    if (null !== $commentStart) {
+                        parent::processReturn($phpcsFile, $stackPtr, $commentStart);
+                    } else {
+                        // There is no doc and we need one with @return
+                        $error = 'Missing @return tag in function comment';
+                        $phpcsFile->addError($error, $stackPtr, 'MissingReturn');
+
+                    }
+
                     break;
                 }
             }
