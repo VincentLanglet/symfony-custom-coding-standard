@@ -5,7 +5,8 @@
  * @see http://doc.example.com/
  *
  * @see SomeClass::someMethod()
- * @Route()
+ * @Route("/{id}/", name="test")
+ * @Security()
  * @param string $a
  *
  *
