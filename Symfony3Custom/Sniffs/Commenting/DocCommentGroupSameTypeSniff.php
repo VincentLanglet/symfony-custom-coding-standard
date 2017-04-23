@@ -6,6 +6,42 @@
 class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements PHP_CodeSniffer_Sniff
 {
     /**
+     * A list of PHPDoc tags that are checked.
+     *
+     * @var array
+     */
+    public $tags = array(
+        '@api',
+        '@author',
+        '@category',
+        '@copyright',
+        '@deprecated',
+        '@example',
+        '@filesource',
+        '@global',
+        '@ignore',
+        '@internal',
+        '@license',
+        '@link',
+        '@method',
+        '@package',
+        '@param',
+        '@property',
+        '@property-read',
+        '@property-write',
+        '@return',
+        '@see',
+        '@since',
+        '@source',
+        '@subpackage',
+        '@throws',
+        '@todo',
+        '@uses',
+        '@var',
+        '@version',
+    );
+
+    /**
      * A list of tokenizers this sniff supports.
      *
      * @return array
@@ -39,23 +75,40 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                 $stackPtr
             );
 
+            $previousTag = $phpcsFile->findPrevious(
+                T_DOC_COMMENT_TAG,
+                $commentTag - 1,
+                $stackPtr
+            );
+
             if (false !== $previousString) {
                 $previousStringLine = $tokens[$previousString]['line'];
+                $previousTagLine = $tokens[$previousTag]['line'];
+                $previousLine = max($previousStringLine, $previousTagLine);
 
-                if (isset($previousTagLine)) {
-                    $previousLine = max($previousStringLine, $previousTagLine);
-                } else {
-                    $previousLine = $previousStringLine;
-                }
+                $currentIsCustom = ! in_array($currentType, $this->tags);
+                $previousIsCustom = ! in_array($previousType, $this->tags);
 
-                if ($previousType === $currentType) {
+                if (($previousType === $currentType)
+                    || ($currentIsCustom && $previousIsCustom)
+                ) {
                     if ($previousLine !== $commentTagLine - 1) {
-                        $fix = $phpcsFile->addFixableError(
-                            'Expected no empty lines '
-                            . 'between annotations of the same type',
-                            $commentTag,
-                            'SameType'
-                        );
+
+                        if ($previousType === $currentType) {
+                            $fix = $phpcsFile->addFixableError(
+                                'Expected no empty lines '
+                                . 'between annotations of the same type',
+                                $commentTag,
+                                'SameType'
+                            );
+                        } else {
+                            $fix = $phpcsFile->addFixableError(
+                                'Expected no empty lines '
+                                . 'between custom annotations',
+                                $commentTag,
+                                'CustomType'
+                            );
+                        }
 
                         if ($fix === true) {
                             $phpcsFile->fixer->beginChangeset();
@@ -113,7 +166,6 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
             }
 
             $previousType = $currentType;
-            $previousTagLine = $commentTagLine;
         }
     }
 
