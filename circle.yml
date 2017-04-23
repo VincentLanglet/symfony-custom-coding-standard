@@ -4,9 +4,10 @@ machine:
   php:
     version: 7.1.0
 
-test:
+dependencies:
   pre:
     - composer global require "phpunit/phpunit=5.7.*"
 
+test:
   override:
     - ant test
