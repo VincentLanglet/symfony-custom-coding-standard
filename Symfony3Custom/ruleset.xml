@@ -13,45 +13,9 @@
         <!-- Include the whole PSR-2 (so PSR-1) standard -->
         <rule ref="PSR2"/>
 
-    <!-- ************** -->
-    <!-- ***  ZEND  *** -->
-    <!-- ************** -->
-
-        <!-- Import Zend coding standard (which in turn imports PEAR) -->
-        <rule ref="Zend">
-            <!-- Exclude their code analyzer -->
-            <exclude name="Zend.Debug.CodeAnalyzer"/>
-
-            <!-- Covered by Squiz ControlSignature -->
-            <exclude name="PEAR.ControlStructures.ControlSignature"/>
-
-            <!-- Covered by PSR2 FunctionCallSignature -->
-            <exclude name="PEAR.Functions.FunctionCallSignature"/>
-
-            <!-- Covered by Squiz FunctionDeclaration imported by PSR2 -->
-            <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine"/>
-        </rule>
-
-        <!-- Don't enforce Zend's private member underscores -->
-        <rule ref="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore">
-            <severity>0</severity>
-        </rule>
-
-        <!-- Ignore variables that contains numbers -->
-        <rule ref="Zend.NamingConventions.ValidVariableName.ContainsNumbers">
-            <severity>0</severity>
-        </rule>
-
     <!-- ****************** -->
     <!-- ***  OVERRIDE  *** -->
     <!-- ****************** -->
-
-        <!-- Override LineLength to avoid 80 character warning -->
-        <rule ref="Generic.Files.LineLength">
-            <properties>
-                <property name="lineLimit" value="120"/>
-            </properties>
-        </rule>
 
         <!-- Override SuperfluousWhitespace to not ignore blank lines -->
         <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
@@ -60,6 +24,22 @@
             </properties>
         </rule>
         <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines" />
+
+    <!-- ************** -->
+    <!-- ***  ZEND  *** -->
+    <!-- ************** -->
+
+        <!-- Complete with some of ZEND standard -->
+        <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman">
+            <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine"/>
+        </rule>
+        <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+        <rule ref="PEAR.Classes.ClassDeclaration"/>
+        <rule ref="Squiz.Functions.GlobalFunction"/>
+        <rule ref="Squiz.NamingConventions.ValidVariableName">
+            <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+            <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
+        </rule>
 
     <!-- **************** -->
     <!-- ***  OTHERS  *** -->

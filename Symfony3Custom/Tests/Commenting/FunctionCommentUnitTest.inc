@@ -73,7 +73,7 @@ function functionTestInherit($test)
     return 42;
 }
 
-function testToIgnore($test)
+function testToNotIgnore1($test)
 {
     return 42;
 }
@@ -81,7 +81,16 @@ function testToIgnore($test)
 /**
  * @param string $test should not be ignore
  */
-function testToNotIgnore($test)
+function testToNotIgnore2($test)
 {
     return 42;
+}
+
+function testToIgnore1()
+{
+    $test = 42;
+}
+function testToIgnore2()
+{
+    $test = 42;
 }

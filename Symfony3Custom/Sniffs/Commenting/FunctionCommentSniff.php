@@ -57,6 +57,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
 
             if ($commentRequired) {
                 $phpcsFile->addError('Missing function doc comment', $stackPtr, 'Missing');
+
                 return;
             } else {
                 // The comment may not be required, we'll see in next checks
@@ -69,7 +70,11 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
         $commentStart = null;
         if ($hasComment) {
             if ($tokens[$commentEnd]['code'] === T_COMMENT) {
-                $phpcsFile->addError('You must use "/**" style comments for a function comment', $stackPtr, 'WrongStyle');
+                $phpcsFile->addError(
+                    'You must use "/**" style comments for a function comment',
+                    $stackPtr,
+                    'WrongStyle'
+                );
 
                 return;
             }
@@ -99,11 +104,15 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             // These checks need function comment
             $this->processParams($phpcsFile, $stackPtr, $commentStart);
             $this->processThrows($phpcsFile, $stackPtr, $commentStart);
-        } elseif (count($realParams) > 0) {
-            foreach ($realParams as $neededParam) {
-                $error = 'Doc comment for parameter "%s" missing';
-                $data  = array($neededParam['name']);
-                $phpcsFile->addError($error, $stackPtr, 'MissingParamTag', $data);
+        } else {
+            $this->processWhitespace($phpcsFile, $stackPtr, $stackPtr);
+
+            if (count($realParams) > 0) {
+                foreach ($realParams as $neededParam) {
+                    $error = 'Doc comment for parameter "%s" missing';
+                    $data  = array($neededParam['name']);
+                    $phpcsFile->addError($error, $stackPtr, 'MissingParamTag', $data);
+                }
             }
         }
     }
@@ -188,14 +197,22 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
         $found = $startLine - $prevLine - 1;
 
         // Skip for class opening
-        if ($found !== 1 && !($found === 0 && $tokens[$before]['type'] === 'T_OPEN_CURLY_BRACKET')) {
+        if ($found < 1 && !($found === 0 && $tokens[$before]['type'] === 'T_OPEN_CURLY_BRACKET')) {
             if ($found < 0) {
                 $found = 0;
             }
 
-            $error = 'Expected 1 blank line before docblock; %s found';
+            if ($stackPtr === $commentStart) {
+                // There is no docblock
+                $error = 'Expected 1 blank line before function; %s found';
+                $rule = 'SpacingBeforeFunction';
+            } else {
+                $error = 'Expected 1 blank line before docblock; %s found';
+                $rule = 'SpacingBeforeDocblock';
+            }
+
             $data = array($found);
-            $fix = $phpcsFile->addFixableError($error, $commentStart, 'SpacingBeforeDocblock', $data);
+            $fix = $phpcsFile->addFixableError($error, $commentStart, $rule, $data);
 
             if ($fix === true) {
                 if ($found > 1) {
@@ -229,8 +246,6 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
      */
     protected function isInheritDoc(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
-
         $start = $phpcsFile->findPrevious(T_DOC_COMMENT_OPEN_TAG, $stackPtr - 1);
         $end = $phpcsFile->findNext(T_DOC_COMMENT_CLOSE_TAG, $start);
 
@@ -255,8 +270,6 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
         $stackPtr,
         $commentStart
     ) {
-        $tokens = $phpcsFile->getTokens();
-
         if ($this->isInheritDoc($phpcsFile, $stackPtr)) {
             return;
         }

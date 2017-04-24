@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Unit test class for the MultipleClassesOneFile sniff.
+ * Unit test class for the OpenBracketSpacing sniff.
  *
  * A sniff unit test checks a .inc file for expected violations of a single
  * coding standard. Expected errors and warnings are stored in this class.
  */
-class Symfony3Custom_Tests_Classes_MultipleClassesOneFileUnitTest extends AbstractSniffUnitTest
+class Symfony3Custom_Tests_WhiteSpace_OpenBracketSpacingUnitTest extends AbstractSniffUnitTest
 {
     /**
      * Returns the lines where errors should occur.
@@ -19,7 +19,9 @@ class Symfony3Custom_Tests_Classes_MultipleClassesOneFileUnitTest extends Abstra
     public function getErrorList()
     {
         return array(
-            7  => 1,
+            3 => 1,
+            5 => 2,
+            7 => 1,
         );
     }
 
@@ -27,11 +29,11 @@ class Symfony3Custom_Tests_Classes_MultipleClassesOneFileUnitTest extends Abstra
      * Returns the lines where warnings should occur.
      *
      * The key of the array should represent the line number and the value
-     * should represent the number of errors that should occur on that line.
+     * should represent the number of warnings that should occur on that line.
      *
      * @return array(int => int)
      */
-    public function getWarningList()
+    protected function getWarningList()
     {
         return array();
     }

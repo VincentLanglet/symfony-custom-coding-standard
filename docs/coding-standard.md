@@ -1,17 +1,22 @@
 # Coding Standard Rules
-## General
-We added
-- `PSR1` and `PSR2` rules
+## From PSR2
 
-- All `Zend` rules except:
+@TODO
+
+## From Zend
+
+@TODO
 
 ```
-<rule ref="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore">
-    <severity>0</severity>
+<rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman">
+    <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine"/>
 </rule>
-
-<rule ref="Zend.NamingConventions.ValidVariableName.ContainsNumbers">
-    <severity>0</severity>
+<rule ref="Generic.PHP.DisallowShortOpenTag"/>
+<rule ref="PEAR.Classes.ClassDeclaration"/>
+<rule ref="Squiz.Functions.GlobalFunction"/>
+<rule ref="Squiz.NamingConventions.ValidVariableName">
+    <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+    <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
 </rule>
 ```
 
@@ -73,9 +78,7 @@ Covered by `PSR2`
 
 - Define one class per file
 
-```
-<rule ref="Symfony3Custom.Classes.MultipleClassesOneFile" />
-```
+Covered by `PSR2`
 
 - Declare the class inheritance and all the implemented interfaces on the same line as the class name
 
@@ -189,4 +192,56 @@ We added exceptions for param comments
 
 ```
 <rule ref="Symfony3Custom.Commenting.DocCommentForbiddenTags" />
+```
+
+## Others
+
+- Add a single space after type casting
+
+```
+<rule ref="Generic.Formatting.SpaceAfterCast"/>
+```
+
+- Add a single space around assignement operator
+
+```
+<rule ref="Symfony3Custom.WhiteSpace.AssignementSpacing"/>
+```
+
+- Do not use spaces after `(` or `{` or before `)` or `}`
+
+```
+<rule ref="Symfony3Custom.WhiteSpace.CloseBracketSpacing"/>
+<rule ref="Symfony3Custom.WhiteSpace.OpenBracketSpacing"/>
+```
+
+- Do not use multiple following blank lines
+
+```
+<rule ref="Symfony3Custom.WhiteSpace.EmptyLines"/>
+```
+
+- Do not call functions with variables passed by reference
+
+```
+<rule ref="Generic.Functions.CallTimePassByReference"/>
+```
+
+- Use lowercase for PHP functions
+
+```
+<rule ref="Squiz.PHP.LowercasePHPFunctions"/>
+```
+
+- Variable and methods have scope modifier
+
+```
+<rule ref="Squiz.Scope.MemberVarScope"/>
+<rule ref="Symfony3Custom.Scope.MethodScope"/>
+```
+
+- No perl-style comments are used
+
+```
+<rule ref="PEAR.Commenting.InlineComment"/>
 ```

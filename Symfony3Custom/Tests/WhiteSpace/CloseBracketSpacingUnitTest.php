@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Unit test class for the FunctionComment sniff.
+ * Unit test class for the CloseBracketSpacing sniff.
  *
  * A sniff unit test checks a .inc file for expected violations of a single
  * coding standard. Expected errors and warnings are stored in this class.
  */
-class Symfony3Custom_Tests_Commenting_FunctionCommentUnitTest extends AbstractSniffUnitTest
+class Symfony3Custom_Tests_WhiteSpace_CloseBracketSpacingUnitTest extends AbstractSniffUnitTest
 {
     /**
      * Returns the lines where errors should occur.
@@ -19,13 +19,9 @@ class Symfony3Custom_Tests_Commenting_FunctionCommentUnitTest extends AbstractSn
     public function getErrorList()
     {
         return array(
-            5 => 1,
-            10 => 2,
-            43 => 1,
-            48 => 2,
-            76 => 2,
-            83 => 1,
-            93 => 1,
+            3 => 1,
+            5 => 2,
+            7 => 1,
         );
     }
 
