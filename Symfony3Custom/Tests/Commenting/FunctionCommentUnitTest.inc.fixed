@@ -86,7 +86,12 @@ function testToNotIgnore2($test)
     return 42;
 }
 
-function testToIgnore()
+function testToIgnore1()
 {
-    $test = 2;
+    $test = 42;
+}
+
+function testToIgnore2()
+{
+    $test = 42;
 }

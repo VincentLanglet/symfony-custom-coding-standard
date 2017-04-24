@@ -27,6 +27,7 @@ class Symfony3Custom_Tests_Commenting_FunctionCommentUnitTest extends AbstractSn
             57 => 1,
             76 => 2,
             83 => 1,
+            93 => 1,
         );
     }
 

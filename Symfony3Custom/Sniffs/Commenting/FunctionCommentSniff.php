@@ -99,11 +99,15 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             // These checks need function comment
             $this->processParams($phpcsFile, $stackPtr, $commentStart);
             $this->processThrows($phpcsFile, $stackPtr, $commentStart);
-        } elseif (count($realParams) > 0) {
-            foreach ($realParams as $neededParam) {
-                $error = 'Doc comment for parameter "%s" missing';
-                $data  = array($neededParam['name']);
-                $phpcsFile->addError($error, $stackPtr, 'MissingParamTag', $data);
+        } else {
+            $this->processWhitespace($phpcsFile, $stackPtr, $stackPtr);
+
+            if (count($realParams) > 0) {
+                foreach ($realParams as $neededParam) {
+                    $error = 'Doc comment for parameter "%s" missing';
+                    $data  = array($neededParam['name']);
+                    $phpcsFile->addError($error, $stackPtr, 'MissingParamTag', $data);
+                }
             }
         }
     }
@@ -193,9 +197,17 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                 $found = 0;
             }
 
-            $error = 'Expected 1 blank line before docblock; %s found';
+            if ($stackPtr === $commentStart) {
+                // There is no docblock
+                $error = 'Expected 1 blank line before function; %s found';
+                $rule = 'SpacingBeforeFunction';
+            } else {
+                $error = 'Expected 1 blank line before docblock; %s found';
+                $rule = 'SpacingBeforeDocblock';
+            }
+
             $data = array($found);
-            $fix = $phpcsFile->addFixableError($error, $commentStart, 'SpacingBeforeDocblock', $data);
+            $fix = $phpcsFile->addFixableError($error, $commentStart, $rule, $data);
 
             if ($fix === true) {
                 if ($found > 1) {
