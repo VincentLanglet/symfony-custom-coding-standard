@@ -67,7 +67,6 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             $phpcsFile->recordMetric($stackPtr, 'Function has doc comment', 'yes');
         }
 
-        $commentStart = null;
         if ($hasComment) {
             if ($tokens[$commentEnd]['code'] === T_COMMENT) {
                 $phpcsFile->addError(
@@ -95,9 +94,22 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                     }
                 }
             }
+        } else {
+            // No comment but maybe a method prefix
+            $methodPrefixes = $phpcsFile->findFirstOnLine(
+                PHP_CodeSniffer_Tokens::$methodPrefixes,
+                $stackPtr
+            );
+
+            if ($methodPrefixes !== false) {
+                $commentStart = $methodPrefixes;
+            } else {
+                // No comment and no method prefix
+                $commentStart = $stackPtr;
+            }
         }
 
-        $this->processReturn($phpcsFile, $stackPtr, $commentStart);
+        $this->processReturn($phpcsFile, $stackPtr, $commentStart, $hasComment);
 
         $realParams = $phpcsFile->getMethodParameters($stackPtr);
         if ($hasComment) {
@@ -105,7 +117,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             $this->processParams($phpcsFile, $stackPtr, $commentStart);
             $this->processThrows($phpcsFile, $stackPtr, $commentStart);
         } else {
-            $this->processWhitespace($phpcsFile, $stackPtr, $stackPtr);
+            $this->processWhitespace($phpcsFile, $commentStart, $hasComment);
 
             if (count($realParams) > 0) {
                 foreach ($realParams as $neededParam) {
@@ -120,23 +132,23 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
     /**
      * Process the return comment of this function comment.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile    The file being scanned.
-     * @param int                  $stackPtr     The position of the current token
-     *                                           in the stack passed in $tokens.
-     * @param int|null             $commentStart The position in the stack
-     *                                           where the comment started.
+     * @param PHP_CodeSniffer_File $phpcsFile      The file being scanned.
+     * @param int                  $stackPtr       The position of the current token
+     *                                             in the stack passed in $tokens.
+     * @param int|null             $commentStart   The position in the stack
+     *                                             where the comment started.
+     * @param bool                 $hasRealComment
      *
      * @return void
      */
     protected function processReturn(
         PHP_CodeSniffer_File $phpcsFile,
         $stackPtr,
-        $commentStart
+        $commentStart,
+        $hasRealComment = true
     ) {
         // Check for inheritDoc if there is comment
-        if ((null !== $commentStart)
-            && $this->isInheritDoc($phpcsFile, $stackPtr)
-        ) {
+        if ($hasRealComment && $this->isInheritDoc($phpcsFile, $stackPtr)) {
             return;
         }
 
@@ -163,7 +175,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                 if ($tokens[$i]['code'] === T_RETURN
                     && $this->isMatchingReturn($tokens, $i)
                 ) {
-                    if (null !== $commentStart) {
+                    if ($hasRealComment) {
                         parent::processReturn($phpcsFile, $stackPtr, $commentStart);
                     } else {
                         // There is no doc and we need one with @return
@@ -180,13 +192,13 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
 
     /**
      * @param PHP_CodeSniffer_File $phpcsFile
-     * @param int                  $stackPtr
      * @param int                  $commentStart
+     * @param bool                 $hasRealComment
      */
     protected function processWhitespace(
         PHP_CodeSniffer_File $phpcsFile,
-        $stackPtr,
-        $commentStart
+        $commentStart,
+        $hasRealComment = true
     ) {
         $tokens = $phpcsFile->getTokens();
         $before = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
@@ -202,13 +214,12 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                 $found = 0;
             }
 
-            if ($stackPtr === $commentStart) {
-                // There is no docblock
-                $error = 'Expected 1 blank line before function; %s found';
-                $rule = 'SpacingBeforeFunction';
-            } else {
+            if ($hasRealComment) {
                 $error = 'Expected 1 blank line before docblock; %s found';
                 $rule = 'SpacingBeforeDocblock';
+            } else {
+                $error = 'Expected 1 blank line before function; %s found';
+                $rule = 'SpacingBeforeFunction';
             }
 
             $data = array($found);
@@ -274,7 +285,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             return;
         }
 
-        $this->processWhitespace($phpcsFile, $stackPtr, $commentStart);
+        $this->processWhitespace($phpcsFile, $commentStart);
 
         parent::processParams($phpcsFile, $stackPtr, $commentStart);
     }
