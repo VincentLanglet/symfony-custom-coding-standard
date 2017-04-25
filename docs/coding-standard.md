@@ -1,12 +1,20 @@
 # Coding Standard Rules
 ## From PSR2
 
-@TODO
+We imported the [PSR2 Standard](./psr2.md) with this override:
+
+- There MUST NOT be trailing whitespace at the end of blank lines
+```
+<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+    <properties>
+        <property name="ignoreBlankLines" value="false"/>
+    </properties>
+</rule>
+```
 
 ## From Zend
 
-@TODO
-
+We imported these rules, used in the Zend standard:
 ```
 <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman">
     <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine"/>
