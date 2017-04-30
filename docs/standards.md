@@ -71,16 +71,12 @@ We mainly respect the [Symfony Standard](./symfony.md) but
 <rule ref="PEAR.Commenting.InlineComment"/>
 ```
 
-- Use same name for a file and the class inside
-
-```
-<rule ref="Squiz.Classes.ClassFileName"/>
-```
-
 - Use single quotes instead of double quotes
 
 ```
-<rule ref="Squiz.Strings.DoubleQuoteUsage"/>
+<rule ref="Squiz.Strings.DoubleQuoteUsage">
+    <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
+</rule>
 ```
 
 - Do not skip blank line after function opening brace

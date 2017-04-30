@@ -59,8 +59,9 @@
         </rule>
 
         <!-- Added by VincentLanglet repo -->
-        <rule ref="Squiz.Classes.ClassFileName"/>
-        <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
+        <rule ref="Squiz.Strings.DoubleQuoteUsage">
+            <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
+        </rule>
         <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
         <rule ref="Squiz.WhiteSpace.OperatorSpacing">
             <properties>
