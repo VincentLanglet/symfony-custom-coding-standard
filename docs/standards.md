@@ -120,3 +120,9 @@ We mainly respect the [Symfony Standard](./symfony.md) but
 ```
 <rule ref="Symfony3Custom.Scope.MethodScope"/>
 ```
+
+- Member var should have phpDoc with one blank line before
+
+```
+<rule ref="Symfony3Custom.Commenting.VariableComment"/>
+```
