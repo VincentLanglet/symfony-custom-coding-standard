@@ -340,7 +340,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
         for ($nextToken = ($stackPtr + 1); $nextToken < $arrayEnd; $nextToken++) {
             // Skip bracketed statements, like function calls.
             if (T_OPEN_PARENTHESIS === $tokens[$nextToken]['code']
-                && false === (isset($tokens[$nextToken]['parenthesis_owner'])
+                && (false === isset($tokens[$nextToken]['parenthesis_owner'])
                 || $tokens[$nextToken]['parenthesis_owner'] !== $stackPtr)
             ) {
                 $nextToken = $tokens[$nextToken]['parenthesis_closer'];
