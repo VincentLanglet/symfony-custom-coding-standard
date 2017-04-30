@@ -19,9 +19,9 @@ class Symfony3Custom_Tests_Commenting_DocCommentGroupSameTypeUnitTest extends Ab
     public function getErrorList()
     {
         return array(
-            5 => 1,
-            7 => 1,
-            8 => 1,
+            5  => 1,
+            7  => 1,
+            8  => 1,
             10 => 1,
             13 => 1,
             14 => 1,

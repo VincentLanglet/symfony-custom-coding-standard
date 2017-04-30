@@ -19,7 +19,7 @@ class Symfony3Custom_Tests_Commenting_FunctionCommentUnitTest extends AbstractSn
     public function getErrorList()
     {
         return array(
-            5 => 1,
+            5  => 1,
             10 => 2,
             43 => 1,
             48 => 2,

@@ -16,15 +16,15 @@ class Symfony3Custom_Tests_Commenting_VariableCommentUnitTest extends AbstractSn
     public function getErrorList()
     {
         return array(
-                21  => 1,
-                24  => 1,
-                56  => 1,
-                64  => 1,
-                73  => 1,
-                84  => 1,
-                122 => 1,
-                124 => 1,
-               );
+            21  => 1,
+            24  => 1,
+            56  => 1,
+            64  => 1,
+            73  => 1,
+            84  => 1,
+            122 => 1,
+            124 => 1,
+        );
     }
 
     /**

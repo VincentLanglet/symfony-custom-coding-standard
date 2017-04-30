@@ -118,9 +118,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
         } else {
             $this->processMultiLineArray($phpcsFile, $stackPtr, $arrayStart, $arrayEnd);
         }
-
     }
-
 
     /**
      * Processes a single-line array definition.
@@ -183,9 +181,9 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     $content = $tokens[($nextArrow - 2)]['content'];
                     $error   = 'Expected 1 space between "%s" and double arrow; %s found';
                     $data    = array(
-                                $content,
-                                $spaceLength,
-                               );
+                        $content,
+                        $spaceLength,
+                    );
 
                     $fix = $phpcsFile->addFixableError($error, $nextArrow, 'SpaceBeforeDoubleArrow', $data);
                     if ($fix === true) {
@@ -208,9 +206,9 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     $content = $tokens[($nextArrow + 2)]['content'];
                     $error   = 'Expected 1 space between double arrow and "%s"; %s found';
                     $data    = array(
-                                $content,
-                                $spaceLength,
-                               );
+                        $content,
+                        $spaceLength,
+                    );
 
                     $fix = $phpcsFile->addFixableError($error, $nextArrow, 'SpaceAfterDoubleArrow', $data);
                     if ($fix === true) {
@@ -265,7 +263,6 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
             }
         }
     }
-
 
     /**
      * Processes a multi-line array definition.
@@ -417,9 +414,9 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
 
                         $error = 'Expected 0 spaces between "%s" and comma; %s found';
                         $data  = array(
-                                  $content,
-                                  $spaceLength,
-                                 );
+                            $content,
+                            $spaceLength,
+                        );
 
                         $fix = $phpcsFile->addFixableError($error, $nextToken, 'SpaceBeforeComma', $data);
                         if ($fix === true) {
@@ -547,9 +544,9 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     if ($found !== $expected) {
                         $error = 'Array value not aligned correctly; expected %s spaces but found %s';
                         $data  = array(
-                                  $expected,
-                                  $found,
-                                 );
+                            $expected,
+                            $found,
+                        );
 
                         $fix = $phpcsFile->addFixableError($error, $value['value'], 'ValueNotAligned', $data);
                         if ($fix === true) {
@@ -646,9 +643,9 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 $found    = ($tokens[$index['index']]['column'] - 1);
                 $error    = 'Array key not aligned correctly; expected %s spaces but found %s';
                 $data     = array(
-                             $expected,
-                             $found,
-                            );
+                    $expected,
+                    $found,
+                );
 
                 $fix = $phpcsFile->addFixableError($error, $index['index'], 'KeyNotAligned', $data);
 
@@ -665,7 +662,8 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
 
             if ($tokens[$index['arrow']]['column'] !== $arrowStart) {
                 $expected = ($arrowStart - (strlen($index['index_content']) + $tokens[$index['index']]['column']));
-                $found    = ($tokens[$index['arrow']]['column'] - (strlen($index['index_content']) + $tokens[$index['index']]['column']));
+                $found    = $tokens[$index['arrow']]['column']
+                    - (strlen($index['index_content']) + $tokens[$index['index']]['column']);
 
                 if ($found < 0) {
                     $found = 'newline';
@@ -673,9 +671,9 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
 
                 $error    = 'Array double arrow not aligned correctly; expected %s space(s) but found %s';
                 $data     = array(
-                             $expected,
-                             $found,
-                            );
+                    $expected,
+                    $found,
+                );
 
                 if ($found !== 'newline' || $this->ignoreNewLine === false) {
                     $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'DoubleArrowNotAligned', $data);
@@ -702,7 +700,9 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
 
             if ($tokens[$index['value']]['column'] !== $valueStart) {
                 $expected = ($valueStart - ($tokens[$index['arrow']]['length'] + $tokens[$index['arrow']]['column']));
-                $found    = ($tokens[$index['value']]['column'] - ($tokens[$index['arrow']]['length'] + $tokens[$index['arrow']]['column']));
+                $found    = $tokens[$index['value']]['column']
+                    - ($tokens[$index['arrow']]['length'] + $tokens[$index['arrow']]['column']);
+
                 if ($found < 0) {
                     $found = 'newline';
                 }
@@ -799,9 +799,9 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 $spaceLength = $tokens[($nextComma - 1)]['length'];
                 $error       = 'Expected 0 spaces between "%s" and comma; %s found';
                 $data        = array(
-                                $content,
-                                $spaceLength,
-                               );
+                    $content,
+                    $spaceLength,
+                );
 
                 $fix = $phpcsFile->addFixableError($error, $nextComma, 'SpaceBeforeComma', $data);
                 if ($fix === true) {

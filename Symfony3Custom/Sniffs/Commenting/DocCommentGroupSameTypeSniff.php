@@ -86,15 +86,14 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                 $previousTagLine = $tokens[$previousTag]['line'];
                 $previousLine = max($previousStringLine, $previousTagLine);
 
-                $currentIsCustom = ! in_array($currentType, $this->tags);
+                $currentIsCustom = !in_array($currentType, $this->tags);
                 $previousIsCustom = ($previousType !== '')
-                    && ! in_array($previousType, $this->tags);
+                    && !in_array($previousType, $this->tags);
 
                 if (($previousType === $currentType)
                     || ($currentIsCustom && $previousIsCustom)
                 ) {
                     if ($previousLine !== $commentTagLine - 1) {
-
                         if ($previousType === $currentType) {
                             $fix = $phpcsFile->addFixableError(
                                 'Expected no empty lines '

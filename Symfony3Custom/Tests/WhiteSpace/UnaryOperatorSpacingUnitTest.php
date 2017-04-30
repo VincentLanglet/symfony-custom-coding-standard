@@ -19,9 +19,9 @@ class Symfony3Custom_Tests_WhiteSpace_UnaryOperatorSpacingUnitTest extends Abstr
     public function getErrorList()
     {
         return array(
-            4 => 1,
-            7 => 1,
-            9 => 1,
+            4  => 1,
+            7  => 1,
+            9  => 1,
             12 => 1,
             14 => 1,
             17 => 1,

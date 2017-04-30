@@ -19,8 +19,8 @@ class Symfony3Custom_Tests_Commenting_DocCommentForbiddenTagsUnitTest extends Ab
     public function getErrorList()
     {
         return array(
-            6 => 1,
-            7 => 1,
+            6  => 1,
+            7  => 1,
             11 => 1,
             15 => 1,
             20 => 1,

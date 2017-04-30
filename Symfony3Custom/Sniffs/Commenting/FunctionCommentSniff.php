@@ -181,7 +181,6 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                         // There is no doc and we need one with @return
                         $error = 'Missing @return tag in function comment';
                         $phpcsFile->addError($error, $stackPtr, 'MissingReturn');
-
                     }
 
                     break;

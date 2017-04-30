@@ -67,7 +67,7 @@ class Symfony3Custom_Sniffs_Functions_ScopeOrderSniff implements PHP_CodeSniffer
             );
 
             if (isset($tokens[$function]['parenthesis_opener'])) {
-                $scope = $phpcsFile->findPrevious($scopes, $function -1, $stackPtr);
+                $scope = $phpcsFile->findPrevious($scopes, $function - 1, $stackPtr);
                 $name = $phpcsFile->findNext(
                     T_STRING,
                     $function + 1,
