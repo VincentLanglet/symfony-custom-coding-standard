@@ -36,7 +36,9 @@ Not covered
 
 - Use Yoda conditions when checking a variable against an expression
 
-Not covered
+```
+<rule ref="Symfony3Custom.Formatting.YodaCondition" />
+```
 
 - Add a comma after each array item in a multi-line array, even after the last one
 
