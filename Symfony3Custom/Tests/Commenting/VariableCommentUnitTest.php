@@ -37,6 +37,6 @@ class Symfony3Custom_Tests_Commenting_VariableCommentUnitTest extends AbstractSn
      */
     public function getWarningList()
     {
-        return array(93 => 1);
+        return array();
     }
 }
