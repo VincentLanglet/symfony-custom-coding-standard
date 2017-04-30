@@ -68,12 +68,8 @@ class Symfony3Custom_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSnif
                     $error = 'Content missing for @see tag in member variable comment';
                     $phpcsFile->addError($error, $tag, 'EmptySees');
                 }
-            } else {
-                $error = '%s tag is not allowed in member variable comment';
-                $data  = array($tokens[$tag]['content']);
-                $phpcsFile->addWarning($error, $tag, 'TagNotAllowed', $data);
-            }//end if
-        }//end foreach
+            }
+        }
 
         // The @var tag is the only one we require.
         if ($foundVar === null) {
