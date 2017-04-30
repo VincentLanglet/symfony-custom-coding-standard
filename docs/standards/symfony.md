@@ -5,13 +5,13 @@ From [symfony standard](http://symfony.com/doc/current/contributing/code/standar
 - Add a single space after each comma delimiter
 
 ```
-<rule ref="Symfony3Custom.WhiteSpace.CommaSpacing" />
+<rule ref="Symfony3Custom.Array.ArrayDeclaration" />
 ```
 
 - Add a single space around binary operators (`==`, `&&`, `...`)
 
 ```
-<rule ref="Symfony3Custom.WhiteSpace.BinaryOperatorSpacing" />
+<rule ref="Squiz.WhiteSpace.OperatorSpacing" />
 ```
 
 We do not respect the exception of the concatenation (`.`) operator
@@ -116,11 +116,17 @@ Not covered
 
 - Use camelCase, not underscores, for variable, function and method names, arguments
 
-Covered by `PSR2` and `Zend`
+Covered by `PSR2` completed by
+```
+<rule ref="Squiz.NamingConventions.ValidVariableName">
+    <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+    <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
+</rule>
+```
 
 - Use namespaces for all classes
 
-Covered by `PSR1`
+Covered by `PSR1` completed by
 ```
 <rule ref="Squiz.Classes.ValidClassName" />
 ```

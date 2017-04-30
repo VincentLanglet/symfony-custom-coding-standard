@@ -35,27 +35,19 @@
     <!-- ***  OTHERS  *** -->
     <!-- **************** -->
 
-        <!-- Complete with some of ZEND standard -->
-        <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman">
-            <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine"/>
-        </rule>
+        <!-- From djoos repo -->
         <rule ref="Generic.PHP.DisallowShortOpenTag"/>
-        <rule ref="PEAR.Classes.ClassDeclaration"/>
-        <rule ref="Squiz.Functions.GlobalFunction"/>
         <rule ref="Squiz.NamingConventions.ValidVariableName">
             <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
             <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
         </rule>
-
-        <!-- Rules added by djoos/Symfony2-coding-standard-->
         <rule ref="Generic.Formatting.SpaceAfterCast"/>
-        <rule ref="Generic.Functions.CallTimePassByReference"/>
         <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
         <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
         <rule ref="Squiz.Scope.MemberVarScope"/>
         <rule ref="PEAR.Commenting.InlineComment"/>
 
-        <!-- Rules added by endouble/Symfony3Custom-coding-standard -->
+        <!-- From endouble repo -->
         <rule ref="Squiz.Strings.ConcatenationSpacing">
             <properties>
                 <property name="spacing" value="1"/>
@@ -66,10 +58,14 @@
             <severity>0</severity>
         </rule>
 
-        <!-- Rules added by VincentLanglet/Symfony3Custom-coding-standard -->
+        <!-- Added by VincentLanglet repo -->
+        <rule ref="Squiz.Classes.ClassFileName"/>
+        <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
+        <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
         <rule ref="Squiz.WhiteSpace.OperatorSpacing">
             <properties>
                 <property name="ignoreNewlines" value="true"/>
             </properties>
         </rule>
+        <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
 </ruleset>

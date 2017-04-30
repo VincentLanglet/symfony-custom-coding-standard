@@ -39,44 +39,12 @@ We mainly respect the [Symfony Standard](./symfony.md) but
   - Do not use `else`, `elseif`, `break` after `if` and `case` conditions which return or throw something
 
 ## Others
-### From Zend
-
-- @TODO
-
-```
-<rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman">
-    <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine"/>
-</rule>
-```
-
-- @TODO
+### Imported
+- Do not use `<?` to define a php file
 
 ```
 <rule ref="Generic.PHP.DisallowShortOpenTag"/>
 ```
-
-- @TODO
-
-```
-<rule ref="PEAR.Classes.ClassDeclaration"/>
-```
-
-- @TODO
-
-```
-<rule ref="Squiz.Functions.GlobalFunction"/>
-```
-
-- @TODO
-
-```
-<rule ref="Squiz.NamingConventions.ValidVariableName">
-    <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
-    <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
-</rule>
-```
-
-### Others
 
 - Add a single space after type casting
 
@@ -84,13 +52,57 @@ We mainly respect the [Symfony Standard](./symfony.md) but
 <rule ref="Generic.Formatting.SpaceAfterCast"/>
 ```
 
-- Add a single space around assignement operator
+- Use lowercase for PHP functions
 
 ```
-<rule ref="Symfony3Custom.WhiteSpace.AssignementSpacing"/>
+<rule ref="Squiz.PHP.LowercasePHPFunctions"/>
 ```
 
-- Do not use spaces after `(` or `{` or before `)` or `}`
+- Variable have scope modifier
+
+```
+<rule ref="Squiz.Scope.MemberVarScope"/>
+<rule ref="Symfony3Custom.Scope.MethodScope"/>
+```
+
+- No perl-style comments are used
+
+```
+<rule ref="PEAR.Commenting.InlineComment"/>
+```
+
+- Use same name for a file and the class inside
+
+```
+<rule ref="Squiz.Classes.ClassFileName"/>
+```
+
+- Use single quotes instead of double quotes
+
+```
+<rule ref="Squiz.Strings.DoubleQuoteUsage"/>
+```
+
+- Do not skip blank line after function opening brace
+
+```
+<rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+```
+
+- Do not use space before semicolon
+
+```
+<rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+```
+
+### Custom
+- Some others checks are made about array (`=>` alignments and indentation)
+
+```
+<rule ref="Symfony3Custom.Array.ArrayDeclaration"/>
+```
+
+- Do not use spaces after `(` or `{` and before `)` or `}`
 
 ```
 <rule ref="Symfony3Custom.WhiteSpace.CloseBracketSpacing"/>
@@ -103,27 +115,8 @@ We mainly respect the [Symfony Standard](./symfony.md) but
 <rule ref="Symfony3Custom.WhiteSpace.EmptyLines"/>
 ```
 
-- Do not call functions with variables passed by reference
+- Methods have scope modifier
 
 ```
-<rule ref="Generic.Functions.CallTimePassByReference"/>
-```
-
-- Use lowercase for PHP functions
-
-```
-<rule ref="Squiz.PHP.LowercasePHPFunctions"/>
-```
-
-- Variable and methods have scope modifier
-
-```
-<rule ref="Squiz.Scope.MemberVarScope"/>
 <rule ref="Symfony3Custom.Scope.MethodScope"/>
-```
-
-- No perl-style comments are used
-
-```
-<rule ref="PEAR.Commenting.InlineComment"/>
 ```
