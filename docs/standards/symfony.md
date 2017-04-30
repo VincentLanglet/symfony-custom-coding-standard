@@ -32,9 +32,7 @@ We do not respect the exception of the concatenation (`.`) operator
 
 - Always use identical comparison unless you need type juggling
 
-```
-<rule ref="Symfony3Custom.Operators.ComparisonOperatorUsage" />
-```
+Not covered
 
 - Use Yoda conditions when checking a variable against an expression
 
