@@ -13,9 +13,17 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
     public $indent = 4;
 
     /**
+     * Allow or disallow a multiline assignment
+     * By default, it is allowed to avoid conflict with a maximum line length rule
+     *
+     * [
+     *     'key' =>
+     *         'value'
+     * ]
+     *
      * @var bool
      */
-    public $ignoreNewLine = true;
+    public $ignoreNewLines = true;
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -675,7 +683,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     $found,
                 );
 
-                if ($found !== 'newline' || $this->ignoreNewLine === false) {
+                if ($found !== 'newline' || $this->ignoreNewLines === false) {
                     $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'DoubleArrowNotAligned', $data);
                     if ($fix === true) {
                         if ($found === 'newline') {
@@ -707,7 +715,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     $found = 'newline';
                 }
 
-                if ($found !== 'newline' || $this->ignoreNewLine === false) {
+                if ($found !== 'newline' || $this->ignoreNewLines === false) {
                     $error = 'Array value not aligned correctly; expected %s space(s) but found %s';
                     $data = [
                         $expected,

@@ -62,7 +62,6 @@ We mainly respect the [Symfony Standard](./symfony.md) but
 
 ```
 <rule ref="Squiz.Scope.MemberVarScope"/>
-<rule ref="Symfony3Custom.Scope.MethodScope"/>
 ```
 
 - No perl-style comments are used
