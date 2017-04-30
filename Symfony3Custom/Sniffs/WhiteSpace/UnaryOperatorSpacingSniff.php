@@ -37,8 +37,8 @@ class Symfony3Custom_Sniffs_WhiteSpace_UnaryOperatorSpacingSniff implements PHP_
 
         // Check decrement / increment.
         if (T_DEC === $tokens[$stackPtr]['code'] || T_INC === $tokens[$stackPtr]['code']) {
-            $modifyLeft = substr($tokens[($stackPtr - 1)]['content'], 0, 1) === '$' ||
-                ';' === $tokens[($stackPtr + 1)]['content'];
+            $modifyLeft = substr($tokens[($stackPtr - 1)]['content'], 0, 1) === '$'
+                || ';' === $tokens[($stackPtr + 1)]['content'];
 
             if (true === $modifyLeft && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']) {
                 $error = 'There must not be a single space before a unary operator statement';

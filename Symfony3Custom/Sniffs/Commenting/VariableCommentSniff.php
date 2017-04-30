@@ -114,7 +114,10 @@ class Symfony3Custom_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSnif
         $found = $startLine - $prevLine - 1;
 
         // Skip for class opening
-        if ($found < 1 && !(0 === $found && 'T_OPEN_CURLY_BRACKET' === $tokens[$before]['type'])) {
+        if ($found < 1
+            && !(0 === $found
+            && 'T_OPEN_CURLY_BRACKET' === $tokens[$before]['type'])
+        ) {
             if ($found < 0) {
                 $found = 0;
             }

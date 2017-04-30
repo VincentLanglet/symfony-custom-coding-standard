@@ -7,16 +7,6 @@
 class Symfony3Custom_Sniffs_WhiteSpace_OpenBracketSpacingSniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
-     */
-    public $supportedTokenizers = array(
-        'PHP',
-        'JS',
-    );
-
-    /**
      * Returns an array of tokens this test wants to listen for.
      *
      * @return array
@@ -42,24 +32,21 @@ class Symfony3Custom_Sniffs_WhiteSpace_OpenBracketSpacingSniff implements PHP_Co
     {
         $tokens = $phpcsFile->getTokens();
 
-        // Ignore curly brackets in javascript files.
-        if (T_OPEN_CURLY_BRACKET === $tokens[$stackPtr]['code']
-            && 'JS' === $phpcsFile->tokenizerType
-        ) {
-            return;
-        }
-
         if (isset($tokens[($stackPtr + 1)]) === true
             && T_WHITESPACE === $tokens[($stackPtr + 1)]['code']
             && strpos($tokens[($stackPtr + 1)]['content'], $phpcsFile->eolChar) === false
         ) {
             $error = 'There should be no space after an opening "%s"';
-            $phpcsFile->addError(
+            $fix = $phpcsFile->addFixableError(
                 $error,
                 ($stackPtr + 1),
                 'OpeningWhitespace',
                 array($tokens[$stackPtr]['content'])
             );
+
+            if (true === $fix) {
+                $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
+            }
         }
     }
 }

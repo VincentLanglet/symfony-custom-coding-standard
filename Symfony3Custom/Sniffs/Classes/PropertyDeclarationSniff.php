@@ -6,15 +6,6 @@
 class Symfony3Custom_Sniffs_Classes_PropertyDeclarationSniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
-     */
-    public $supportedTokenizers = array(
-        'PHP',
-    );
-
-    /**
      * Returns an array of tokens this test wants to listen for.
      *
      * @return array

@@ -48,7 +48,9 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
      */
     public function register()
     {
-        return array(T_DOC_COMMENT_OPEN_TAG);
+        return array(
+            T_DOC_COMMENT_OPEN_TAG
+        );
     }
 
     /**

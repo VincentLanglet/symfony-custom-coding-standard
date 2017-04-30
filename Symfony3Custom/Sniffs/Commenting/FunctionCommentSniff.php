@@ -117,8 +117,6 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             $this->processParams($phpcsFile, $stackPtr, $commentStart);
             $this->processThrows($phpcsFile, $stackPtr, $commentStart);
         } else {
-            $this->processWhitespace($phpcsFile, $commentStart, $hasComment);
-
             if (count($realParams) > 0) {
                 foreach ($realParams as $neededParam) {
                     $error = 'Doc comment for parameter "%s" missing';
@@ -127,6 +125,8 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                 }
             }
         }
+
+        $this->processWhitespace($phpcsFile, $commentStart);
     }
 
     /**
@@ -283,8 +283,6 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
         if ($this->isInheritDoc($phpcsFile, $stackPtr)) {
             return;
         }
-
-        $this->processWhitespace($phpcsFile, $commentStart);
 
         parent::processParams($phpcsFile, $stackPtr, $commentStart);
     }

@@ -8,23 +8,15 @@
 class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
-     */
-    public $supportedTokenizers = array(
-        'PHP',
-        'JS',
-    );
-
-    /**
      * Returns an array of tokens this test wants to listen for.
      *
      * @return array
      */
     public function register()
     {
-        return array(T_RETURN);
+        return array(
+            T_RETURN
+        );
     }
 
     /**

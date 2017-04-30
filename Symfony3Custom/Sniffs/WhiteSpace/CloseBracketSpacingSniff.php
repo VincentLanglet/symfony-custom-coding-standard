@@ -7,16 +7,6 @@
 class Symfony3Custom_Sniffs_WhiteSpace_CloseBracketSpacingSniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
-     */
-    public $supportedTokenizers = array(
-        'PHP',
-        'JS',
-    );
-
-    /**
      * Returns an array of tokens this test wants to listen for.
      *
      * @return array
@@ -41,13 +31,6 @@ class Symfony3Custom_Sniffs_WhiteSpace_CloseBracketSpacingSniff implements PHP_C
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-
-        // Ignore curly brackets in javascript files.
-        if (T_CLOSE_CURLY_BRACKET === $tokens[$stackPtr]['code']
-            && 'JS' === $phpcsFile->tokenizerType
-        ) {
-            return;
-        }
 
         if (isset($tokens[($stackPtr - 1)]) === true
             && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']

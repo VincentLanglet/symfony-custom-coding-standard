@@ -26,9 +26,9 @@ class Symfony3Custom_Tests_Formatting_YodaConditionUnitTest extends AbstractSnif
             55 => 1,
             62 => 1,
             68 => 1,
-            84 => 1,
-            88 => 1,
-            90 => 1,
+            87 => 1,
+            92 => 1,
+            95 => 1,
         );
     }
 

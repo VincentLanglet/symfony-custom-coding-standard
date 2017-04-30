@@ -22,7 +22,9 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentForbiddenTagsSniff implements P
      */
     public function register()
     {
-        return array(T_DOC_COMMENT_TAG);
+        return array(
+            T_DOC_COMMENT_TAG
+        );
     }
 
     /**
