@@ -19,31 +19,31 @@ class Symfony3Custom_Tests_Arrays_ArrayDeclarationUnitTest extends AbstractSniff
     public function getErrorList()
     {
         return array(
-            7   => 2,
-            9   => 1,
-            22  => 1,
-            23  => 1,
-            24  => 1,
-            25  => 1,
-            31  => 1,
-            35  => 1,
-            36  => 1,
-            41  => 1,
-            46  => 1,
-            47  => 1,
-            50  => 1,
-            51  => 1,
-            53  => 1,
-            58  => 1,
-            61  => 1,
-            62  => 1,
-            63  => 1,
-            64  => 1,
-            65  => 1,
-            66  => 2,
-            67  => 1,
-            68  => 1,
-            70  => 1,
+            7  => 2,
+            9  => 1,
+            22 => 1,
+            23 => 1,
+            24 => 1,
+            25 => 1,
+            31 => 1,
+            35 => 1,
+            36 => 1,
+            41 => 1,
+            46 => 1,
+            47 => 1,
+            50 => 1,
+            51 => 1,
+            53 => 1,
+            58 => 1,
+            61 => 1,
+            62 => 1,
+            63 => 1,
+            64 => 1,
+            65 => 1,
+            66 => 2,
+            67 => 1,
+            68 => 1,
+            70 => 1,
         );
     }
 
@@ -58,6 +58,5 @@ class Symfony3Custom_Tests_Arrays_ArrayDeclarationUnitTest extends AbstractSniff
     public function getWarningList()
     {
         return array();
-
     }
 }

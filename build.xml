@@ -1,39 +1,50 @@
 <project name="Symfony3-custom-coding-standard" default="test">
-    <property file="build.properties" />
-    <available property="composer.exists" file="${composer.path}" />
-    <available property="symlink.exists" file="${phpcs.symlink.path}" />
+    <property file="build.properties"/>
 
-    <target name="test" depends="vendor,lint,phpunit" />
+    <available property="composer.exists" file="${composer.path}"/>
+    <available property="symlink.exists" file="${phpcs.symlink.path}"/>
 
-    <target name="vendor" description="Load composer repositories" depends="composer">
+    <target name="test" depends="vendor,lint,phpunit,phpcs"/>
+
+    <target name="vendor" depends="composer" description="Load composer repositories">
         <exec executable="composer" failonerror="true">
-            <arg value="install" />
+            <arg value="install"/>
         </exec>
     </target>
 
     <target name="composer" description="Download composer" unless="composer.exists">
-        <get src="${composer.url}" dest="${composer.path}" />
+        <get src="${composer.url}" dest="${composer.path}"/>
     </target>
 
     <target name="lint" description="Perform syntax check">
         <apply executable="php" failonerror="true">
-            <arg value="-l" />
+            <arg value="-l"/>
             <fileset dir="${basedir}">
-                <include name="**/*.php" />
-                <exclude name="vendor/**" />
+                <include name="**/*.php"/>
+                <exclude name="vendor/**"/>
             </fileset>
         </apply>
     </target>
 
-    <target name="phpunit" depends="symlink-this-coding-standard" description="Run unit tests with PHPUnit">
+    <target name="phpunit" depends="symlink-cs" description="Run unit tests with PHPUnit">
         <exec executable="phpunit" failonerror="true" >
-            <arg value="--verbose" />
-            <arg value="--filter=Symfony3Custom_*" />
-            <arg value="${phpcs.dir}/tests/AllTests.php" />
+            <arg value="--verbose"/>
+            <arg value="--filter=Symfony3Custom_*"/>
+            <arg value="${phpcs.dir}/tests/AllTests.php"/>
         </exec>
     </target>
 
-    <target name="symlink-this-coding-standard" description="Symlink this coding standard" unless="symlink.exists">
-        <symlink link="${basedir}/${phpcs.symlink.path}" resource="${basedir}/Symfony3Custom"/>
+    <target name="phpcs" depends="symlink-cs" description="Find coding standard violations using PHP Code Sniffer">
+        <exec executable="${phpcs.bin}" failonerror="true">
+            <arg value="--standard=Symfony3Custom"/>
+            <arg value="--extensions=php"/>
+            <arg value="--ignore=vendor/*"/>
+            <arg value="--exclude=${phpcs.exclude.sniffs}"/>
+            <arg path="${basedir}"/>
+        </exec>
+    </target>
+
+    <target name="symlink-cs" description="Symlink this coding standard" unless="symlink.exists">
+        <symlink link="${phpcs.symlink.path}" resource="${basedir}/Symfony3Custom"/>
     </target>
 </project>

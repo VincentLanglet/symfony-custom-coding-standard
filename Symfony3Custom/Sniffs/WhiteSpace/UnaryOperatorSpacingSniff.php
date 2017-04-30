@@ -20,9 +20,7 @@ class Symfony3Custom_Sniffs_WhiteSpace_UnaryOperatorSpacingSniff implements PHP_
             T_PLUS,
             T_BOOLEAN_NOT,
         );
-
     }
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -112,6 +110,5 @@ class Symfony3Custom_Sniffs_WhiteSpace_UnaryOperatorSpacingSniff implements PHP_
                 }
             }
         }
-
     }
 }

@@ -19,7 +19,7 @@ class Symfony3Custom_Tests_NamingConventions_ValidClassNameUnitTest extends Abst
     public function getErrorList()
     {
         return array(
-            3 => 1,
+            3  => 1,
             11 => 1,
             19 => 1,
             23 => 1,

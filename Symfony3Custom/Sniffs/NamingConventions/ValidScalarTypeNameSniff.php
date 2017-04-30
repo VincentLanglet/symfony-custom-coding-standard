@@ -12,9 +12,9 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidScalarTypeNameSniff implement
      */
     public $types = array(
         'boolean' => 'bool',
-        'double' => 'float',
+        'double'  => 'float',
         'integer' => 'int',
-        'real' => 'float',
+        'real'    => 'float',
     );
 
     /**

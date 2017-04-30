@@ -83,7 +83,7 @@ class VariableCommentUnitTest
      * @see anotherFunctions()
      * @see
      */
-     public $singleLineFullStopShortComment = '';
+     public $singleLineFullStopShortComment2 = '';
 
 
     /**
@@ -93,14 +93,6 @@ class VariableCommentUnitTest
      * @summary unknown tag
      */
      public $missingSinceTag = '';
-
-
-    /**
-     * T_VARIABLE check, without scope.
-     *
-     * @var string
-     */
-     $variableCheck = '';
 
     /**
      * T_VARIABLE check, var in string and in function.
@@ -114,8 +106,8 @@ class VariableCommentUnitTest
     {
         $var4 = 'A normal variable';
         $var5 = PHP_CodeSniffer_Tokens::$operators;
-        echo "Printing $var1 $var2 and unknown $var3 in a double quoted  string\n";
-        foreach (self::$_array as $index => $content) {
+        echo "Printing $var1 $var2 in a double quoted  string\n";
+        foreach ([] as $index => $content) {
             echo $content;
         }
 
@@ -128,7 +120,7 @@ class VariableCommentUnitTest
      *
      *
      */
-     $emptyVarDoc = '';
+     public $emptyVarDoc = '';
     /**
      * @var int
      */

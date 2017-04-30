@@ -32,60 +32,60 @@ class Symfony3Custom_Sniffs_Commenting_ClassCommentSniff extends PEAR_Sniffs_Com
      * @var array
      */
     protected $tags = array(
-        'category' => array(
-            'required' => false,
+        'category'   => array(
+            'required'       => false,
             'allow_multiple' => false,
-            'order_text' => 'precedes @package',
+            'order_text'     => 'precedes @package',
         ),
-        'package' => array(
-            'required' => false,
+        'package'    => array(
+            'required'       => false,
             'allow_multiple' => false,
-            'order_text' => 'follows @category',
+            'order_text'     => 'follows @category',
         ),
         'subpackage' => array(
-            'required' => false,
+            'required'       => false,
             'allow_multiple' => false,
-            'order_text' => 'follows @package',
+            'order_text'     => 'follows @package',
         ),
-        'author' => array(
-            'required' => false,
+        'author'     => array(
+            'required'       => false,
             'allow_multiple' => true,
-            'order_text' => 'follows @subpackage (if used) or @package',
+            'order_text'     => 'follows @subpackage (if used) or @package',
         ),
-        'copyright' => array(
-            'required' => false,
+        'copyright'  => array(
+            'required'       => false,
             'allow_multiple' => true,
-            'order_text' => 'follows @author',
+            'order_text'     => 'follows @author',
         ),
-        'license' => array(
-            'required' => false,
+        'license'    => array(
+            'required'       => false,
             'allow_multiple' => false,
-            'order_text' => 'follows @copyright (if used) or @author',
+            'order_text'     => 'follows @copyright (if used) or @author',
         ),
-        'version' => array(
-            'required' => false,
+        'version'    => array(
+            'required'       => false,
             'allow_multiple' => false,
-            'order_text' => 'follows @license',
+            'order_text'     => 'follows @license',
         ),
-        'link' => array(
-            'required' => false,
+        'link'       => array(
+            'required'       => false,
             'allow_multiple' => true,
-            'order_text' => 'follows @version',
+            'order_text'     => 'follows @version',
         ),
-        'see' => array(
-            'required' => false,
+        'see'        => array(
+            'required'       => false,
             'allow_multiple' => true,
-            'order_text' => 'follows @link',
+            'order_text'     => 'follows @link',
         ),
-        'since' => array(
-            'required' => false,
+        'since'      => array(
+            'required'       => false,
             'allow_multiple' => false,
-            'order_text' => 'follows @see (if used) or @link',
+            'order_text'     => 'follows @see (if used) or @link',
         ),
         'deprecated' => array(
-            'required' => false,
+            'required'       => false,
             'allow_multiple' => false,
-            'order_text' => 'follows @since (if used) or @see (if used) or @link',
+            'order_text'     => 'follows @since (if used) or @see (if used) or @link',
         ),
     );
 }

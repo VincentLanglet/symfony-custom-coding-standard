@@ -22,13 +22,13 @@ class Symfony3Custom_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSnif
     {
         $tokens = $phpcsFile->getTokens();
         $ignore = array(
-                   T_PUBLIC,
-                   T_PRIVATE,
-                   T_PROTECTED,
-                   T_VAR,
-                   T_STATIC,
-                   T_WHITESPACE,
-                  );
+            T_PUBLIC,
+            T_PRIVATE,
+            T_PROTECTED,
+            T_VAR,
+            T_STATIC,
+            T_WHITESPACE,
+        );
 
         $commentEnd = $phpcsFile->findPrevious($ignore, ($stackPtr - 1), null, true);
         if ($commentEnd === false

@@ -19,7 +19,7 @@ class Symfony3Custom_Tests_Classes_PropertyDeclarationUnitTest extends AbstractS
     public function getErrorList()
     {
         return array(
-            9  => 1,
+            9 => 1,
         );
     }
 

@@ -19,7 +19,7 @@ class Symfony3Custom_Tests_Functions_ScopeOrderUnitTest extends AbstractSniffUni
     public function getErrorList()
     {
         return array(
-            9 => 1,
+            9  => 1,
             20 => 1,
         );
     }

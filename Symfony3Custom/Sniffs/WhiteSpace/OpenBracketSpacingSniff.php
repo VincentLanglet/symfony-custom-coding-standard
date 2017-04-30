@@ -27,7 +27,6 @@ class Symfony3Custom_Sniffs_WhiteSpace_OpenBracketSpacingSniff implements PHP_Co
             T_OPEN_CURLY_BRACKET,
             T_OPEN_PARENTHESIS,
         );
-
     }
 
     /**
