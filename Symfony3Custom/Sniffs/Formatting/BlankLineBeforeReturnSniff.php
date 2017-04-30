@@ -36,7 +36,7 @@ class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP
         $prevLineTokens  = array();
 
         while ($current >= 0 && $tokens[$current]['line'] >= $previousLine) {
-            if ($tokens[$current]['line'] == $previousLine
+            if ($tokens[$current]['line'] === $previousLine
                 && 'T_WHITESPACE' !== $tokens[$current]['type']
                 && 'T_COMMENT' !== $tokens[$current]['type']
                 && 'T_DOC_COMMENT_CLOSE_TAG' !== $tokens[$current]['type']
@@ -62,7 +62,7 @@ class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP
             if (true === $fix) {
                 $phpcsFile->fixer->beginChangeset();
                 $i = 1;
-                while ('T_WHITESPACE' == $tokens[$stackPtr - $i]['type']) {
+                while ('T_WHITESPACE' === $tokens[$stackPtr - $i]['type']) {
                     $i++;
                 }
                 $phpcsFile->fixer->addNewLine($stackPtr - $i);
