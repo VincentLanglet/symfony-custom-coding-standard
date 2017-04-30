@@ -6,15 +6,6 @@
 class Symfony3Custom_Sniffs_Classes_PropertyDeclarationSniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
-     */
-    public $supportedTokenizers = array(
-        'PHP',
-    );
-
-    /**
      * Returns an array of tokens this test wants to listen for.
      *
      * @return array
@@ -63,7 +54,7 @@ class Symfony3Custom_Sniffs_Classes_PropertyDeclarationSniff implements PHP_Code
                 $end
             );
 
-            if ($scope && $tokens[$scope + 2]['code'] === T_VARIABLE) {
+            if ($scope && T_VARIABLE === $tokens[$scope + 2]['code']) {
                 $phpcsFile->addError(
                     'Declare class properties before methods',
                     $scope,

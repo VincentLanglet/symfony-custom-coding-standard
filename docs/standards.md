@@ -32,8 +32,6 @@ We mainly respect the [Symfony Standard](./symfony.md) but
 
 - We do not currently check these rules:
 
-  - Always use identical comparison unless you need type juggling
-  - Use Yoda conditions when checking a variable against an expression
   - Exception and error message strings must be concatenated using `sprintf`
   - Calls to `trigger_error` with type `E_USER_DEPRECATED` must be switched to opt-in via `@`operator
   - Do not use `else`, `elseif`, `break` after `if` and `case` conditions which return or throw something
@@ -62,7 +60,6 @@ We mainly respect the [Symfony Standard](./symfony.md) but
 
 ```
 <rule ref="Squiz.Scope.MemberVarScope"/>
-<rule ref="Symfony3Custom.Scope.MethodScope"/>
 ```
 
 - No perl-style comments are used

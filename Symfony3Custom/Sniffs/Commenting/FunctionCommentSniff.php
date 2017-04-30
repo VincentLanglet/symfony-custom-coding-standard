@@ -33,24 +33,24 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
         $find[] = T_WHITESPACE;
 
         $commentEnd = $phpcsFile->findPrevious($find, ($stackPtr - 1), null, true);
-        if ($tokens[$commentEnd]['code'] === T_COMMENT) {
+        if (T_COMMENT === $tokens[$commentEnd]['code']) {
             // Inline comments might just be closing comments for
             // control structures or functions instead of function comments
             // using the wrong comment type. If there is other code on the line,
             // assume they relate to that code.
             $prev = $phpcsFile->findPrevious($find, ($commentEnd - 1), null, true);
-            if ($prev !== false && $tokens[$prev]['line'] === $tokens[$commentEnd]['line']) {
+            if (false !== $prev && $tokens[$prev]['line'] === $tokens[$commentEnd]['line']) {
                 $commentEnd = $prev;
             }
         }
 
         $name = $phpcsFile->getDeclarationName($stackPtr);
         $commentRequired = strpos($name, 'test') !== 0
-            && $name !== 'setUp'
-            && $name !== 'tearDown';
+            && 'setUp' !== $name
+            && 'tearDown' !== $name;
 
-        if ($tokens[$commentEnd]['code'] !== T_DOC_COMMENT_CLOSE_TAG
-            && $tokens[$commentEnd]['code'] !== T_COMMENT
+        if (T_DOC_COMMENT_CLOSE_TAG !== $tokens[$commentEnd]['code']
+            && T_COMMENT !== $tokens[$commentEnd]['code']
         ) {
             $hasComment = false;
             $phpcsFile->recordMetric($stackPtr, 'Function has doc comment', 'no');
@@ -68,7 +68,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
         }
 
         if ($hasComment) {
-            if ($tokens[$commentEnd]['code'] === T_COMMENT) {
+            if (T_COMMENT === $tokens[$commentEnd]['code']) {
                 $phpcsFile->addError(
                     'You must use "/**" style comments for a function comment',
                     $stackPtr,
@@ -78,17 +78,17 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                 return;
             }
 
-            if ($tokens[$commentEnd]['line'] !== ($tokens[$stackPtr]['line'] - 1)) {
+            if (($tokens[$stackPtr]['line'] - 1) !== $tokens[$commentEnd]['line']) {
                 $error = 'There must be no blank lines after the function comment';
                 $phpcsFile->addError($error, $commentEnd, 'SpacingAfter');
             }
 
             $commentStart = $tokens[$commentEnd]['comment_opener'];
             foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
-                if ($tokens[$tag]['content'] === '@see') {
+                if ('@see' === $tokens[$tag]['content']) {
                     // Make sure the tag isn't empty.
                     $string = $phpcsFile->findNext(T_DOC_COMMENT_STRING, $tag, $commentEnd);
-                    if ($string === false || $tokens[$string]['line'] !== $tokens[$tag]['line']) {
+                    if (false === $string || $tokens[$string]['line'] !== $tokens[$tag]['line']) {
                         $error = 'Content missing for @see tag in function comment';
                         $phpcsFile->addError($error, $tag, 'EmptySees');
                     }
@@ -101,7 +101,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                 $stackPtr
             );
 
-            if ($methodPrefixes !== false) {
+            if (false !== $methodPrefixes) {
                 $commentStart = $methodPrefixes;
             } else {
                 // No comment and no method prefix
@@ -117,8 +117,6 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             $this->processParams($phpcsFile, $stackPtr, $commentStart);
             $this->processThrows($phpcsFile, $stackPtr, $commentStart);
         } else {
-            $this->processWhitespace($phpcsFile, $commentStart, $hasComment);
-
             if (count($realParams) > 0) {
                 foreach ($realParams as $neededParam) {
                     $error = 'Doc comment for parameter "%s" missing';
@@ -127,6 +125,8 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                 }
             }
         }
+
+        $this->processWhitespace($phpcsFile, $commentStart);
     }
 
     /**
@@ -165,14 +165,14 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
 
             for ($i = $start; $i < $tokens[$stackPtr]['scope_closer']; ++$i) {
                 // Skip closures
-                if ($tokens[$i]['code'] === T_CLOSURE) {
+                if (T_CLOSURE === $tokens[$i]['code']) {
                     $i = $tokens[$i]['scope_closer'];
                     continue;
                 }
 
                 // Found a return not in a closure statement
                 // Run the check on the first which is not only 'return;'
-                if ($tokens[$i]['code'] === T_RETURN
+                if (T_RETURN === $tokens[$i]['code']
                     && $this->isMatchingReturn($tokens, $i)
                 ) {
                     if ($hasRealComment) {
@@ -208,7 +208,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
         $found = $startLine - $prevLine - 1;
 
         // Skip for class opening
-        if ($found < 1 && !($found === 0 && $tokens[$before]['type'] === 'T_OPEN_CURLY_BRACKET')) {
+        if ($found < 1 && !(0 === $found && 'T_OPEN_CURLY_BRACKET' === $tokens[$before]['type'])) {
             if ($found < 0) {
                 $found = 0;
             }
@@ -224,7 +224,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             $data = array($found);
             $fix = $phpcsFile->addFixableError($error, $commentStart, $rule, $data);
 
-            if ($fix === true) {
+            if (true === $fix) {
                 if ($found > 1) {
                     $phpcsFile->fixer->beginChangeset();
 
@@ -235,7 +235,7 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
                     $phpcsFile->fixer->endChangeset();
                 } else {
                     // Try and maintain indentation.
-                    if ($tokens[($commentStart - 1)]['code'] === T_WHITESPACE) {
+                    if (T_WHITESPACE === $tokens[($commentStart - 1)]['code']) {
                         $phpcsFile->fixer->addNewlineBefore($commentStart - 1);
                     } else {
                         $phpcsFile->fixer->addNewlineBefore($commentStart);
@@ -284,8 +284,6 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
             return;
         }
 
-        $this->processWhitespace($phpcsFile, $commentStart);
-
         parent::processParams($phpcsFile, $stackPtr, $commentStart);
     }
 
@@ -301,8 +299,8 @@ class Symfony3Custom_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_
     {
         do {
             $returnPos++;
-        } while ($tokens[$returnPos]['code'] === T_WHITESPACE);
+        } while (T_WHITESPACE === $tokens[$returnPos]['code']);
 
-        return $tokens[$returnPos]['code'] !== T_SEMICOLON;
+        return T_SEMICOLON !== $tokens[$returnPos]['code'];
     }
 }

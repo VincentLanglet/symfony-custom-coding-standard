@@ -36,7 +36,7 @@ class Symfony3Custom_Sniffs_Scope_MethodScopeSniff extends PHP_CodeSniffer_Stand
         $tokens = $phpcsFile->getTokens();
 
         $methodName = $phpcsFile->getDeclarationName($stackPtr);
-        if ($methodName === null) {
+        if (null === $methodName) {
             // Ignore closures.
             return;
         }
@@ -46,7 +46,7 @@ class Symfony3Custom_Sniffs_Scope_MethodScopeSniff extends PHP_CodeSniffer_Stand
             $stackPtr
         );
 
-        if (($modifier === false)
+        if ((false === $modifier)
             || ($tokens[$modifier]['line'] !== $tokens[$stackPtr]['line'])
         ) {
             $error = 'No scope modifier specified for function "%s"';

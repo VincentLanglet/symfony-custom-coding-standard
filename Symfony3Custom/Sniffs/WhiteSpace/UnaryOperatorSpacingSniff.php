@@ -36,26 +36,26 @@ class Symfony3Custom_Sniffs_WhiteSpace_UnaryOperatorSpacingSniff implements PHP_
         $tokens = $phpcsFile->getTokens();
 
         // Check decrement / increment.
-        if ($tokens[$stackPtr]['code'] === T_DEC || $tokens[$stackPtr]['code'] === T_INC) {
-            $modifyLeft = substr($tokens[($stackPtr - 1)]['content'], 0, 1) === '$' ||
-                $tokens[($stackPtr + 1)]['content'] === ';';
+        if (T_DEC === $tokens[$stackPtr]['code'] || T_INC === $tokens[$stackPtr]['code']) {
+            $modifyLeft = substr($tokens[($stackPtr - 1)]['content'], 0, 1) === '$'
+                || ';' === $tokens[($stackPtr + 1)]['content'];
 
-            if ($modifyLeft === true && $tokens[($stackPtr - 1)]['code'] === T_WHITESPACE) {
+            if (true === $modifyLeft && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']) {
                 $error = 'There must not be a single space before a unary operator statement';
                 $fix = $phpcsFile->addFixableError($error, $stackPtr, 'IncDecLeft');
 
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr - 1, '');
                 }
 
                 return;
             }
 
-            if ($modifyLeft === false && substr($tokens[($stackPtr + 1)]['content'], 0, 1) !== '$') {
+            if (false === $modifyLeft && substr($tokens[($stackPtr + 1)]['content'], 0, 1) !== '$') {
                 $error = 'A unary operator statement must not be followed by a single space';
                 $fix = $phpcsFile->addFixableError($error, $stackPtr, 'IncDecRight');
 
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
                 }
 
@@ -64,11 +64,11 @@ class Symfony3Custom_Sniffs_WhiteSpace_UnaryOperatorSpacingSniff implements PHP_
         }
 
         // Check "!" operator.
-        if ($tokens[$stackPtr]['code'] === T_BOOLEAN_NOT && $tokens[$stackPtr + 1]['code'] === T_WHITESPACE) {
+        if (T_BOOLEAN_NOT === $tokens[$stackPtr]['code'] && T_WHITESPACE === $tokens[$stackPtr + 1]['code']) {
             $error = 'A unary operator statement must not be followed by a space';
             $fix = $phpcsFile->addFixableError($error, $stackPtr, 'BooleanNot');
 
-            if ($fix === true) {
+            if (true === $fix) {
                 $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
             }
 
@@ -98,14 +98,14 @@ class Symfony3Custom_Sniffs_WhiteSpace_UnaryOperatorSpacingSniff implements PHP_
         );
 
         // Check plus / minus value assignments or comparisons.
-        if ($tokens[$stackPtr]['code'] === T_MINUS || $tokens[$stackPtr]['code'] === T_PLUS) {
-            if ($operatorSuffixAllowed === false
-                && $tokens[($stackPtr + 1)]['code'] === T_WHITESPACE
+        if (T_MINUS === $tokens[$stackPtr]['code'] || T_PLUS === $tokens[$stackPtr]['code']) {
+            if (false === $operatorSuffixAllowed
+                && T_WHITESPACE === $tokens[($stackPtr + 1)]['code']
             ) {
                 $error = 'A unary operator statement must not be followed by a space';
                 $fix = $phpcsFile->addFixableError($error, $stackPtr);
 
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
                 }
             }
