@@ -45,10 +45,10 @@ class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP
 
         while ($current >= 0 && $tokens[$current]['line'] >= $previousLine) {
             if ($tokens[$current]['line'] == $previousLine
-                && $tokens[$current]['type'] !== 'T_WHITESPACE'
-                && $tokens[$current]['type'] !== 'T_COMMENT'
-                && $tokens[$current]['type'] !== 'T_DOC_COMMENT_CLOSE_TAG'
-                && $tokens[$current]['type'] !== 'T_DOC_COMMENT_WHITESPACE'
+                && 'T_WHITESPACE' !== $tokens[$current]['type']
+                && 'T_COMMENT' !== $tokens[$current]['type']
+                && 'T_DOC_COMMENT_CLOSE_TAG' !== $tokens[$current]['type']
+                && 'T_DOC_COMMENT_WHITESPACE' !== $tokens[$current]['type']
             ) {
                 $prevLineTokens[] = $tokens[$current]['type'];
             }
@@ -56,8 +56,8 @@ class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP
         }
 
         if (isset($prevLineTokens[0])
-            && ($prevLineTokens[0] === 'T_OPEN_CURLY_BRACKET'
-            || $prevLineTokens[0] === 'T_COLON')
+            && ('T_OPEN_CURLY_BRACKET' === $prevLineTokens[0]
+            || 'T_COLON' === $prevLineTokens[0])
         ) {
             return;
         } elseif (count($prevLineTokens) > 0) {
@@ -67,10 +67,10 @@ class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP
                 'MissedBlankLineBeforeRetrun'
             );
 
-            if ($fix === true) {
+            if (true === $fix) {
                 $phpcsFile->fixer->beginChangeset();
                 $i = 1;
-                while ($tokens[$stackPtr - $i]['type'] == 'T_WHITESPACE') {
+                while ('T_WHITESPACE' == $tokens[$stackPtr - $i]['type']) {
                     $i++;
                 }
                 $phpcsFile->fixer->addNewLine($stackPtr - $i);

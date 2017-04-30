@@ -55,7 +55,7 @@ class Symfony3Custom_Sniffs_Objects_ObjectInstantiationSniff implements PHP_Code
             if ($tokens[$object]['line'] === $line
                 && !in_array($tokens[$object + 1]['code'], $allowed)
             ) {
-                if ($tokens[$object + 1]['code'] !== T_OPEN_PARENTHESIS) {
+                if (T_OPEN_PARENTHESIS !== $tokens[$object + 1]['code']) {
                     $phpcsFile->addError(
                         'Use parentheses when instantiating classes',
                         $stackPtr,

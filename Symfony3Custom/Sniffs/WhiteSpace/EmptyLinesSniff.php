@@ -47,7 +47,7 @@ class Symfony3Custom_Sniffs_WhiteSpace_EmptyLinesSniff implements PHP_CodeSniffe
             $error = 'More than 1 empty lines are not allowed';
             $fix = $phpcsFile->addFixableError($error, $stackPtr + 2, 'EmptyLines');
 
-            if ($fix === true) {
+            if (true === $fix) {
                 $phpcsFile->fixer->replaceToken($stackPtr + 2, '');
             }
         }

@@ -43,17 +43,17 @@ class Symfony3Custom_Sniffs_WhiteSpace_CloseBracketSpacingSniff implements PHP_C
         $tokens = $phpcsFile->getTokens();
 
         // Ignore curly brackets in javascript files.
-        if ($tokens[$stackPtr]['code'] === T_CLOSE_CURLY_BRACKET
-            && $phpcsFile->tokenizerType === 'JS'
+        if (T_CLOSE_CURLY_BRACKET === $tokens[$stackPtr]['code']
+            && 'JS' === $phpcsFile->tokenizerType
         ) {
             return;
         }
 
         if (isset($tokens[($stackPtr - 1)]) === true
-            && $tokens[($stackPtr - 1)]['code'] === T_WHITESPACE
+            && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']
         ) {
             $before = $phpcsFile->findPrevious(PHP_CodeSniffer_Tokens::$emptyTokens, ($stackPtr - 1), null, true);
-            if ($before !== false
+            if (false !== $before
                 && $tokens[$stackPtr]['line'] === $tokens[$before]['line']
             ) {
                 $error = 'There should be no space before a closing "%s"';
@@ -64,7 +64,7 @@ class Symfony3Custom_Sniffs_WhiteSpace_CloseBracketSpacingSniff implements PHP_C
                     array($tokens[$stackPtr]['content'])
                 );
 
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr - 1, '');
                 }
             }

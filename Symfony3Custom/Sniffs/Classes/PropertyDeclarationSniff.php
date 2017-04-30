@@ -63,7 +63,7 @@ class Symfony3Custom_Sniffs_Classes_PropertyDeclarationSniff implements PHP_Code
                 $end
             );
 
-            if ($scope && $tokens[$scope + 2]['code'] === T_VARIABLE) {
+            if ($scope && T_VARIABLE === $tokens[$scope + 2]['code']) {
                 $phpcsFile->addError(
                     'Declare class properties before methods',
                     $scope,

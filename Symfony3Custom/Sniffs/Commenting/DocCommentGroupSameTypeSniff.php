@@ -87,7 +87,7 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                 $previousLine = max($previousStringLine, $previousTagLine);
 
                 $currentIsCustom = !in_array($currentType, $this->tags);
-                $previousIsCustom = ($previousType !== '')
+                $previousIsCustom = ('' !== $previousType)
                     && !in_array($previousType, $this->tags);
 
                 if (($previousType === $currentType)
@@ -110,7 +110,7 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                             );
                         }
 
-                        if ($fix === true) {
+                        if (true === $fix) {
                             $phpcsFile->fixer->beginChangeset();
                             $this->removeLines(
                                 $phpcsFile,
@@ -130,7 +130,7 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                             'DifferentType'
                         );
 
-                        if ($fix === true) {
+                        if (true === $fix) {
                             $phpcsFile->fixer->beginChangeset();
 
                             if ($previousLine === $commentTagLine - 1) {

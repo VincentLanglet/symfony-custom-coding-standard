@@ -51,21 +51,22 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
     {
         $tokens = $phpcsFile->getTokens();
 
-        if ($tokens[$stackPtr]['code'] === T_ARRAY) {
+        if (T_ARRAY === $tokens[$stackPtr]['code']) {
             $phpcsFile->recordMetric($stackPtr, 'Short array syntax used', 'no');
 
             // Array keyword should be lower case.
-            if ($tokens[$stackPtr]['content'] !== strtolower($tokens[$stackPtr]['content'])) {
-                if ($tokens[$stackPtr]['content'] === strtoupper($tokens[$stackPtr]['content'])) {
+            if (strtolower($tokens[$stackPtr]['content']) !== $tokens[$stackPtr]['content']) {
+                if (strtoupper($tokens[$stackPtr]['content']) === $tokens[$stackPtr]['content']) {
                     $phpcsFile->recordMetric($stackPtr, 'Array keyword case', 'upper');
                 } else {
                     $phpcsFile->recordMetric($stackPtr, 'Array keyword case', 'mixed');
                 }
 
                 $error = 'Array keyword should be lower case; expected "array" but found "%s"';
-                $data  = array($tokens[$stackPtr]['content']);
+                $data  = [$tokens[$stackPtr]['content']];
                 $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'NotLowerCase', $data);
-                if ($fix === true) {
+
+                if (true === $fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr, 'array');
                 }
             } else {
@@ -79,11 +80,11 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
 
             $arrayEnd = $tokens[$arrayStart]['parenthesis_closer'];
 
-            if ($arrayStart !== ($stackPtr + 1)) {
+            if (($stackPtr + 1) !== $arrayStart) {
                 $error = 'There must be no space between the "array" keyword and the opening parenthesis';
                 $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SpaceAfterKeyword');
 
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->beginChangeset();
                     for ($i = ($stackPtr + 1); $i < $arrayStart; $i++) {
                         $phpcsFile->fixer->replaceToken($i, '');
@@ -106,7 +107,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 $error = 'Empty array declaration must have no space between the parentheses';
                 $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SpaceInEmptyArray');
 
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->beginChangeset();
                     for ($i = ($arrayStart + 1); $i < $arrayEnd; $i++) {
                         $phpcsFile->fixer->replaceToken($i, '');
@@ -149,23 +150,23 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
         $commas     = array();
         for ($i = ($arrayStart + 1); $i < $arrayEnd; $i++) {
             // Skip bracketed statements, like function calls.
-            if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS) {
+            if (T_OPEN_PARENTHESIS === $tokens[$i]['code']) {
                 $i = $tokens[$i]['parenthesis_closer'];
                 continue;
             }
 
-            if ($tokens[$i]['code'] === T_COMMA) {
+            if (T_COMMA === $tokens[$i]['code']) {
                 // Before counting this comma, make sure we are not
                 // at the end of the array.
                 $next = $phpcsFile->findNext(T_WHITESPACE, ($i + 1), $arrayEnd, true);
-                if ($next !== false) {
+                if (false !== $next) {
                     $valueCount++;
                     $commas[] = $i;
                 } else {
                     // There is a comma at the end of a single line array.
                     $error = 'Comma not allowed after last value in single-line array declaration';
                     $fix   = $phpcsFile->addFixableError($error, $i, 'CommaAfterLast');
-                    if ($fix === true) {
+                    if (true === $fix) {
                         $phpcsFile->fixer->replaceToken($i, '');
                     }
                 }
@@ -175,17 +176,17 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
         // Now check each of the double arrows (if any).
         $nextArrow = $arrayStart;
         while (($nextArrow = $phpcsFile->findNext(T_DOUBLE_ARROW, ($nextArrow + 1), $arrayEnd)) !== false) {
-            if ($tokens[($nextArrow - 1)]['code'] !== T_WHITESPACE) {
+            if (T_WHITESPACE !== $tokens[($nextArrow - 1)]['code']) {
                 $content = $tokens[($nextArrow - 1)]['content'];
                 $error   = 'Expected 1 space between "%s" and double arrow; 0 found';
                 $data    = array($content);
                 $fix     = $phpcsFile->addFixableError($error, $nextArrow, 'NoSpaceBeforeDoubleArrow', $data);
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->addContentBefore($nextArrow, ' ');
                 }
             } else {
                 $spaceLength = $tokens[($nextArrow - 1)]['length'];
-                if ($spaceLength !== 1) {
+                if (1 !== $spaceLength) {
                     $content = $tokens[($nextArrow - 2)]['content'];
                     $error   = 'Expected 1 space between "%s" and double arrow; %s found';
                     $data    = array(
@@ -194,23 +195,24 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     );
 
                     $fix = $phpcsFile->addFixableError($error, $nextArrow, 'SpaceBeforeDoubleArrow', $data);
-                    if ($fix === true) {
+                    if (true === $fix) {
                         $phpcsFile->fixer->replaceToken(($nextArrow - 1), ' ');
                     }
                 }
             }
 
-            if ($tokens[($nextArrow + 1)]['code'] !== T_WHITESPACE) {
+            if (T_WHITESPACE !== $tokens[($nextArrow + 1)]['code']) {
                 $content = $tokens[($nextArrow + 1)]['content'];
                 $error   = 'Expected 1 space between double arrow and "%s"; 0 found';
                 $data    = array($content);
+
                 $fix     = $phpcsFile->addFixableError($error, $nextArrow, 'NoSpaceAfterDoubleArrow', $data);
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->addContent($nextArrow, ' ');
                 }
             } else {
                 $spaceLength = $tokens[($nextArrow + 1)]['length'];
-                if ($spaceLength !== 1) {
+                if (1 !== $spaceLength) {
                     $content = $tokens[($nextArrow + 2)]['content'];
                     $error   = 'Expected 1 space between double arrow and "%s"; %s found';
                     $data    = array(
@@ -219,7 +221,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     );
 
                     $fix = $phpcsFile->addFixableError($error, $nextArrow, 'SpaceAfterDoubleArrow', $data);
-                    if ($fix === true) {
+                    if (true === $fix) {
                         $phpcsFile->fixer->replaceToken(($nextArrow + 1), ' ');
                     }
                 }
@@ -229,17 +231,18 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
         if ($valueCount > 0) {
             // We have a multiple value array
             foreach ($commas as $comma) {
-                if ($tokens[($comma + 1)]['code'] !== T_WHITESPACE) {
+                if (T_WHITESPACE !== $tokens[($comma + 1)]['code']) {
                     $content = $tokens[($comma + 1)]['content'];
                     $error = 'Expected 1 space between comma and "%s"; 0 found';
                     $data = [$content];
+
                     $fix = $phpcsFile->addFixableError($error, $comma, 'NoSpaceAfterComma', $data);
-                    if ($fix === true) {
+                    if (true === $fix) {
                         $phpcsFile->fixer->addContent($comma, ' ');
                     }
                 } else {
                     $spaceLength = $tokens[($comma + 1)]['length'];
-                    if ($spaceLength !== 1) {
+                    if (1 !== $spaceLength) {
                         $content = $tokens[($comma + 2)]['content'];
                         $error = 'Expected 1 space between comma and "%s"; %s found';
                         $data = [
@@ -248,13 +251,13 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                         ];
 
                         $fix = $phpcsFile->addFixableError($error, $comma, 'SpaceAfterComma', $data);
-                        if ($fix === true) {
+                        if (true === $fix) {
                             $phpcsFile->fixer->replaceToken(($comma + 1), ' ');
                         }
                     }
                 }
 
-                if ($tokens[($comma - 1)]['code'] === T_WHITESPACE) {
+                if (T_WHITESPACE === $tokens[($comma - 1)]['code']) {
                     $content = $tokens[($comma - 2)]['content'];
                     $spaceLength = $tokens[($comma - 1)]['length'];
                     $error = 'Expected 0 spaces between "%s" and comma; %s found';
@@ -264,7 +267,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     ];
 
                     $fix = $phpcsFile->addFixableError($error, $comma, 'SpaceBeforeComma', $data);
-                    if ($fix === true) {
+                    if (true === $fix) {
                         $phpcsFile->fixer->replaceToken(($comma - 1), '');
                     }
                 }
@@ -286,7 +289,6 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
     public function processMultiLineArray(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $arrayStart, $arrayEnd)
     {
         $tokens       = $phpcsFile->getTokens();
-        $keywordStart = $tokens[$stackPtr]['column'];
 
         $indent = $phpcsFile->findFirstOnLine(T_WHITESPACE, $arrayStart);
         if (false === $indent) {
@@ -300,7 +302,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
         if ($tokens[$lastContent]['line'] === $tokens[$arrayEnd]['line']) {
             $error = 'Closing parenthesis of array declaration must be on a new line';
             $fix   = $phpcsFile->addFixableError($error, $arrayEnd, 'CloseBraceNewLine');
-            if ($fix === true) {
+            if (true === $fix) {
                 $phpcsFile->fixer->addNewlineBefore($arrayEnd);
             }
         } elseif ($tokens[$arrayEnd]['column'] !== $currentIndent + 1) {
@@ -314,8 +316,8 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
             );
 
             $fix = $phpcsFile->addFixableError($error, $arrayEnd, 'CloseBraceNotAligned', $data);
-            if ($fix === true) {
-                if ($found === 0) {
+            if (true === $fix) {
+                if (0 === $found) {
                     $phpcsFile->fixer->addContent(($arrayEnd - 1), str_repeat(' ', $expected));
                 } else {
                     $phpcsFile->fixer->replaceToken(($arrayEnd - 1), str_repeat(' ', $expected));
@@ -328,7 +330,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
         $indices    = array();
         $maxLength  = 0;
 
-        if ($tokens[$stackPtr]['code'] === T_ARRAY) {
+        if (T_ARRAY === $tokens[$stackPtr]['code']) {
             $lastToken = $tokens[$stackPtr]['parenthesis_opener'];
         } else {
             $lastToken = $stackPtr;
@@ -337,27 +339,27 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
         // Find all the double arrows that reside in this scope.
         for ($nextToken = ($stackPtr + 1); $nextToken < $arrayEnd; $nextToken++) {
             // Skip bracketed statements, like function calls.
-            if ($tokens[$nextToken]['code'] === T_OPEN_PARENTHESIS
-                && (isset($tokens[$nextToken]['parenthesis_owner']) === false
+            if (T_OPEN_PARENTHESIS === $tokens[$nextToken]['code']
+                && false === (isset($tokens[$nextToken]['parenthesis_owner'])
                 || $tokens[$nextToken]['parenthesis_owner'] !== $stackPtr)
             ) {
                 $nextToken = $tokens[$nextToken]['parenthesis_closer'];
                 continue;
             }
 
-            if ($tokens[$nextToken]['code'] === T_ARRAY
-                || $tokens[$nextToken]['code'] === T_OPEN_SHORT_ARRAY
-                || $tokens[$nextToken]['code'] === T_CLOSURE
+            if (T_ARRAY === $tokens[$nextToken]['code']
+                || T_OPEN_SHORT_ARRAY === $tokens[$nextToken]['code']
+                || T_CLOSURE === $tokens[$nextToken]['code']
             ) {
                 // Let subsequent calls of this test handle nested arrays.
-                if ($tokens[$lastToken]['code'] !== T_DOUBLE_ARROW) {
+                if (T_DOUBLE_ARROW !== $tokens[$lastToken]['code']) {
                     $indices[] = array('value' => $nextToken);
                     $lastToken = $nextToken;
                 }
 
-                if ($tokens[$nextToken]['code'] === T_ARRAY) {
+                if (T_ARRAY === $tokens[$nextToken]['code']) {
                     $nextToken = $tokens[$tokens[$nextToken]['parenthesis_opener']]['parenthesis_closer'];
-                } elseif ($tokens[$nextToken]['code'] === T_OPEN_SHORT_ARRAY) {
+                } elseif (T_OPEN_SHORT_ARRAY === $tokens[$nextToken]['code']) {
                     $nextToken = $tokens[$nextToken]['bracket_closer'];
                 } else {
                     // T_CLOSURE.
@@ -365,7 +367,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 }
 
                 $nextToken = $phpcsFile->findNext(T_WHITESPACE, ($nextToken + 1), null, true);
-                if ($tokens[$nextToken]['code'] !== T_COMMA) {
+                if (T_COMMA !== $tokens[$nextToken]['code']) {
                     $nextToken--;
                 } else {
                     $lastToken = $nextToken;
@@ -374,24 +376,24 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 continue;
             }
 
-            if ($tokens[$nextToken]['code'] !== T_DOUBLE_ARROW
-                && $tokens[$nextToken]['code'] !== T_COMMA
+            if (T_DOUBLE_ARROW !== $tokens[$nextToken]['code']
+                && T_COMMA !== $tokens[$nextToken]['code']
             ) {
                 continue;
             }
 
             $currentEntry = array();
 
-            if ($tokens[$nextToken]['code'] === T_COMMA) {
+            if (T_COMMA === $tokens[$nextToken]['code']) {
                 $stackPtrCount = 0;
-                if (isset($tokens[$stackPtr]['nested_parenthesis']) === true) {
+                if (true === isset($tokens[$stackPtr]['nested_parenthesis'])) {
                     $stackPtrCount = count($tokens[$stackPtr]['nested_parenthesis']);
                 }
 
                 $commaCount = 0;
-                if (isset($tokens[$nextToken]['nested_parenthesis']) === true) {
+                if (true === isset($tokens[$nextToken]['nested_parenthesis'])) {
                     $commaCount = count($tokens[$nextToken]['nested_parenthesis']);
-                    if ($tokens[$stackPtr]['code'] === T_ARRAY) {
+                    if (T_ARRAY === $tokens[$stackPtr]['code']) {
                         // Remove parenthesis that are used to define the array.
                         $commaCount--;
                     }
@@ -404,15 +406,15 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     continue;
                 }
 
-                if ($keyUsed === true && $tokens[$lastToken]['code'] === T_COMMA) {
+                if (true === $keyUsed && T_COMMA === $tokens[$lastToken]['code']) {
                     $error = 'No key specified for array entry; first entry specifies key';
                     $phpcsFile->addError($error, $nextToken, 'NoKeySpecified');
 
                     return;
                 }
 
-                if ($keyUsed === false) {
-                    if ($tokens[($nextToken - 1)]['code'] === T_WHITESPACE) {
+                if (false === $keyUsed) {
+                    if (T_WHITESPACE === $tokens[($nextToken - 1)]['code']) {
                         $content = $tokens[($nextToken - 2)]['content'];
                         if ($tokens[($nextToken - 1)]['content'] === $phpcsFile->eolChar) {
                             $spaceLength = 'newline';
@@ -427,7 +429,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                         );
 
                         $fix = $phpcsFile->addFixableError($error, $nextToken, 'SpaceBeforeComma', $data);
-                        if ($fix === true) {
+                        if (true === $fix) {
                             $phpcsFile->fixer->replaceToken(($nextToken - 1), '');
                         }
                     }
@@ -447,8 +449,8 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 continue;
             }
 
-            if ($tokens[$nextToken]['code'] === T_DOUBLE_ARROW) {
-                if ($singleUsed === true) {
+            if (T_DOUBLE_ARROW === $tokens[$nextToken]['code']) {
+                if (true === $singleUsed) {
                     $error = 'Key specified for array entry; first entry has no key';
                     $phpcsFile->addError($error, $nextToken, 'KeySpecified');
 
@@ -503,7 +505,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                );
         */
 
-        if ($keyUsed === false && empty($indices) === false) {
+        if (false === $keyUsed && false === empty($indices)) {
             $count     = count($indices);
             $lastIndex = $indices[($count - 1)]['value'];
 
@@ -514,11 +516,11 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 true
             );
 
-            if ($tokens[$trailingContent]['code'] !== T_COMMA) {
+            if (T_COMMA !== $tokens[$trailingContent]['code']) {
                 $phpcsFile->recordMetric($stackPtr, 'Array end comma', 'no');
                 $error = 'Comma required after last value in array declaration';
                 $fix   = $phpcsFile->addFixableError($error, $trailingContent, 'NoCommaAfterLast');
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->addContent($trailingContent, ',');
                 }
             } else {
@@ -527,24 +529,24 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
 
             $lastValueLine = false;
             foreach ($indices as $value) {
-                if (empty($value['value']) === true) {
+                if (true === empty($value['value'])) {
                     // Array was malformed and we couldn't figure out
                     // the array value correctly, so we have to ignore it.
                     // Other parts of this sniff will correct the error.
                     continue;
                 }
 
-                if ($lastValueLine !== false && $tokens[$value['value']]['line'] === $lastValueLine) {
+                if (false !== $lastValueLine && $tokens[$value['value']]['line'] === $lastValueLine) {
                     $error = 'Each value in a multi-line array must be on a new line';
                     $fix   = $phpcsFile->addFixableError($error, $value['value'], 'ValueNoNewline');
-                    if ($fix === true) {
-                        if ($tokens[($value['value'] - 1)]['code'] === T_WHITESPACE) {
+                    if (true === $fix) {
+                        if (T_WHITESPACE === $tokens[($value['value'] - 1)]['code']) {
                             $phpcsFile->fixer->replaceToken(($value['value'] - 1), '');
                         }
 
                         $phpcsFile->fixer->addNewlineBefore($value['value']);
                     }
-                } elseif ($tokens[($value['value'] - 1)]['code'] === T_WHITESPACE) {
+                } elseif (T_WHITESPACE === $tokens[($value['value'] - 1)]['code']) {
                     $expected = $currentIndent + $this->indent;
 
                     $first = $phpcsFile->findFirstOnLine(T_WHITESPACE, $value['value'], true);
@@ -557,19 +559,19 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                         );
 
                         $fix = $phpcsFile->addFixableError($error, $value['value'], 'ValueNotAligned', $data);
-                        if ($fix === true) {
-                            if ($found === 0) {
+                        if (true === $fix) {
+                            if (0 === $found) {
                                 $phpcsFile->fixer->addContent(($value['value'] - 1), str_repeat(' ', $expected));
                             } else {
                                 $phpcsFile->fixer->replaceToken(($value['value'] - 1), str_repeat(' ', $expected));
                             }
                         }
                     }
-                }//end if
+                }
 
                 $lastValueLine = $tokens[$value['value']]['line'];
-            }//end foreach
-        }//end if
+            }
+        }
 
         /*
             Below the actual indentation of the array is checked.
@@ -611,7 +613,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 if ($tokens[$index['value']]['line'] === $tokens[$stackPtr]['line'] && $numValues > 1) {
                     $error = 'The first value in a multi-value array must be on a new line';
                     $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'FirstValueNoNewline');
-                    if ($fix === true) {
+                    if (true === $fix) {
                         $phpcsFile->fixer->addNewlineBefore($index['value']);
                     }
                 }
@@ -625,7 +627,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
             if ($indexLine === $tokens[$stackPtr]['line']) {
                 $error = 'The first index in a multi-value array must be on a new line';
                 $fix   = $phpcsFile->addFixableError($error, $index['index'], 'FirstIndexNoNewline');
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->addNewlineBefore($index['index']);
                 }
 
@@ -635,8 +637,8 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
             if ($indexLine === $lastIndexLine) {
                 $error = 'Each index in a multi-line array must be on a new line';
                 $fix   = $phpcsFile->addFixableError($error, $index['index'], 'IndexNoNewline');
-                if ($fix === true) {
-                    if ($tokens[($index['index'] - 1)]['code'] === T_WHITESPACE) {
+                if (true === $fix) {
+                    if (T_WHITESPACE === $tokens[($index['index'] - 1)]['code']) {
                         $phpcsFile->fixer->replaceToken(($index['index'] - 1), '');
                     }
 
@@ -646,7 +648,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 continue;
             }
 
-            if ($tokens[$index['index']]['column'] !== $indicesStart) {
+            if ($indicesStart !== $tokens[$index['index']]['column']) {
                 $expected = ($indicesStart - 1);
                 $found    = ($tokens[$index['index']]['column'] - 1);
                 $error    = 'Array key not aligned correctly; expected %s spaces but found %s';
@@ -657,8 +659,8 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
 
                 $fix = $phpcsFile->addFixableError($error, $index['index'], 'KeyNotAligned', $data);
 
-                if ($fix === true) {
-                    if ($found === 0) {
+                if (true === $fix) {
+                    if (0 === $found) {
                         $phpcsFile->fixer->addContent(($index['index'] - 1), str_repeat(' ', $expected));
                     } else {
                         $phpcsFile->fixer->replaceToken(($index['index'] - 1), str_repeat(' ', $expected));
@@ -683,10 +685,10 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     $found,
                 );
 
-                if ($found !== 'newline' || $this->ignoreNewLines === false) {
+                if ('newline' !== $found || false === $this->ignoreNewLines) {
                     $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'DoubleArrowNotAligned', $data);
-                    if ($fix === true) {
-                        if ($found === 'newline') {
+                    if (true === $fix) {
+                        if ('newline' === $found) {
                             $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($index['value'] - 1), null, true);
                             $phpcsFile->fixer->beginChangeset();
                             for ($i = ($prev + 1); $i < $index['value']; $i++) {
@@ -695,7 +697,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
 
                             $phpcsFile->fixer->replaceToken(($index['value'] - 1), str_repeat(' ', $expected));
                             $phpcsFile->fixer->endChangeset();
-                        } elseif ($found === 0) {
+                        } elseif (0 === $found) {
                             $phpcsFile->fixer->addContent(($index['arrow'] - 1), str_repeat(' ', $expected));
                         } else {
                             $phpcsFile->fixer->replaceToken(($index['arrow'] - 1), str_repeat(' ', $expected));
@@ -715,7 +717,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     $found = 'newline';
                 }
 
-                if ($found !== 'newline' || $this->ignoreNewLines === false) {
+                if ('newline' !== $found || false === $this->ignoreNewLines) {
                     $error = 'Array value not aligned correctly; expected %s space(s) but found %s';
                     $data = [
                         $expected,
@@ -723,8 +725,8 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     ];
 
                     $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'ValueNotAligned', $data);
-                    if ($fix === true) {
-                        if ($found === 'newline') {
+                    if (true === $fix) {
+                        if ('newline' === $found) {
                             $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($index['value'] - 1), null, true);
                             $phpcsFile->fixer->beginChangeset();
                             for ($i = ($prev + 1); $i < $index['value']; $i++) {
@@ -733,7 +735,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
 
                             $phpcsFile->fixer->replaceToken(($index['value'] - 1), str_repeat(' ', $expected));
                             $phpcsFile->fixer->endChangeset();
-                        } elseif ($found === 0) {
+                        } elseif (0 === $found) {
                             $phpcsFile->fixer->addContent(($index['value'] - 1), str_repeat(' ', $expected));
                         } else {
                             $phpcsFile->fixer->replaceToken(($index['value'] - 1), str_repeat(' ', $expected));
@@ -747,13 +749,13 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
             $nextComma = false;
             for ($i = $index['value']; $i < $arrayEnd; $i++) {
                 // Skip bracketed statements, like function calls.
-                if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS) {
+                if (T_OPEN_PARENTHESIS === $tokens[$i]['code']) {
                     $i         = $tokens[$i]['parenthesis_closer'];
                     $valueLine = $tokens[$i]['line'];
                     continue;
                 }
 
-                if ($tokens[$i]['code'] === T_ARRAY) {
+                if (T_ARRAY === $tokens[$i]['code']) {
                     $i         = $tokens[$tokens[$i]['parenthesis_opener']]['parenthesis_closer'];
                     $valueLine = $tokens[$i]['line'];
                     continue;
@@ -767,29 +769,29 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     continue;
                 }
 
-                if ($tokens[$i]['code'] === T_OPEN_SHORT_ARRAY) {
+                if (T_OPEN_SHORT_ARRAY === $tokens[$i]['code']) {
                     $i         = $tokens[$i]['bracket_closer'];
                     $valueLine = $tokens[$i]['line'];
                     continue;
                 }
 
-                if ($tokens[$i]['code'] === T_CLOSURE) {
+                if (T_CLOSURE === $tokens[$i]['code']) {
                     $i         = $tokens[$i]['scope_closer'];
                     $valueLine = $tokens[$i]['line'];
                     continue;
                 }
 
-                if ($tokens[$i]['code'] === T_COMMA) {
+                if (T_COMMA === $tokens[$i]['code']) {
                     $nextComma = $i;
                     break;
                 }
             }
 
-            if ($nextComma === false || ($tokens[$nextComma]['line'] !== $valueLine)) {
+            if (false === $nextComma || ($tokens[$nextComma]['line'] !== $valueLine)) {
                 $error = 'Each line in an array declaration must end in a comma';
                 $fix   = $phpcsFile->addFixableError($error, $index['value'], 'NoComma');
 
-                if ($fix === true) {
+                if (true === $fix) {
                     // Find the end of the line and put a comma there.
                     for ($i = ($index['value'] + 1); $i < $arrayEnd; $i++) {
                         if ($tokens[$i]['line'] > $valueLine) {
@@ -802,7 +804,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
             }
 
             // Check that there is no space before the comma.
-            if ($nextComma !== false && $tokens[($nextComma - 1)]['code'] === T_WHITESPACE) {
+            if (false !== $nextComma && T_WHITESPACE === $tokens[($nextComma - 1)]['code']) {
                 $content     = $tokens[($nextComma - 2)]['content'];
                 $spaceLength = $tokens[($nextComma - 1)]['length'];
                 $error       = 'Expected 0 spaces between "%s" and comma; %s found';
@@ -812,7 +814,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 );
 
                 $fix = $phpcsFile->addFixableError($error, $nextComma, 'SpaceBeforeComma', $data);
-                if ($fix === true) {
+                if (true === $fix) {
                     $phpcsFile->fixer->replaceToken(($nextComma - 1), '');
                 }
             }

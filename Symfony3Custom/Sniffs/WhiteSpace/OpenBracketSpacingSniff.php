@@ -43,14 +43,14 @@ class Symfony3Custom_Sniffs_WhiteSpace_OpenBracketSpacingSniff implements PHP_Co
         $tokens = $phpcsFile->getTokens();
 
         // Ignore curly brackets in javascript files.
-        if ($tokens[$stackPtr]['code'] === T_OPEN_CURLY_BRACKET
-            && $phpcsFile->tokenizerType === 'JS'
+        if (T_OPEN_CURLY_BRACKET === $tokens[$stackPtr]['code']
+            && 'JS' === $phpcsFile->tokenizerType
         ) {
             return;
         }
 
         if (isset($tokens[($stackPtr + 1)]) === true
-            && $tokens[($stackPtr + 1)]['code'] === T_WHITESPACE
+            && T_WHITESPACE === $tokens[($stackPtr + 1)]['code']
             && strpos($tokens[($stackPtr + 1)]['content'], $phpcsFile->eolChar) === false
         ) {
             $error = 'There should be no space after an opening "%s"';
