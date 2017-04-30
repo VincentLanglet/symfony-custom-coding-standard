@@ -1,12 +1,9 @@
 <?php
 
 /**
- * Unit test class for the AssignmentSpacing sniff.
- *
- * A sniff unit test checks a .inc file for expected violations of a single
- * coding standard. Expected errors and warnings are stored in this class.
+ * Unit test class for VariableCommentSniff.
  */
-class Symfony3Custom_Tests_WhiteSpace_AssignmentSpacingUnitTest extends AbstractSniffUnitTest
+class Symfony3Custom_Tests_Commenting_VariableCommentUnitTest extends AbstractSniffUnitTest
 {
     /**
      * Returns the lines where errors should occur.
@@ -19,11 +16,15 @@ class Symfony3Custom_Tests_WhiteSpace_AssignmentSpacingUnitTest extends Abstract
     public function getErrorList()
     {
         return array(
-            3 => 1,
-            6 => 1,
-            9 => 1,
-            13 => 1,
-        );
+                21  => 1,
+                24  => 1,
+                56  => 1,
+                64  => 1,
+                73  => 1,
+                84  => 1,
+                130 => 1,
+                132 => 1,
+               );
     }
 
     /**
@@ -32,9 +33,9 @@ class Symfony3Custom_Tests_WhiteSpace_AssignmentSpacingUnitTest extends Abstract
      * The key of the array should represent the line number and the value
      * should represent the number of warnings that should occur on that line.
      *
-     * @return array(int => int)
+     * @return array<int, int>
      */
-    protected function getWarningList()
+    public function getWarningList()
     {
         return array();
     }

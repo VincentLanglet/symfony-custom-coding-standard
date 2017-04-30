@@ -1,47 +1,17 @@
-# Coding Standard Rules
-## From PSR2
-
-We imported the [PSR2 Standard](./psr2.md) with this override:
-
-- There MUST NOT be trailing whitespace at the end of blank lines
-```
-<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
-    <properties>
-        <property name="ignoreBlankLines" value="false"/>
-    </properties>
-</rule>
-```
-
-## From Zend
-
-We imported these rules, used in the Zend standard:
-```
-<rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman">
-    <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine"/>
-</rule>
-<rule ref="Generic.PHP.DisallowShortOpenTag"/>
-<rule ref="PEAR.Classes.ClassDeclaration"/>
-<rule ref="Squiz.Functions.GlobalFunction"/>
-<rule ref="Squiz.NamingConventions.ValidVariableName">
-    <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
-    <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
-</rule>
-```
-
-## From symfony
+# Symfony standard
 From [symfony standard](http://symfony.com/doc/current/contributing/code/standards.html)
 
-### Structure
+## Structure
 - Add a single space after each comma delimiter
 
 ```
-<rule ref="Symfony3Custom.WhiteSpace.CommaSpacing" />
+<rule ref="Symfony3Custom.Array.ArrayDeclaration" />
 ```
 
 - Add a single space around binary operators (`==`, `&&`, `...`)
 
 ```
-<rule ref="Symfony3Custom.WhiteSpace.BinaryOperatorSpacing" />
+<rule ref="Squiz.WhiteSpace.OperatorSpacing" />
 ```
 
 We do not respect the exception of the concatenation (`.`) operator
@@ -60,10 +30,18 @@ We do not respect the exception of the concatenation (`.`) operator
 <rule ref="Symfony3Custom.WhiteSpace.SpaceUnaryOperatorSpacing" />
 ```
 
+- Always use identical comparison unless you need type juggling
+
+Not covered
+
+- Use Yoda conditions when checking a variable against an expression
+
+Not covered
+
 - Add a comma after each array item in a multi-line array, even after the last one
 
 ```
-<rule ref="Symfony3Custom.Array.MultiLineArrayComma" />
+<rule ref="Symfony3Custom.Array.ArrayDeclaration" />
 ```
 
 - Add a blank line before return statements,
@@ -106,8 +84,7 @@ Covered by `PSR2`
 <rule ref="Symfony3Custom.Functions.ScopeOrder" />
 ```
 
-- Declare all the arguments on the same line as the method/function name,
- no matter how many arguments there are
+- Declare all the arguments on the same line as the method/function name, no matter how many arguments there are
 
 Not checked because of the limit of 120 characters per line
 
@@ -116,6 +93,18 @@ Not checked because of the limit of 120 characters per line
 ```
 <rule ref="Symfony3Custom.Objects.ObjectInstantiation" />
 ```
+
+- Exception and error message strings must be concatenated using `sprintf`
+
+Not covered
+
+- Calls to `trigger_error` with type `E_USER_DEPRECATED` must be switched to opt-in via `@`operator
+
+Not covered
+
+- Do not use `else`, `elseif`, `break` after `if` and `case` conditions which return or throw something
+
+Not covered
 
 - Do not use spaces around `[` offset accessor and before `]` offset accessor
 
@@ -127,11 +116,17 @@ Not checked because of the limit of 120 characters per line
 
 - Use camelCase, not underscores, for variable, function and method names, arguments
 
-Covered by `PSR2` and `Zend`
+Covered by `PSR2` completed by
+```
+<rule ref="Squiz.NamingConventions.ValidVariableName">
+    <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+    <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
+</rule>
+```
 
 - Use namespaces for all classes
 
-Covered by `PSR1`
+Covered by `PSR1` completed by
 ```
 <rule ref="Squiz.Classes.ValidClassName" />
 ```
@@ -200,56 +195,4 @@ We added exceptions for param comments
 
 ```
 <rule ref="Symfony3Custom.Commenting.DocCommentForbiddenTags" />
-```
-
-## Others
-
-- Add a single space after type casting
-
-```
-<rule ref="Generic.Formatting.SpaceAfterCast"/>
-```
-
-- Add a single space around assignement operator
-
-```
-<rule ref="Symfony3Custom.WhiteSpace.AssignementSpacing"/>
-```
-
-- Do not use spaces after `(` or `{` or before `)` or `}`
-
-```
-<rule ref="Symfony3Custom.WhiteSpace.CloseBracketSpacing"/>
-<rule ref="Symfony3Custom.WhiteSpace.OpenBracketSpacing"/>
-```
-
-- Do not use multiple following blank lines
-
-```
-<rule ref="Symfony3Custom.WhiteSpace.EmptyLines"/>
-```
-
-- Do not call functions with variables passed by reference
-
-```
-<rule ref="Generic.Functions.CallTimePassByReference"/>
-```
-
-- Use lowercase for PHP functions
-
-```
-<rule ref="Squiz.PHP.LowercasePHPFunctions"/>
-```
-
-- Variable and methods have scope modifier
-
-```
-<rule ref="Squiz.Scope.MemberVarScope"/>
-<rule ref="Symfony3Custom.Scope.MethodScope"/>
-```
-
-- No perl-style comments are used
-
-```
-<rule ref="PEAR.Commenting.InlineComment"/>
 ```

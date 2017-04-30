@@ -3,6 +3,12 @@
     <!-- See http://symfony.com/doc/current/contributing/code/standards.html -->
     <description>The Symfony3Custom coding standard.</description>
 
+    <!-- We should only be concerned by src and tests folder -->
+    <exclude-pattern>*/app/*</exclude-pattern>
+    <exclude-pattern>*/var/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/web/*</exclude-pattern>
+
     <!-- There should not be any code in the bundle Resources directory. -->
     <exclude-pattern>*/Resources/*</exclude-pattern>
 
@@ -13,10 +19,6 @@
         <!-- Include the whole PSR-2 (so PSR-1) standard -->
         <rule ref="PSR2"/>
 
-    <!-- ****************** -->
-    <!-- ***  OVERRIDE  *** -->
-    <!-- ****************** -->
-
         <!-- Override SuperfluousWhitespace to not ignore blank lines -->
         <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
             <properties>
@@ -24,35 +26,28 @@
             </properties>
         </rule>
 
-    <!-- ************** -->
-    <!-- ***  ZEND  *** -->
-    <!-- ************** -->
-
-        <!-- Complete with some of ZEND standard -->
-        <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman">
-            <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine"/>
-        </rule>
-        <rule ref="Generic.PHP.DisallowShortOpenTag"/>
-        <rule ref="PEAR.Classes.ClassDeclaration"/>
-        <rule ref="Squiz.Functions.GlobalFunction"/>
-        <rule ref="Squiz.NamingConventions.ValidVariableName">
-            <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
-            <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
+        <!-- Override FunctionDeclaration to check space after type hinting -->
+        <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint">
+            <severity>5</severity>
         </rule>
 
     <!-- **************** -->
     <!-- ***  OTHERS  *** -->
     <!-- **************** -->
 
-        <!-- Rules added by djoos/Symfony2-coding-standard-->
+        <!-- From djoos repo -->
+        <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+        <rule ref="Squiz.NamingConventions.ValidVariableName">
+            <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+            <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
+        </rule>
         <rule ref="Generic.Formatting.SpaceAfterCast"/>
-        <rule ref="Generic.Functions.CallTimePassByReference"/>
         <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
         <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
         <rule ref="Squiz.Scope.MemberVarScope"/>
         <rule ref="PEAR.Commenting.InlineComment"/>
 
-        <!-- Rules added by endouble/Symfony3Custom-coding-standard -->
+        <!-- From endouble repo -->
         <rule ref="Squiz.Strings.ConcatenationSpacing">
             <properties>
                 <property name="spacing" value="1"/>
@@ -62,4 +57,16 @@
         <rule ref="Symfony3Custom.Commenting.FunctionComment.MissingParamComment">
             <severity>0</severity>
         </rule>
+
+        <!-- Added by VincentLanglet repo -->
+        <rule ref="Squiz.Strings.DoubleQuoteUsage">
+            <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
+        </rule>
+        <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+        <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+            <properties>
+                <property name="ignoreNewlines" value="true"/>
+            </properties>
+        </rule>
+        <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
 </ruleset>
