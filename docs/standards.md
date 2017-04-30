@@ -4,11 +4,20 @@
 We imported the [PSR2 Standard](./psr2.md) with this override:
 
 - There MUST NOT be trailing whitespace at the end of blank lines
+
 ```
 <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
     <properties>
         <property name="ignoreBlankLines" value="false"/>
     </properties>
+</rule>
+```
+
+- There MUST be one space after type hinting
+
+```
+<rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint">
+    <severity>5</severity>
 </rule>
 ```
 
@@ -67,7 +76,7 @@ We mainly respect the [Symfony Standard](./symfony.md) but
 </rule>
 ```
 
-### Custom
+### Others
 
 - Add a single space after type casting
 

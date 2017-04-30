@@ -26,6 +26,11 @@
             </properties>
         </rule>
 
+        <!-- Override FunctionDeclaration to check space after type hinting -->
+        <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint">
+            <severity>5</severity>
+        </rule>
+
     <!-- **************** -->
     <!-- ***  OTHERS  *** -->
     <!-- **************** -->
@@ -59,5 +64,12 @@
         </rule>
         <rule ref="Symfony3Custom.Commenting.FunctionComment.MissingParamComment">
             <severity>0</severity>
+        </rule>
+
+        <!-- Rules added by VincentLanglet/Symfony3Custom-coding-standard -->
+        <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+            <properties>
+                <property name="ignoreNewlines" value="true"/>
+            </properties>
         </rule>
 </ruleset>

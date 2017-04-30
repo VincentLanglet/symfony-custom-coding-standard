@@ -41,7 +41,7 @@ Not covered
 - Add a comma after each array item in a multi-line array, even after the last one
 
 ```
-<rule ref="Symfony3Custom.Array.MultiLineArrayComma" />
+<rule ref="Symfony3Custom.Array.ArrayDeclaration" />
 ```
 
 - Add a blank line before return statements,
