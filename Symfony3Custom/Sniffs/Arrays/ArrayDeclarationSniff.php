@@ -650,12 +650,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                              $found,
                             );
 
-                if ($found < 0) {
-                    $phpcsFile->addError($error, $index['index'], 'KeyNotAligned', $data);
-                    $fix = false;
-                } else {
-                    $fix = $phpcsFile->addFixableError($error, $index['index'], 'KeyNotAligned', $data);
-                }
+                $fix = $phpcsFile->addFixableError($error, $index['index'], 'KeyNotAligned', $data);
 
                 if ($fix === true) {
                     if ($found === 0) {
@@ -671,18 +666,34 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
             if ($tokens[$index['arrow']]['column'] !== $arrowStart) {
                 $expected = ($arrowStart - (strlen($index['index_content']) + $tokens[$index['index']]['column']));
                 $found    = ($tokens[$index['arrow']]['column'] - (strlen($index['index_content']) + $tokens[$index['index']]['column']));
+
+                if ($found < 0) {
+                    $found = 'newline';
+                }
+
                 $error    = 'Array double arrow not aligned correctly; expected %s space(s) but found %s';
                 $data     = array(
                              $expected,
                              $found,
                             );
 
-                $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'DoubleArrowNotAligned', $data);
-                if ($fix === true) {
-                    if ($found === 0) {
-                        $phpcsFile->fixer->addContent(($index['arrow'] - 1), str_repeat(' ', $expected));
-                    } else {
-                        $phpcsFile->fixer->replaceToken(($index['arrow'] - 1), str_repeat(' ', $expected));
+                if ($found !== 'newline' || $this->ignoreNewLine === false) {
+                    $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'DoubleArrowNotAligned', $data);
+                    if ($fix === true) {
+                        if ($found === 'newline') {
+                            $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($index['value'] - 1), null, true);
+                            $phpcsFile->fixer->beginChangeset();
+                            for ($i = ($prev + 1); $i < $index['value']; $i++) {
+                                $phpcsFile->fixer->replaceToken($i, '');
+                            }
+
+                            $phpcsFile->fixer->replaceToken(($index['value'] - 1), str_repeat(' ', $expected));
+                            $phpcsFile->fixer->endChangeset();
+                        } elseif ($found === 0) {
+                            $phpcsFile->fixer->addContent(($index['arrow'] - 1), str_repeat(' ', $expected));
+                        } else {
+                            $phpcsFile->fixer->replaceToken(($index['arrow'] - 1), str_repeat(' ', $expected));
+                        }
                     }
                 }
 
