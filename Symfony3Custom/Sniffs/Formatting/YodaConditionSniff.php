@@ -59,7 +59,8 @@ class Symfony3Custom_Sniffs_Formatting_YodaConditionSniff implements PHP_CodeSni
                 $tokens[$i]['code'],
                 array(T_CONSTANT_ENCAPSED_STRING, T_CLOSE_PARENTHESIS, T_OPEN_PARENTHESIS, T_RETURN),
                 true
-            )) {
+            )
+            ) {
                 return;
             }
         }
