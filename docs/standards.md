@@ -88,6 +88,13 @@ We mainly respect the [Symfony Standard](./symfony.md) but
 <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
 ```
 
+- Do not use `error_log`, `print_r`, `var_dump`, `sizeof`, `delete`, `print`, `is_null` and `create_function`
+
+```
+<rule ref="Squiz.PHP.DiscouragedFunctions"/>
+<rule ref="Squiz.PHP.ForbiddenFunctions"/>
+```
+
 ### Custom
 - Some others checks are made about array (`=>` alignments and indentation)
 

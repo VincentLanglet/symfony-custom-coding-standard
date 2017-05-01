@@ -59,6 +59,8 @@
         </rule>
 
         <!-- Added by VincentLanglet repo -->
+        <rule ref="Squiz.PHP.DiscouragedFunctions"/>
+        <rule ref="Squiz.PHP.ForbiddenFunctions"/>
         <rule ref="Squiz.Strings.DoubleQuoteUsage">
             <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
         </rule>
