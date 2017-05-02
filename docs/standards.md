@@ -1,7 +1,7 @@
 # Coding Standard Rules
 ## From PSR2
 
-We imported the [PSR2 Standard](./psr2.md) with this override:
+We imported the [PSR2 Standard](./standards/psr2.md) with this override:
 
 - There MUST NOT be trailing whitespace at the end of blank lines
 
@@ -23,7 +23,7 @@ We imported the [PSR2 Standard](./psr2.md) with this override:
 
 ## From symfony
 
-We mainly respect the [Symfony Standard](./symfony.md) but
+We mainly respect the [Symfony Standard](./standards/symfony.md) but
 
 - We do not respect this rule:
 
