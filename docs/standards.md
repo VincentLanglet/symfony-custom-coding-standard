@@ -25,9 +25,8 @@ We imported the [PSR2 Standard](./psr2.md) with this override:
 
 We mainly respect the [Symfony Standard](./symfony.md) but
 
-- We do not respect these rules:
+- We do not respect this rule:
 
-  - Add no space around the concatenation (`.`) operator
   - Declare all the arguments on the same line as the method/function name, no matter how many arguments there are
 
 - We do not currently check these rules:
