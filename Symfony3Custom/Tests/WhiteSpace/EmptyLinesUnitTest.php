@@ -19,8 +19,9 @@ class Symfony3Custom_Tests_WhiteSpace_EmptyLinesUnitTest extends AbstractSniffUn
     public function getErrorList()
     {
         return array(
-            5 => 1,
+            3 => 1,
             6 => 1,
+            7 => 1,
         );
     }
 

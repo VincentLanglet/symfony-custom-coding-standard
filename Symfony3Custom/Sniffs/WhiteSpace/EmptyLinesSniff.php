@@ -29,6 +29,23 @@ class Symfony3Custom_Sniffs_WhiteSpace_EmptyLinesSniff implements PHP_CodeSniffe
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
+
+        // Special case for the first line
+        if (isset($tokens[$stackPtr - 1])
+            && 'T_OPEN_TAG' === $tokens[$stackPtr - 1]['type']
+            && $tokens[$stackPtr]['content'] === $phpcsFile->eolChar
+            && isset($tokens[$stackPtr + 1]) === true
+            && $tokens[$stackPtr + 1]['content'] === $phpcsFile->eolChar
+        ) {
+            $error = 'More than 1 empty lines are not allowed';
+            $fix = $phpcsFile->addFixableError($error, $stackPtr + 1, 'EmptyLines');
+
+            if (true === $fix) {
+                $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
+            }
+        }
+
+        // General case
         if ($tokens[$stackPtr]['content'] === $phpcsFile->eolChar
             && isset($tokens[$stackPtr + 1]) === true
             && $tokens[$stackPtr + 1]['content'] === $phpcsFile->eolChar
