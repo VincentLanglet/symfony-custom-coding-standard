@@ -9,16 +9,12 @@ From [symfony standard](http://symfony.com/doc/current/contributing/code/standar
 ```
 
 - Add a single space around binary operators (`==`, `&&`, `...`)
+ with the exception of the concatenation (`.`) operator
 
 ```
 <rule ref="Squiz.WhiteSpace.OperatorSpacing" />
-```
-
-We do not respect the exception of the concatenation (`.`) operator
-```
 <rule ref="Squiz.Strings.ConcatenationSpacing">
     <properties>
-        <property name="spacing" value="1"/>
         <property name="ignoreNewlines" value="true" />
     </properties>
 </rule>
