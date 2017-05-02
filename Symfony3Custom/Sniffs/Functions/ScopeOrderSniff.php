@@ -76,7 +76,7 @@ class Symfony3Custom_Sniffs_Functions_ScopeOrderSniff implements PHP_CodeSniffer
                     $current = $current[0];
 
                     $error = 'Declare public methods first,'
-                    . 'then protected ones and finally private ones';
+                    .'then protected ones and finally private ones';
 
                     if (isset($previous) && $current < $previous) {
                         $phpcsFile->addError(

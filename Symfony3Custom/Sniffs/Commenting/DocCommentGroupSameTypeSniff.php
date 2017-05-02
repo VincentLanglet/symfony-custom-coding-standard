@@ -99,14 +99,14 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                         if ($previousType === $currentType) {
                             $fix = $phpcsFile->addFixableError(
                                 'Expected no empty lines '
-                                . 'between annotations of the same type',
+                                .'between annotations of the same type',
                                 $commentTag,
                                 'SameType'
                             );
                         } else {
                             $fix = $phpcsFile->addFixableError(
                                 'Expected no empty lines '
-                                . 'between custom annotations',
+                                .'between custom annotations',
                                 $commentTag,
                                 'CustomType'
                             );
@@ -127,7 +127,7 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                     if ($previousLine !== $commentTagLine - 2) {
                         $fix = $phpcsFile->addFixableError(
                             'Expected exactly one empty line '
-                            . 'between annotations of different types',
+                            .'between annotations of different types',
                             $commentTag,
                             'DifferentType'
                         );
@@ -151,7 +151,7 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentGroupSameTypeSniff implements P
                                 );
                                 $phpcsFile->fixer->addContentBefore(
                                     $firstOnLine,
-                                    $content . $phpcsFile->eolChar
+                                    $content.$phpcsFile->eolChar
                                 );
                             } else {
                                 $this->removeLines(
