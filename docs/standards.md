@@ -125,3 +125,9 @@ We mainly respect the [Symfony Standard](./standards/symfony.md) but
 ```
 <rule ref="Symfony3Custom.Commenting.VariableComment"/>
 ```
+
+- USE keywords should be alphabetically sorted
+
+```
+<rule ref="Symfony3Custom.Namespaces.AlphabeticallySortedUse"/>
+```
