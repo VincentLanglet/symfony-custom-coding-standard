@@ -63,5 +63,4 @@ class UserDeprecatedSniff implements Sniff
             }
         } while ($opener < $closer);
     }
-
 }

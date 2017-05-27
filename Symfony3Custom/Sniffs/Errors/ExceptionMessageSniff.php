@@ -49,5 +49,4 @@ class ExceptionMessageSniff implements Sniff
             $phpcsFile->addError($error, $stackPtr, 'Invalid');
         }
     }
-
 }
