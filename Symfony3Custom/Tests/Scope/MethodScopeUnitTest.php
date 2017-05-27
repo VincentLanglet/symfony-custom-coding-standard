@@ -7,8 +7,7 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 /**
  * Unit test class for the MethodScope sniff.
  *
- * A sniff unit test checks a .inc file for expected violations of a single
- * coding standard. Expected errors and warnings are stored in this class.
+ * @group Symfony3Custom
  */
 class MethodScopeUnitTest extends AbstractSniffUnitTest
 {
