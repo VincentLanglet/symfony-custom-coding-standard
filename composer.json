@@ -1,5 +1,5 @@
 {
-    "name": "vincentlanglet/Symfony3-custom-coding-standard",
+    "name": "vincentlanglet/symfony3-custom-coding-standard",
     "type": "coding-standard",
     "description": "Customized CodeSniffer ruleset for the Symfony3 projects",
     "keywords": [
