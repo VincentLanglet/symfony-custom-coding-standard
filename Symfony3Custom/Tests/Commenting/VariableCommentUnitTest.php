@@ -1,9 +1,13 @@
 <?php
 
+namespace Symfony3Custom\Tests\Commenting;
+
+use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
+
 /**
  * Unit test class for VariableCommentSniff.
  */
-class Symfony3Custom_Tests_Commenting_VariableCommentUnitTest extends AbstractSniffUnitTest
+class VariableCommentUnitTest extends AbstractSniffUnitTest
 {
     /**
      * Returns the lines where errors should occur.

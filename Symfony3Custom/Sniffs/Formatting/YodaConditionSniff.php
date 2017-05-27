@@ -1,9 +1,15 @@
 <?php
 
+namespace Symfony3Custom\Sniffs\Formatting;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Util\Tokens;
+
 /**
  * Enforces Yoda conditional statements.
  */
-class Symfony3Custom_Sniffs_Formatting_YodaConditionSniff implements PHP_CodeSniffer_Sniff
+class YodaConditionSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -23,17 +29,17 @@ class Symfony3Custom_Sniffs_Formatting_YodaConditionSniff implements PHP_CodeSni
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-     * @param int                  $stackPtr  The position of the current token in the
-     *                                        stack passed in $tokens.
+     * @param File $phpcsFile The file being scanned.
+     * @param int  $stackPtr  The position of the current token in the
+     *                        stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
-        $beginners   = PHP_CodeSniffer_Tokens::$booleanOperators;
+        $beginners   = Tokens::$booleanOperators;
         $beginners[] = T_IF;
         $beginners[] = T_ELSEIF;
 
@@ -44,7 +50,7 @@ class Symfony3Custom_Sniffs_Formatting_YodaConditionSniff implements PHP_CodeSni
         // Note: going backwards!
         for ($i = $stackPtr; $i > $beginning; $i--) {
             // Ignore whitespace.
-            if (isset(PHP_CodeSniffer_Tokens::$emptyTokens[$tokens[$i]['code']])) {
+            if (isset(Tokens::$emptyTokens[$tokens[$i]['code']])) {
                 continue;
             }
 
@@ -70,11 +76,11 @@ class Symfony3Custom_Sniffs_Formatting_YodaConditionSniff implements PHP_CodeSni
         }
 
         // Check if this is a var to var comparison, e.g.: if ( $var1 == $var2 ).
-        $nextNonEmpty = $phpcsFile->findNext(PHP_CodeSniffer_Tokens::$emptyTokens, ($stackPtr + 1), null, true);
+        $nextNonEmpty = $phpcsFile->findNext(Tokens::$emptyTokens, ($stackPtr + 1), null, true);
 
-        if (isset(PHP_CodeSniffer_Tokens::$castTokens[$tokens[$nextNonEmpty]['code']])) {
+        if (isset(Tokens::$castTokens[$tokens[$nextNonEmpty]['code']])) {
             $nextNonEmpty = $phpcsFile->findNext(
-                PHP_CodeSniffer_Tokens::$emptyTokens,
+                Tokens::$emptyTokens,
                 ($nextNonEmpty + 1),
                 null,
                 true
@@ -83,7 +89,7 @@ class Symfony3Custom_Sniffs_Formatting_YodaConditionSniff implements PHP_CodeSni
 
         if (in_array($tokens[$nextNonEmpty]['code'], array(T_SELF, T_PARENT, T_STATIC), true)) {
             $nextNonEmpty = $phpcsFile->findNext(
-                array_merge(PHP_CodeSniffer_Tokens::$emptyTokens, array(T_DOUBLE_COLON)),
+                array_merge(Tokens::$emptyTokens, array(T_DOUBLE_COLON)),
                 ($nextNonEmpty + 1),
                 null,
                 true

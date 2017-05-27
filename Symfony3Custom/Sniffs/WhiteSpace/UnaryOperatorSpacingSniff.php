@@ -1,10 +1,15 @@
 <?php
 
+namespace Symfony3Custom\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
+
 /**
  * Ensures there are no spaces on increment / decrement statements or on +/- sign
  * operators or "!" boolean negators.
  */
-class Symfony3Custom_Sniffs_WhiteSpace_UnaryOperatorSpacingSniff implements PHP_CodeSniffer_Sniff
+class UnaryOperatorSpacingSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -25,13 +30,13 @@ class Symfony3Custom_Sniffs_WhiteSpace_UnaryOperatorSpacingSniff implements PHP_
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile The file being scanned.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -103,7 +108,7 @@ class Symfony3Custom_Sniffs_WhiteSpace_UnaryOperatorSpacingSniff implements PHP_
                 && T_WHITESPACE === $tokens[($stackPtr + 1)]['code']
             ) {
                 $error = 'A unary operator statement must not be followed by a space';
-                $fix = $phpcsFile->addFixableError($error, $stackPtr);
+                $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Invalid');
 
                 if (true === $fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr + 1, '');

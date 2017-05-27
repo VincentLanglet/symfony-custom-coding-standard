@@ -1,14 +1,8 @@
 <?php
 
-if (class_exists('PHP_CodeSniffer_Tokenizers_Comment', true) === false) {
-    $error = 'Class PHP_CodeSniffer_Tokenizers_Comment not found';
-    throw new PHP_CodeSniffer_Exception($error);
-}
+namespace Symfony3Custom\Sniffs\Commenting;
 
-if (class_exists('PEAR_Sniffs_Commenting_ClassCommentSniff', true) === false) {
-    $error = 'Class PEAR_Sniffs_Commenting_ClassCommentSniff not found';
-    throw new PHP_CodeSniffer_Exception($error);
-}
+use PHP_CodeSniffer\Standards\PEAR\Sniffs\Commenting\ClassCommentSniff as PEARClassCommentSniff;
 
 /**
  * Parses and verifies the doc comments for classes.
@@ -24,7 +18,7 @@ if (class_exists('PEAR_Sniffs_Commenting_ClassCommentSniff', true) === false) {
  *  <li>Check required and optional tags and the format of their content.</li>
  * </ul>
  */
-class Symfony3Custom_Sniffs_Commenting_ClassCommentSniff extends PEAR_Sniffs_Commenting_ClassCommentSniff
+class ClassCommentSniff extends PEARClassCommentSniff
 {
     /**
      * Tags in correct order and related info.

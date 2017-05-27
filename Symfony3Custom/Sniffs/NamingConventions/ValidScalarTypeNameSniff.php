@@ -1,9 +1,15 @@
 <?php
 
+namespace Symfony3Custom\Sniffs\NamingConventions;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Util\Tokens;
+
 /**
  * Throws errors if scalar type name are not valid.
  */
-class Symfony3Custom_Sniffs_NamingConventions_ValidScalarTypeNameSniff implements PHP_CodeSniffer_Sniff
+class ValidScalarTypeNameSniff implements Sniff
 {
     /**
      * Types to replace: key is type to replace, value is type to replace with.
@@ -24,7 +30,7 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidScalarTypeNameSniff implement
      */
     public function register()
     {
-        $tokens = PHP_CodeSniffer_Tokens::$castTokens;
+        $tokens = Tokens::$castTokens;
         $tokens[] = T_DOC_COMMENT_OPEN_TAG;
 
         return $tokens;
@@ -33,13 +39,13 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidScalarTypeNameSniff implement
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile All the tokens found in the document.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile All the tokens found in the document.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         if (T_DOC_COMMENT_OPEN_TAG === $tokens[$stackPtr]['code']) {
@@ -52,12 +58,12 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidScalarTypeNameSniff implement
     /**
      * Validates PHPDoc comment.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile File to process
-     * @param int                  $stackPtr  Position of PHPDoc comment to validate
+     * @param File $phpcsFile File to process
+     * @param int  $stackPtr  Position of PHPDoc comment to validate
      *
      * @return void
      */
-    protected function validateDocComment(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    protected function validateDocComment(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         foreach ($tokens[$stackPtr]['comment_tags'] as $commentTag) {
@@ -79,12 +85,12 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidScalarTypeNameSniff implement
     /**
      * Validates cast operator.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile File to process
-     * @param int                  $stackPtr  Position of cast to validate
+     * @param File $phpcsFile File to process
+     * @param int  $stackPtr  Position of cast to validate
      *
      * @return void
      */
-    protected function validateCast(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    protected function validateCast(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         preg_match('/^\(\s*(\S+)\s*\)$/', $tokens[$stackPtr]['content'], $matches);
@@ -96,14 +102,14 @@ class Symfony3Custom_Sniffs_NamingConventions_ValidScalarTypeNameSniff implement
     /**
      * Validates type name.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile File to process
-     * @param int                  $stackPtr  Position, where error will be raised
-     * @param string               $typeName  Type name to validate
+     * @param File   $phpcsFile File to process
+     * @param int    $stackPtr  Position, where error will be raised
+     * @param string $typeName  Type name to validate
      *
      * @return void
      */
     protected function validateTypeName(
-        PHP_CodeSniffer_File $phpcsFile,
+        File $phpcsFile,
         $stackPtr,
         $typeName
     ) {

@@ -1,24 +1,25 @@
 <?php
 
-if (class_exists('PHP_CodeSniffer_Standards_AbstractVariableSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_Standards_AbstractVariableSniff not found');
-}
+namespace Symfony3Custom\Sniffs\Commenting;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\AbstractVariableSniff;
 
 /**
  * Parses and verifies the variable doc comment.
  */
-class Symfony3Custom_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSniff
+class VariableCommentSniff extends AbstractVariableSniff
 {
     /**
      * Called to process class member vars.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-     * @param int                  $stackPtr  The position of the current token
-     *                                        in the stack passed in $tokens.
+     * @param File $phpcsFile The file being scanned.
+     * @param int  $stackPtr  The position of the current token
+     *                        in the stack passed in $tokens.
      *
      * @return void
      */
-    public function processMemberVar(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function processMemberVar(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         $ignore = array(
@@ -98,11 +99,11 @@ class Symfony3Custom_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSnif
     }
 
     /**
-     * @param PHP_CodeSniffer_File $phpcsFile
-     * @param int                  $commentStart
+     * @param File $phpcsFile
+     * @param int  $commentStart
      */
     protected function processWhitespace(
-        PHP_CodeSniffer_File $phpcsFile,
+        File $phpcsFile,
         $commentStart
     ) {
         $tokens = $phpcsFile->getTokens();
@@ -154,13 +155,12 @@ class Symfony3Custom_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSnif
      *
      * Not required for this sniff.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The PHP_CodeSniffer file where this token was found.
-     * @param int                  $stackPtr  The position where the double quoted
-     *                                        string was found.
+     * @param File $phpcsFile The PHP_CodeSniffer file where this token was found.
+     * @param int  $stackPtr  The position where the double quoted string was found.
      *
      * @return void
      */
-    protected function processVariable(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    protected function processVariable(File $phpcsFile, $stackPtr)
     {
     }
 
@@ -169,13 +169,12 @@ class Symfony3Custom_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSnif
      *
      * Not required for this sniff.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The PHP_CodeSniffer file where this token was found.
-     * @param int                  $stackPtr  The position where the double quoted
-     *                                        string was found.
+     * @param File $phpcsFile The PHP_CodeSniffer file where this token was found.
+     * @param int  $stackPtr  The position where the double quoted string was found.
      *
      * @return void
      */
-    protected function processVariableInString(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    protected function processVariableInString(File $phpcsFile, $stackPtr)
     {
     }
 }

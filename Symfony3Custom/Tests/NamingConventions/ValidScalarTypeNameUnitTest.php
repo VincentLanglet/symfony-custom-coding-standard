@@ -1,12 +1,16 @@
 <?php
 
+namespace Symfony3Custom\Tests\NamingConventions;
+
+use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
+
 /**
  * Unit test class for the ValidScalarTypeName sniff.
  *
  * A sniff unit test checks a .inc file for expected violations of a single
  * coding standard. Expected errors and warnings are stored in this class.
  */
-class Symfony3Custom_Tests_NamingConventions_ValidScalarTypeNameUnitTest extends AbstractSniffUnitTest
+class ValidScalarTypeNameUnitTest extends AbstractSniffUnitTest
 {
     /**
      * Returns the lines where errors should occur.
