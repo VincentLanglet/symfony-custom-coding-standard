@@ -1,9 +1,14 @@
 <?php
 
+namespace Symfony3Custom\Sniffs\Commenting;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
+
 /**
  * Throws errors if forbidden tags are met.
  */
-class Symfony3Custom_Sniffs_Commenting_DocCommentForbiddenTagsSniff implements PHP_CodeSniffer_Sniff
+class DocCommentForbiddenTagsSniff implements Sniff
 {
     /**
      * A list of PHPDoc tags that are forbidden.
@@ -30,13 +35,13 @@ class Symfony3Custom_Sniffs_Commenting_DocCommentForbiddenTagsSniff implements P
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile All the tokens found in the document.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile All the tokens found in the document.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         if (in_array(

@@ -1,9 +1,15 @@
 <?php
 
+namespace Symfony3Custom\Sniffs\Arrays;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Util\Tokens;
+
 /**
  * A test to ensure that arrays conform to the array coding standard.
  */
-class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
+class ArrayDeclarationSniff implements Sniff
 {
     /**
      * The number of spaces code should be indented.
@@ -41,13 +47,13 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
     /**
      * Processes this sniff, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The current file being checked.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile The current file being checked.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -132,15 +138,15 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
     /**
      * Processes a single-line array definition.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile  The current file being checked.
-     * @param int                  $stackPtr   The position of the current token
-     *                                         in the stack passed in $tokens.
-     * @param int                  $arrayStart The token that starts the array definition.
-     * @param int                  $arrayEnd   The token that ends the array definition.
+     * @param File $phpcsFile  The current file being checked.
+     * @param int  $stackPtr   The position of the current token
+     *                         in the stack passed in $tokens.
+     * @param int  $arrayStart The token that starts the array definition.
+     * @param int  $arrayEnd   The token that ends the array definition.
      *
      * @return void
      */
-    public function processSingleLineArray(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $arrayStart, $arrayEnd)
+    public function processSingleLineArray(File $phpcsFile, $stackPtr, $arrayStart, $arrayEnd)
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -278,15 +284,15 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
     /**
      * Processes a multi-line array definition.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile  The current file being checked.
-     * @param int                  $stackPtr   The position of the current token
-     *                                         in the stack passed in $tokens.
-     * @param int                  $arrayStart The token that starts the array definition.
-     * @param int                  $arrayEnd   The token that ends the array definition.
+     * @param File $phpcsFile  The current file being checked.
+     * @param int  $stackPtr   The position of the current token
+     *                         in the stack passed in $tokens.
+     * @param int  $arrayStart The token that starts the array definition.
+     * @param int  $arrayEnd   The token that ends the array definition.
      *
      * @return void
      */
-    public function processMultiLineArray(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $arrayStart, $arrayEnd)
+    public function processMultiLineArray(File $phpcsFile, $stackPtr, $arrayStart, $arrayEnd)
     {
         $tokens       = $phpcsFile->getTokens();
 
@@ -435,7 +441,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                     }
 
                     $valueContent = $phpcsFile->findNext(
-                        PHP_CodeSniffer_Tokens::$emptyTokens,
+                        Tokens::$emptyTokens,
                         ($lastToken + 1),
                         $nextToken,
                         true
@@ -482,7 +488,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
 
                 // Find the value of this index.
                 $nextContent = $phpcsFile->findNext(
-                    PHP_CodeSniffer_Tokens::$emptyTokens,
+                    Tokens::$emptyTokens,
                     ($nextToken + 1),
                     $arrayEnd,
                     true
@@ -510,7 +516,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
             $lastIndex = $indices[($count - 1)]['value'];
 
             $trailingContent = $phpcsFile->findPrevious(
-                PHP_CodeSniffer_Tokens::$emptyTokens,
+                Tokens::$emptyTokens,
                 ($arrayEnd - 1),
                 $lastIndex,
                 true
@@ -762,7 +768,7 @@ class Symfony3Custom_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSnif
                 }
 
                 // Skip to the end of multi-line strings.
-                if (isset(PHP_CodeSniffer_Tokens::$stringTokens[$tokens[$i]['code']]) === true) {
+                if (isset(Tokens::$stringTokens[$tokens[$i]['code']]) === true) {
                     $i = $phpcsFile->findNext($tokens[$i]['code'], ($i + 1), null, true);
                     $i--;
                     $valueLine = $tokens[$i]['line'];

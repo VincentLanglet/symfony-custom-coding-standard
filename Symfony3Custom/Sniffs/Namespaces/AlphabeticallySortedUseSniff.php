@@ -1,9 +1,14 @@
 <?php
 
+namespace Symfony3Custom\Sniffs\Namespaces;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
+
 /**
  * Ensures USE blocks are alphabetically sorted.
  */
-class Symfony3Custom_Sniffs_Namespaces_AlphabeticallySortedUseSniff implements PHP_CodeSniffer_Sniff
+class AlphabeticallySortedUseSniff implements Sniff
 {
     /**
      * @var bool
@@ -23,13 +28,13 @@ class Symfony3Custom_Sniffs_Namespaces_AlphabeticallySortedUseSniff implements P
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile The file being scanned.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         if (true === $this->shouldIgnoreUse($phpcsFile, $stackPtr)) {
             return;
@@ -62,13 +67,13 @@ class Symfony3Custom_Sniffs_Namespaces_AlphabeticallySortedUseSniff implements P
     /**
      * Check if this USE statement is part of the namespace block.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile The file being scanned.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return bool
      */
-    private function shouldIgnoreUse(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    private function shouldIgnoreUse(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -89,13 +94,13 @@ class Symfony3Custom_Sniffs_Namespaces_AlphabeticallySortedUseSniff implements P
     /**
      * Get full namespace imported
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile The file being scanned.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return string
      */
-    private function getNamespaceUsed(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    private function getNamespaceUsed(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         $namespace = '';

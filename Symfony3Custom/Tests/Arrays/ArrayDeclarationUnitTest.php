@@ -1,12 +1,15 @@
 <?php
 
+namespace Symfony3Custom\Tests\Arrays;
+
+use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
+
 /**
  * Unit test class for the ArrayDeclaration sniff.
  *
- * A sniff unit test checks a .inc file for expected violations of a single
- * coding standard. Expected errors and warnings are stored in this class.
+ * @group Symfony3Custom
  */
-class Symfony3Custom_Tests_Arrays_ArrayDeclarationUnitTest extends AbstractSniffUnitTest
+class ArrayDeclarationUnitTest extends AbstractSniffUnitTest
 {
     /**
      * Returns the lines where errors should occur.

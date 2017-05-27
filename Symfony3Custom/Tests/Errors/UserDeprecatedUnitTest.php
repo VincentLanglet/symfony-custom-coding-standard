@@ -1,15 +1,15 @@
 <?php
 
-namespace Symfony3Custom\Tests\Commenting;
+namespace Symfony3Custom\Tests\Errors;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
- * Unit test class for the FunctionComment sniff.
+ * Unit test class for the UserDeprecated sniff.
  *
  * @group Symfony3Custom
  */
-class FunctionCommentUnitTest extends AbstractSniffUnitTest
+class UserDeprecatedUnitTest extends AbstractSniffUnitTest
 {
     /**
      * Returns the lines where errors should occur.
@@ -22,13 +22,7 @@ class FunctionCommentUnitTest extends AbstractSniffUnitTest
     public function getErrorList()
     {
         return array(
-            5  => 1,
-            10 => 2,
-            43 => 1,
-            48 => 2,
-            76 => 2,
-            83 => 1,
-            93 => 1,
+            30 => 1,
         );
     }
 
@@ -36,11 +30,11 @@ class FunctionCommentUnitTest extends AbstractSniffUnitTest
      * Returns the lines where warnings should occur.
      *
      * The key of the array should represent the line number and the value
-     * should represent the number of warnings that should occur on that line.
+     * should represent the number of errors that should occur on that line.
      *
      * @return array(int => int)
      */
-    protected function getWarningList()
+    public function getWarningList()
     {
         return array();
     }

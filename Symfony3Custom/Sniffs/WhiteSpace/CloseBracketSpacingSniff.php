@@ -1,10 +1,16 @@
 <?php
 
+namespace Symfony3Custom\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Util\Tokens;
+
 /**
  * Checks that there is no white space before a closing bracket, for ")" and "}".
  * Square Brackets are handled by Squiz_Sniffs_Arrays_ArrayBracketSpacingSniff.
  */
-class Symfony3Custom_Sniffs_WhiteSpace_CloseBracketSpacingSniff implements PHP_CodeSniffer_Sniff
+class CloseBracketSpacingSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -22,20 +28,20 @@ class Symfony3Custom_Sniffs_WhiteSpace_CloseBracketSpacingSniff implements PHP_C
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-     * @param int                  $stackPtr  The position of the current token
-     *                                        in the stack passed in $tokens.
+     * @param File $phpcsFile The file being scanned.
+     * @param int  $stackPtr  The position of the current token
+     *                        in the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
         if (isset($tokens[($stackPtr - 1)]) === true
             && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']
         ) {
-            $before = $phpcsFile->findPrevious(PHP_CodeSniffer_Tokens::$emptyTokens, ($stackPtr - 1), null, true);
+            $before = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($stackPtr - 1), null, true);
             if (false !== $before
                 && $tokens[$stackPtr]['line'] === $tokens[$before]['line']
             ) {

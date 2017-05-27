@@ -1,11 +1,16 @@
 <?php
 
+namespace Symfony3Custom\Sniffs\Formatting;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\Sniff;
+
 /**
  * Throws errors if there's no blank line before return statements.
  * Symfony coding standard specifies: "Add a blank line before return statements,
  * unless the return is alone inside a statement-group (like an if statement);"
  */
-class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP_CodeSniffer_Sniff
+class BlankLineBeforeReturnSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -22,13 +27,13 @@ class Symfony3Custom_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile All the tokens found in the document.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile All the tokens found in the document.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         $current = $stackPtr;

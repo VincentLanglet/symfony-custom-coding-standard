@@ -1,15 +1,15 @@
 <?php
 
-if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception(
-        'Class PHP_CodeSniffer_Standards_AbstractScopeSniff not found'
-    );
-}
+namespace Symfony3Custom\Sniffs\Scope;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Sniffs\AbstractScopeSniff;
+use PHP_CodeSniffer\Util\Tokens;
 
 /**
  * Verifies that class members have scope modifiers.
  */
-class Symfony3Custom_Sniffs_Scope_MethodScopeSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
+class MethodScopeSniff extends AbstractScopeSniff
 {
     /**
      * Constructs a Symfony3Custom_Sniffs_Scope_MethodScopeSniff.
@@ -22,14 +22,14 @@ class Symfony3Custom_Sniffs_Scope_MethodScopeSniff extends PHP_CodeSniffer_Stand
     /**
      * Processes the function tokens within the class.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file where this token was found.
-     * @param int                  $stackPtr  The position where the token was found.
-     * @param int                  $currScope The current scope opener token.
+     * @param File $phpcsFile The file where this token was found.
+     * @param int  $stackPtr  The position where the token was found.
+     * @param int  $currScope The current scope opener token.
      *
      * @return void
      */
     protected function processTokenWithinScope(
-        PHP_CodeSniffer_File $phpcsFile,
+        File $phpcsFile,
         $stackPtr,
         $currScope
     ) {
@@ -42,7 +42,7 @@ class Symfony3Custom_Sniffs_Scope_MethodScopeSniff extends PHP_CodeSniffer_Stand
         }
 
         $modifier = $phpcsFile->findPrevious(
-            PHP_CodeSniffer_Tokens::$scopeModifiers,
+            Tokens::$scopeModifiers,
             $stackPtr
         );
 
@@ -53,5 +53,15 @@ class Symfony3Custom_Sniffs_Scope_MethodScopeSniff extends PHP_CodeSniffer_Stand
             $data  = array($methodName);
             $phpcsFile->addError($error, $stackPtr, 'Missing', $data);
         }
+    }
+
+    /**
+     * Process tokens outside scope.
+     *
+     * @param File $phpcsFile
+     * @param int  $stackPtr
+     */
+    protected function processTokenOutsideScope(File $phpcsFile, $stackPtr)
+    {
     }
 }
