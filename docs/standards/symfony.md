@@ -96,11 +96,15 @@ Not checked because of the limit of 120 characters per line
 
 - Exception and error message strings must be concatenated using `sprintf`
 
-Not covered
+```
+<rule ref="Symfony3Custom.Errors.ExceptionMessage" />
+```
 
 - Calls to `trigger_error` with type `E_USER_DEPRECATED` must be switched to opt-in via `@`operator
 
-Not covered
+```
+<rule ref="Symfony3Custom.Errors.UserDeprecated" />
+```
 
 - Do not use `else`, `elseif`, `break` after `if` and `case` conditions which return or throw something
 

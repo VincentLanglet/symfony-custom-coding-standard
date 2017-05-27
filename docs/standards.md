@@ -1,7 +1,7 @@
 # Coding Standard Rules
 ## From PSR2
 
-We imported the [PSR2 Standard](./standards/psr2.md) with this override:
+We imported the [PSR2 Standard](./standards/psr2.md) with these overrides:
 
 - There MUST NOT be trailing whitespace at the end of blank lines
 
@@ -29,10 +29,8 @@ We mainly respect the [Symfony Standard](./standards/symfony.md) but
 
   - Declare all the arguments on the same line as the method/function name, no matter how many arguments there are
 
-- We do not currently check these rules:
+- We do not currently check this rule:
 
-  - Exception and error message strings must be concatenated using `sprintf`
-  - Calls to `trigger_error` with type `E_USER_DEPRECATED` must be switched to opt-in via `@`operator
   - Do not use `else`, `elseif`, `break` after `if` and `case` conditions which return or throw something
 
 ## Others
