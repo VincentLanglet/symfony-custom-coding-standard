@@ -39,7 +39,6 @@
             <arg value="--standard=Symfony3Custom"/>
             <arg value="--extensions=php"/>
             <arg value="--ignore=vendor/*"/>
-            <arg value="--exclude=${phpcs.exclude.sniffs}"/>
             <arg path="${basedir}"/>
         </exec>
     </target>
