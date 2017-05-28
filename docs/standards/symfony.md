@@ -159,6 +159,12 @@ Covered by `PSR1` completed by
 <rule ref="Symfony3Custom.NamingConventions.ValidClassName" />
 ```
 
+- Use alphanumeric characters and underscores for file names
+
+```
+<rule ref="Symfony3Custom.NamingConventions.ValidFileName" />
+```
+
 - For type-hinting in PHPDocs and casting, use `bool`, `int` and `float`
 
 ```
