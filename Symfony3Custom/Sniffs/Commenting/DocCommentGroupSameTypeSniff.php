@@ -88,11 +88,22 @@ class DocCommentGroupSameTypeSniff implements Sniff
                 $stackPtr
             );
 
+            $previousLine = -1;
             if (false !== $previousString) {
-                $previousStringLine = $tokens[$previousString]['line'];
-                $previousTagLine = $tokens[$previousTag]['line'];
-                $previousLine = max($previousStringLine, $previousTagLine);
+                $previousLine = $tokens[$previousString]['line'];
+                $previousElement = $previousString;
+            }
 
+            if (false !== $previousTag) {
+                $previousTagLine = $tokens[$previousTag]['line'];
+
+                if ($previousTagLine > $previousLine) {
+                    $previousLine = $previousTagLine;
+                    $previousElement = $previousTag;
+                }
+            }
+
+            if ($previousLine >= 0) {
                 $currentIsCustom = !in_array($currentType, $this->tags);
                 $previousIsCustom = ('' !== $previousType)
                     && !in_array($previousType, $this->tags);
@@ -121,7 +132,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
                             $phpcsFile->fixer->beginChangeset();
                             $this->removeLines(
                                 $phpcsFile,
-                                $previousString,
+                                $previousElement,
                                 $previousLine + 1,
                                 $commentTagLine - 1
                             );
@@ -161,7 +172,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
                             } else {
                                 $this->removeLines(
                                     $phpcsFile,
-                                    $previousString,
+                                    $previousElement,
                                     $previousLine + 2,
                                     $commentTagLine - 1
                                 );
