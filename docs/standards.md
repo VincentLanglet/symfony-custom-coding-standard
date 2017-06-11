@@ -24,14 +24,9 @@ We imported the [PSR2 Standard](./standards/psr2.md) with these overrides:
 ## From symfony
 
 We mainly respect the [Symfony Standard](./standards/symfony.md) but
-
-- We do not respect this rule:
+we do not respect this rule:
 
   - Declare all the arguments on the same line as the method/function name, no matter how many arguments there are
-
-- We do not currently check this rule:
-
-  - Do not use `else`, `elseif`, `break` after `if` and `case` conditions which return or throw something
 
 ## Others
 ### Imported
@@ -124,7 +119,7 @@ We mainly respect the [Symfony Standard](./standards/symfony.md) but
 <rule ref="Symfony3Custom.Commenting.VariableComment"/>
 ```
 
-- USE keywords should be alphabetically sorted
+- `use` keywords should be alphabetically sorted
 
 ```
 <rule ref="Symfony3Custom.Namespaces.AlphabeticallySortedUse"/>
