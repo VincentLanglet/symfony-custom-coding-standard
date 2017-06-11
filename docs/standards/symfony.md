@@ -108,7 +108,9 @@ Not checked because of the limit of 120 characters per line
 
 - Do not use `else`, `elseif`, `break` after `if` and `case` conditions which return or throw something
 
-Not covered
+```
+<rule ref="Symfony3Custom.Formatting.ConditionalReturnOrThrowSniff" />
+```
 
 - Do not use spaces around `[` offset accessor and before `]` offset accessor
 
