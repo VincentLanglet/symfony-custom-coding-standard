@@ -54,6 +54,14 @@ class Test
             return null;
         }
 
+        if (1 === 1) {
+            if (2 === 3) {
+                return null;
+            }
+        } else {
+            return null;
+        }
+
         return null;
     }
 }
