@@ -57,7 +57,9 @@ class BlankLineBeforeReturnSniff implements Sniff
             || 'T_COLON' === $prevLineTokens[0])
         ) {
             return;
-        } elseif (count($prevLineTokens) > 0) {
+        }
+
+        if (count($prevLineTokens) > 0) {
             $fix = $phpcsFile->addFixableError(
                 'Missing blank line before return statement',
                 $stackPtr,
