@@ -74,10 +74,10 @@ class ConditionalReturnOrThrowSniff implements Sniff
                         ? $tokens[$condition]['scope_closer'] < $tokens[$next]['scope_opener']
                         : $tokens[$condition]['line'] <= $tokens[$next]['line'];
                 } else {
-                    $err = false;
+                    $err = $tokens[$condition]['level'] === $tokens[$opener]['level'];
                 }
 
-                if (false === $next || true === $err) {
+                if ($err) {
                     $phpcsFile->addError(
                         'Do not use else, elseif, break after if and case conditions which return or throw something',
                         $condition,
