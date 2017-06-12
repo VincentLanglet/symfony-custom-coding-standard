@@ -67,17 +67,25 @@ class ConditionalReturnOrThrowSniff implements Sniff
             $condition = $phpcsFile->findNext($this->conditions, $stackPtr + 1);
 
             if (false !== $condition) {
-                $next = $phpcsFile->findNext($this->openers, $stackPtr + 1);
+                $start = $stackPtr;
+                $end = $condition;
 
-                if (false !== $next) {
-                    $err = (isset($tokens[$condition]['scope_closer']) && isset($tokens[$next]['scope_opener']))
-                        ? $tokens[$condition]['scope_closer'] < $tokens[$next]['scope_opener']
-                        : $tokens[$condition]['line'] <= $tokens[$next]['line'];
-                } else {
+                $next = $phpcsFile->findNext($this->openers, $start + 1, $end);
+                while (false !== $next) {
+                    if ($tokens[$condition]['level'] >= $tokens[$next]['level']) {
+                        $err = false;
+                        break;
+                    }
+
+                    $start = $next;
+                    $next = $phpcsFile->findNext($this->openers, $start + 1, $end);
+                }
+
+                if (!isset($err)) {
                     $err = $tokens[$condition]['level'] === $tokens[$opener]['level'];
                 }
 
-                if ($err) {
+                if (true === $err) {
                     $phpcsFile->addError(
                         'Do not use else, elseif, break after if and case conditions which return or throw something',
                         $condition,
