@@ -64,5 +64,16 @@ class Test
 
         return null;
     }
+
+    public function __construct()
+    {
+        if (1 === 1) {
+            if (2 === 2) {
+                return null;
+            }
+        } else {
+            $a = 1;
+        }
+    }
 }
 
