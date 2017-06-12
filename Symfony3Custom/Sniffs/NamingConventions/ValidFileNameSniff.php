@@ -24,7 +24,7 @@ class ValidFileNameSniff implements Sniff
      * Process.
      *
      * @param File $phpcsFile
-     * @param int                         $stackPtr
+     * @param int  $stackPtr
      *
      * @return void
      */

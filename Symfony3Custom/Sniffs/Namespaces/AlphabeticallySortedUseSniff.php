@@ -138,7 +138,9 @@ class AlphabeticallySortedUseSniff implements Sniff
 
             if (true === $this->caseSensitive && strcmp($array1[$i], $array2[$i]) !== 0) {
                 return strcmp($array1[$i], $array2[$i]);
-            } elseif (false === $this->caseSensitive && strcasecmp($array1[$i], $array2[$i]) !== 0) {
+            }
+
+            if (false === $this->caseSensitive && strcasecmp($array1[$i], $array2[$i]) !== 0) {
                 return strcasecmp($array1[$i], $array2[$i]);
             }
         }
