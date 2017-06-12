@@ -53,8 +53,8 @@
                 <property name="ignoreNewlines" value="true" />
             </properties>
         </rule>
-        <rule ref="Symfony3Custom.Commenting.FunctionComment.MissingParamComment">
-            <severity>0</severity>
+        <rule ref="Symfony3Custom.Commenting.FunctionComment">
+            <exclude name="Symfony3Custom.Commenting.FunctionComment.MissingParamComment"/>
         </rule>
 
         <!-- Added by VincentLanglet repo -->
