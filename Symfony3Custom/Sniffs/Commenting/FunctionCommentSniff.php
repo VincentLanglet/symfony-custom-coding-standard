@@ -60,8 +60,6 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                 $phpcsFile->addError('Missing function doc comment', $stackPtr, 'Missing');
 
                 return;
-            } else {
-                // The comment may not be required, we'll see in next checks
             }
         } else {
             $hasComment = true;
