@@ -4,6 +4,9 @@ namespace Symfony3Custom\Sniffs\Classes;
 
 use PHP_CodeSniffer\Files\File;
 
+/**
+ * Checks that there are not empty lines following class declaration.
+ */
 class ClassDeclarationSniff
 {
     /**
