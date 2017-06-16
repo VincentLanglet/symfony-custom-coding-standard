@@ -101,6 +101,12 @@ we do not respect this rule:
 <rule ref="Symfony3Custom.WhiteSpace.OpenBracketSpacing"/>
 ```
 
+- Do not use blank lines after class openers `{`
+
+```
+<rule ref="Symfony3Custom.Classes.ClassDeclaration"/>
+```
+
 - Do not use multiple following blank lines
 
 ```
