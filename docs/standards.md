@@ -130,3 +130,9 @@ we do not respect this rule:
 ```
 <rule ref="Symfony3Custom.Namespaces.AlphabeticallySortedUse"/>
 ```
+
+- Unused `use` statement should be removed
+
+```
+<rule ref="Symfony3Custom.Namespaces.UnusedUse"/>
+```
