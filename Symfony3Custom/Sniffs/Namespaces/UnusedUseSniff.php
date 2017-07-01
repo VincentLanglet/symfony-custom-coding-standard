@@ -144,19 +144,10 @@ class UnusedUseSniff implements Sniff
             // Check for @param Truc or @return Machin
             if ('T_DOC_COMMENT_STRING' === $token['type']) {
                 if (trim(strtolower($token['content'])) === $lowerClassName
-                    // Handle @return Machin|Machine|AnotherMachin
-                    || preg_match('/^'.$lowerClassName.'\|/i', trim($token['content'])) === 1
-                    || preg_match('/\|'.$lowerClassName.'\|/i', trim($token['content'])) === 1
-                    || preg_match('/\|'.$lowerClassName.'$/i', trim($token['content'])) === 1
-                    // Handle @var Machin $machin
-                    || preg_match('/^'.$lowerClassName.' /i', trim($token['content'])) === 1
-                    // Handle @var $machin Machin
-                    || preg_match('/ '.$lowerClassName.' /i', trim($token['content'])) === 1
-                    || preg_match('/ '.$lowerClassName.'$/i', trim($token['content'])) === 1
-                    // Handle @var Machin|Machine $machin
-                    || preg_match('/\|'.$lowerClassName.' /i', trim($token['content'])) === 1
-                    // Handle @var $machin Machin|Machine
-                    || preg_match('/ '.$lowerClassName.'\|/i', trim($token['content'])) === 1) {
+                    // Handle @var Machin[]|Machine|AnotherMachin $machin
+                    || preg_match('/^'.$lowerClassName.'(\|| |\[)/i', trim($token['content'])) === 1
+                    || preg_match('/(\|| )'.$lowerClassName.'(\|| |\[)/i', trim($token['content'])) === 1
+                    || preg_match('/(\|| )'.$lowerClassName.'$/i', trim($token['content'])) === 1) {
                     $beforeUsage = $phpcsFile->findPrevious(
                         Tokens::$emptyTokens,
                         ($classUsed - 1),
