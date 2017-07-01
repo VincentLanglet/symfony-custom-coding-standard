@@ -11,6 +11,8 @@ use Machin;
 use Machine;
 use Unused;
 use Client;
+use Clients;
+use PasClient;
 
 class Container
 {
@@ -25,7 +27,7 @@ class Container
      */
     function test (Bar $bar)
     {
-        /** @var Client $client */
+        /** @var Client|Clients[]|PasClient $client */
 
         return;
     }
