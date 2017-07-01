@@ -10,6 +10,7 @@ use Truc;
 use Machin;
 use Machine;
 use Unused;
+use Client;
 
 class Container
 {
@@ -18,12 +19,14 @@ class Container
      * @Route("/{id}")
      * @ORM\Column(type="integer")
      *
-     * @param Toto
-     * @var Truc
+     * @param Toto $toto
+     * @var Truc $truc
      * @return Machin|Machine
      */
     function test (Bar $bar)
     {
+        /** @var Client $client */
+
         return;
     }
 }
