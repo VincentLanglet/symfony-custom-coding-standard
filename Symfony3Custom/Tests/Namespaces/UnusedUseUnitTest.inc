@@ -8,6 +8,7 @@ use Route;
 use ORM;
 use Truc;
 use Machin;
+use Machine;
 use Unused;
 
 class Container
@@ -19,7 +20,7 @@ class Container
      *
      * @param Toto
      * @var Truc
-     * @return Machin
+     * @return Machin|Machine
      */
     function test (Bar $bar)
     {

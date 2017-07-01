@@ -132,19 +132,38 @@ class UnusedUseSniff implements Sniff
             );
         }
 
-        // Check for doc comment tags
+        // More checks
         foreach ($tokens as $token) {
+            // Check for doc params @...
             if ('T_DOC_COMMENT_TAG' === $token['type']) {
                 // Handle comment tag as @Route(..) or @ORM\Id
                 if (preg_match('/^@'.$lowerClassName.'(?![a-zA-Z])/i', $token['content']) === 1) {
                     return;
                 };
             }
+
+            // Check for @param Truc or @return Machin
+            if ('T_DOC_COMMENT_STRING' === $token['type']) {
+                // Handle @return Machin|Machine
+                if (preg_match('/^'.$lowerClassName.'\|/i', $token['content']) === 1
+                || preg_match('/\|'.$lowerClassName.'\|/i', $token['content']) === 1
+                || preg_match('/\|'.$lowerClassName.'$/i', $token['content']) === 1) {
+                    $beforeUsage = $phpcsFile->findPrevious(
+                        Tokens::$emptyTokens,
+                        ($classUsed - 1),
+                        null,
+                        true
+                    );
+
+                    // If a backslash is used before the class name then this is some other use statement.
+                    if (T_USE !== $tokens[$beforeUsage]['code'] && T_NS_SEPARATOR !== $tokens[$beforeUsage]['code']) {
+                        return;
+                    }
+                }
+            }
         }
 
-        $warning = 'Unused use statement';
-        $fix     = $phpcsFile->addFixableError($warning, $stackPtr, 'UnusedUse');
-
+        $fix = $phpcsFile->addFixableError('Unused use statement', $stackPtr, 'UnusedUse');
         if (true === $fix) {
             // Remove the whole use statement line.
             $phpcsFile->fixer->beginChangeset();
