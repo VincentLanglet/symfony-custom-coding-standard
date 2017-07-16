@@ -130,9 +130,7 @@ class AlphabeticallySortedUseSniff implements Sniff
 
         for ($i = 0; $i < $length1; $i++) {
             if ($i >= $length2) {
-                // $namespace2 is shorter than $namespace1
-                // and they have the same beginning
-                // so $namespace1 > $namespace2
+                // $namespace2 is shorter than $namespace1 and they have the same beginning so $namespace1 > $namespace2
                 return 1;
             }
 
@@ -149,9 +147,7 @@ class AlphabeticallySortedUseSniff implements Sniff
             return 0;
         }
 
-        // $namespace1 is shorter than $namespace2
-        // and they have the same beginning
-        // so $namespace1 < $namespace2
+        // $namespace1 is shorter than $namespace2 and they have the same beginning so $namespace1 < $namespace2
         return -1;
     }
 }

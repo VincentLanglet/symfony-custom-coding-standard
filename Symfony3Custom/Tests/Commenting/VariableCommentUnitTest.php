@@ -5,7 +5,7 @@ namespace Symfony3Custom\Tests\Commenting;
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
- * Unit test class for VariableCommentSniff.
+ * Unit test class for VariableComment sniff.
  *
  * @group Symfony3Custom
  */

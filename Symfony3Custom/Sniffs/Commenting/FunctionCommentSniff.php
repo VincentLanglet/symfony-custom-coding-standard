@@ -22,8 +22,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
      * Processes this test, when one of its tokens is encountered.
      *
      * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token
-     *                        in the stack passed in $tokens.
+     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
      *
      * @return void
      */
@@ -35,20 +34,19 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
 
         $commentEnd = $phpcsFile->findPrevious($find, ($stackPtr - 1), null, true);
         if (T_COMMENT === $tokens[$commentEnd]['code']) {
-            // Inline comments might just be closing comments for
-            // control structures or functions instead of function comments
-            // using the wrong comment type. If there is other code on the line,
-            // assume they relate to that code.
+            // Inline comments might just be closing comments for control structures or functions
+            // instead of function comments using the wrong comment type.
+            // If there is other code on the line, assume they relate to that code.
             $prev = $phpcsFile->findPrevious($find, ($commentEnd - 1), null, true);
             if (false !== $prev && $tokens[$prev]['line'] === $tokens[$commentEnd]['line']) {
                 $commentEnd = $prev;
             }
         }
 
-        $name = $phpcsFile->getDeclarationName($stackPtr);
-        $commentRequired = strpos($name, 'test') !== 0
-            && 'setUp' !== $name
-            && 'tearDown' !== $name;
+        $name              = $phpcsFile->getDeclarationName($stackPtr);
+        $isTestFunction    = strpos($name, 'test') === 0;
+        $isAllowedFunction = in_array($name, ['setUp', 'tearDown']);
+        $commentRequired   = !$isTestFunction && !$isAllowedFunction;
 
         if (T_DOC_COMMENT_CLOSE_TAG !== $tokens[$commentEnd]['code']
             && T_COMMENT !== $tokens[$commentEnd]['code']
@@ -131,10 +129,10 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
     /**
      * Process the return comment of this function comment.
      *
-     * @param File     $phpcsFile      The file being scanned.
-     * @param int      $stackPtr       The position of the current token in the stack passed in $tokens.
-     * @param int|null $commentStart   The position in the stack where the comment started.
-     * @param bool     $hasRealComment
+     * @param File     $phpcsFile    The file being scanned.
+     * @param int      $stackPtr     The position of the current token in the stack passed in $tokens.
+     * @param int|null $commentStart The position in the stack where the comment started.
+     * @param bool     $hasComment   Use to specify if the function has comments to check
      *
      * @return void
      */
@@ -142,10 +140,10 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
         File $phpcsFile,
         $stackPtr,
         $commentStart,
-        $hasRealComment = true
+        $hasComment = true
     ) {
         // Check for inheritDoc if there is comment
-        if ($hasRealComment && $this->isInheritDoc($phpcsFile, $stackPtr)) {
+        if ($hasComment && $this->isInheritDoc($phpcsFile, $stackPtr)) {
             return;
         }
 
@@ -172,7 +170,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                 if (T_RETURN === $tokens[$i]['code']
                     && $this->isMatchingReturn($tokens, $i)
                 ) {
-                    if ($hasRealComment) {
+                    if ($hasComment) {
                         parent::processReturn($phpcsFile, $stackPtr, $commentStart);
                     } else {
                         // There is no doc and we need one with @return
@@ -189,12 +187,12 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
     /**
      * @param File $phpcsFile
      * @param int  $commentStart
-     * @param bool $hasRealComment
+     * @param bool $hasComment
      */
     protected function processWhitespace(
         File $phpcsFile,
         $commentStart,
-        $hasRealComment = true
+        $hasComment = true
     ) {
         $tokens = $phpcsFile->getTokens();
         $before = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
@@ -210,7 +208,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                 $found = 0;
             }
 
-            if ($hasRealComment) {
+            if ($hasComment) {
                 $error = 'Expected 1 blank line before docblock; %s found';
                 $rule = 'SpacingBeforeDocblock';
             } else {

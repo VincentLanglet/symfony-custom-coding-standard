@@ -62,8 +62,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
      * Processes this test, when one of its tokens is encountered.
      *
      * @param File $phpcsFile All the tokens found in the document.
-     * @param int  $stackPtr  The position of the current token in
-     *                        the stack passed in $tokens.
+     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
      *
      * @return void
      */
@@ -103,26 +102,21 @@ class DocCommentGroupSameTypeSniff implements Sniff
                 }
             }
 
-            if ($previousLine >= 0) {
+            if (isset($previousElement) && $previousLine >= 0) {
                 $currentIsCustom = !in_array($currentType, $this->tags);
-                $previousIsCustom = ('' !== $previousType)
-                    && !in_array($previousType, $this->tags);
+                $previousIsCustom = ('' !== $previousType) && !in_array($previousType, $this->tags);
 
-                if (($previousType === $currentType)
-                    || ($currentIsCustom && $previousIsCustom)
-                ) {
+                if (($previousType === $currentType) || ($currentIsCustom && $previousIsCustom)) {
                     if ($previousLine !== $commentTagLine - 1) {
                         if ($previousType === $currentType) {
                             $fix = $phpcsFile->addFixableError(
-                                'Expected no empty lines '
-                                .'between annotations of the same type',
+                                'Expected no empty lines between annotations of the same type',
                                 $commentTag,
                                 'SameType'
                             );
                         } else {
                             $fix = $phpcsFile->addFixableError(
-                                'Expected no empty lines '
-                                .'between custom annotations',
+                                'Expected no empty lines between custom annotations',
                                 $commentTag,
                                 'CustomType'
                             );
@@ -142,8 +136,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
                 } else {
                     if ($previousLine !== $commentTagLine - 2) {
                         $fix = $phpcsFile->addFixableError(
-                            'Expected exactly one empty line '
-                            .'between annotations of different types',
+                            'Expected exactly one empty line between annotations of different types',
                             $commentTag,
                             'DifferentType'
                         );
@@ -199,12 +192,8 @@ class DocCommentGroupSameTypeSniff implements Sniff
      *
      * @return void
      */
-    protected function removeLines(
-        File $phpcsFile,
-        $fromPtr,
-        $fromLine,
-        $toLine
-    ) {
+    protected function removeLines(File $phpcsFile, $fromPtr, $fromLine, $toLine)
+    {
         $tokens = $phpcsFile->getTokens();
 
         for ($i = $fromPtr;; $i++) {

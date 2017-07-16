@@ -12,7 +12,7 @@ use PHP_CodeSniffer\Util\Tokens;
 class MethodScopeSniff extends AbstractScopeSniff
 {
     /**
-     * Constructs a Symfony3Custom_Sniffs_Scope_MethodScopeSniff.
+     * MethodScopeSniff constructor
      */
     public function __construct()
     {

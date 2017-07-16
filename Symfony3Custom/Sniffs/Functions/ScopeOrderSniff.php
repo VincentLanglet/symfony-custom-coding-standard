@@ -11,6 +11,17 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class ScopeOrderSniff implements Sniff
 {
     /**
+     * Whitelisted function for this rule
+     *
+     * @var array
+     */
+    public $whitelisted = array(
+        '__construct',
+        'setUp',
+        'tearDown',
+    );
+
+    /**
      * Returns an array of tokens this test wants to listen for.
      *
      * @return array
@@ -27,8 +38,7 @@ class ScopeOrderSniff implements Sniff
      * Processes this test, when one of its tokens is encountered.
      *
      * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token
-     *                        in the stack passed in $tokens.
+     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
      *
      * @return void
      */
@@ -41,12 +51,6 @@ class ScopeOrderSniff implements Sniff
             0 => T_PUBLIC,
             1 => T_PROTECTED,
             2 => T_PRIVATE,
-        );
-
-        $whitelisted = array(
-            '__construct',
-            'setUp',
-            'tearDown',
         );
 
         while ($function) {
@@ -74,14 +78,13 @@ class ScopeOrderSniff implements Sniff
                     && $name
                     && !in_array(
                         $tokens[$name]['content'],
-                        $whitelisted
+                        $this->whitelisted
                     )
                 ) {
                     $current = array_keys($scopes, $tokens[$scope]['code']);
                     $current = $current[0];
 
-                    $error = 'Declare public methods first,'
-                    .'then protected ones and finally private ones';
+                    $error = 'Declare public methods first, then protected ones and finally private ones';
 
                     if (isset($previous) && $current < $previous) {
                         $phpcsFile->addError(
