@@ -141,8 +141,7 @@ class ValidScalarTypeNameSniff implements Sniff
      *
      * @param string $typeName Invalid type name.
      *
-     * @return string|bool Valid type name if provided one is invalid,
-     *                     false otherwise.
+     * @return string|bool     Valid type name if provided one is invalid, false otherwise.
      */
     protected function getValidTypeName($typeName)
     {

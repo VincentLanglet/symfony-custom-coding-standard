@@ -14,8 +14,7 @@ class VariableCommentSniff extends AbstractVariableSniff
      * Called to process class member vars.
      *
      * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token
-     *                        in the stack passed in $tokens.
+     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
      *
      * @return void
      */
