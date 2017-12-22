@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f9bf4d8e3f359bb36089341a4d4d2cd4",
-    "content-hash": "2228097b77df480967c602e43594da56",
+    "hash": "404fb0b2e10e043163823e7c92d2439f",
+    "content-hash": "ee3a3f9465b147e9c8d2299d0ef7d425",
     "packages": [
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "f9eaf037edf22fdfccf04cb0ab57ebcb1e166219"
+                "reference": "c7594a88ae75401e8f8d0bd4deb8431b39045c51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/f9eaf037edf22fdfccf04cb0ab57ebcb1e166219",
-                "reference": "f9eaf037edf22fdfccf04cb0ab57ebcb1e166219",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/c7594a88ae75401e8f8d0bd4deb8431b39045c51",
+                "reference": "c7594a88ae75401e8f8d0bd4deb8431b39045c51",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2017-06-14 01:23:49"
+            "time": "2017-07-18 01:12:32"
         }
     ],
     "packages-dev": [],
