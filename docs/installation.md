@@ -26,10 +26,10 @@ bin/phpcs -i
 4. Done!
 
 ```
-bin/phpcs --standard=Symfony3Custom /path/to/code
+bin/phpcs --standard=SymfonyCustom /path/to/code
 ```
 
 5. (optional) Set up PHPStorm
 
 - configure code sniffer under Languages & Frameworks -> PHP -> Code Sniffer
-- Go to Editor -> Inspections -> PHP Code sniffer, refresh the standards and select Symfony3Custom
+- Go to Editor -> Inspections -> PHP Code sniffer, refresh the standards and select SymfonyCustom

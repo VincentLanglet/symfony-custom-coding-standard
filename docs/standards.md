@@ -91,48 +91,48 @@ we do not respect this rule:
 - Some others checks are made about array (`=>` alignments and indentation)
 
 ```
-<rule ref="Symfony3Custom.Array.ArrayDeclaration"/>
+<rule ref="SymfonyCustom.Array.ArrayDeclaration"/>
 ```
 
 - Do not use spaces after `(` or `{` and before `)` or `}`
 
 ```
-<rule ref="Symfony3Custom.WhiteSpace.CloseBracketSpacing"/>
-<rule ref="Symfony3Custom.WhiteSpace.OpenBracketSpacing"/>
+<rule ref="SymfonyCustom.WhiteSpace.CloseBracketSpacing"/>
+<rule ref="SymfonyCustom.WhiteSpace.OpenBracketSpacing"/>
 ```
 
 - Do not use blank lines after class openers `{`
 
 ```
-<rule ref="Symfony3Custom.Classes.ClassDeclaration"/>
+<rule ref="SymfonyCustom.Classes.ClassDeclaration"/>
 ```
 
 - Do not use multiple following blank lines
 
 ```
-<rule ref="Symfony3Custom.WhiteSpace.EmptyLines"/>
+<rule ref="SymfonyCustom.WhiteSpace.EmptyLines"/>
 ```
 
 - Methods have scope modifier
 
 ```
-<rule ref="Symfony3Custom.Scope.MethodScope"/>
+<rule ref="SymfonyCustom.Scope.MethodScope"/>
 ```
 
 - Member var should have phpDoc with one blank line before
 
 ```
-<rule ref="Symfony3Custom.Commenting.VariableComment"/>
+<rule ref="SymfonyCustom.Commenting.VariableComment"/>
 ```
 
 - `use` keywords should be alphabetically sorted
 
 ```
-<rule ref="Symfony3Custom.Namespaces.AlphabeticallySortedUse"/>
+<rule ref="SymfonyCustom.Namespaces.AlphabeticallySortedUse"/>
 ```
 
 - Unused `use` statement should be removed
 
 ```
-<rule ref="Symfony3Custom.Namespaces.UnusedUse"/>
+<rule ref="SymfonyCustom.Namespaces.UnusedUse"/>
 ```

@@ -1,4 +1,4 @@
-<project name="Symfony3-custom-coding-standard" default="test">
+<project name="Symfony-custom-coding-standard" default="test">
     <property file="build.properties"/>
 
     <available property="composer.exists" file="${composer.path}"/>
@@ -29,14 +29,14 @@
     <target name="phpunit" depends="symlink-cs" description="Run unit tests with PHPUnit">
         <exec executable="phpunit" failonerror="true" >
             <arg value="--verbose"/>
-            <arg value="--group=Symfony3Custom"/>
+            <arg value="--group=SymfonyCustom"/>
             <arg value="${phpcs.dir}/tests/AllTests.php"/>
         </exec>
     </target>
 
     <target name="phpcs" depends="symlink-cs" description="Find coding standard violations using PHP Code Sniffer">
         <exec executable="${phpcs.bin}" failonerror="true">
-            <arg value="--standard=Symfony3Custom"/>
+            <arg value="--standard=SymfonyCustom"/>
             <arg value="--extensions=php"/>
             <arg value="--ignore=vendor/*"/>
             <arg path="${basedir}"/>
@@ -44,6 +44,6 @@
     </target>
 
     <target name="symlink-cs" description="Symlink this coding standard" unless="symlink.exists">
-        <symlink link="${phpcs.symlink.path}" resource="${basedir}/Symfony3Custom"/>
+        <symlink link="${phpcs.symlink.path}" resource="${basedir}/SymfonyCustom"/>
     </target>
 </project>
