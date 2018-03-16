@@ -1,13 +1,13 @@
 {
     "name": "vincentlanglet/symfony3-custom-coding-standard",
     "type": "coding-standard",
-    "description": "Customized CodeSniffer rule set for the Symfony3 projects",
+    "description": "Customized CodeSniffer rule set for the Symfony projects",
     "keywords": [
-        "Symfony3",
+        "Symfony",
         "coding standard",
         "phpcs"
     ],
-    "homepage": "https://github.com/VincentLanglet/Symfony3-coding-standard",
+    "homepage": "https://github.com/VincentLanglet/Symfony-coding-standard",
     "license": "MIT",
     "authors": [
         {

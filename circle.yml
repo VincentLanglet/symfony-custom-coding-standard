@@ -7,7 +7,7 @@ machine:
 dependencies:
     cache_directories:
         - ~/.composer
-        - ~/Symfony3-custom-coding-standard/vendor
+        - ~/Symfony-custom-coding-standard/vendor
 
     pre:
         - composer global require "phpunit/phpunit=5.7.*"
