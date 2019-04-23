@@ -1,0 +1,31 @@
+version: 2.1
+
+executors:
+    php:
+        docker:
+            - image: circleci/php:7.1
+        environment:
+            TZ: '/usr/share/zoneinfo/Europe/Paris'
+        working_directory: ~/Symfony-custom-coding-standard
+
+jobs:
+    test:
+        executor: php
+        steps:
+            - checkout
+            - restore_cache:
+                  keys:
+                      - v1-dependencies-{{ checksum "composer.lock" }}
+                      - v1-dependencies-
+            - run: sudo apt-get install -y ant
+            - run: ant test
+            - save_cache:
+                  paths:
+                      - vendor
+                  key: v1-dependencies-{{ checksum "composer.lock" }}
+
+workflows:
+    version: 2
+    check:
+        jobs:
+            - test
