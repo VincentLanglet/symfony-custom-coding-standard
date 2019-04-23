@@ -7,8 +7,9 @@
     <target name="test" depends="vendor,lint,phpunit,phpcs"/>
 
     <target name="vendor" depends="composer" description="Load composer repositories">
-        <exec executable="composer" failonerror="true">
-            <arg value="install"/>
+        <exec executable="/bin/bash" failonerror="true">
+            <arg value="-c" />
+            <arg value="php composer.phar install"/>
         </exec>
     </target>
 
@@ -27,7 +28,7 @@
     </target>
 
     <target name="phpunit" depends="symlink-cs" description="Run unit tests with PHPUnit">
-        <exec executable="phpunit" failonerror="true" >
+        <exec executable="${phpunit.bin}" failonerror="true" >
             <arg value="--verbose"/>
             <arg value="--group=SymfonyCustom"/>
             <arg value="${phpcs.dir}/tests/AllTests.php"/>

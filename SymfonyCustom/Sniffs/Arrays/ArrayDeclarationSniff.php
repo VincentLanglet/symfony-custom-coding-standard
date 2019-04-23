@@ -284,7 +284,7 @@ class ArrayDeclarationSniff implements Sniff
         if (false === $indent) {
             $currentIndent = 0;
         } else {
-            $currentIndent = strlen($tokens[$indent]['content']);
+            $currentIndent = mb_strlen($tokens[$indent]['content']);
         }
 
         // Check the closing bracket is on a new line.
@@ -462,7 +462,7 @@ class ArrayDeclarationSniff implements Sniff
                     );
                 }
 
-                $indexLength = strlen($currentEntry['index_content']);
+                $indexLength = mb_strlen($currentEntry['index_content']);
                 if ($maxLength < $indexLength) {
                     $maxLength = $indexLength;
                 }
@@ -652,9 +652,9 @@ class ArrayDeclarationSniff implements Sniff
             }
 
             if ($tokens[$index['arrow']]['column'] !== $arrowStart) {
-                $expected = ($arrowStart - (strlen($index['index_content']) + $tokens[$index['index']]['column']));
+                $expected = ($arrowStart - (mb_strlen($index['index_content']) + $tokens[$index['index']]['column']));
                 $found    = $tokens[$index['arrow']]['column']
-                    - (strlen($index['index_content']) + $tokens[$index['index']]['column']);
+                    - (mb_strlen($index['index_content']) + $tokens[$index['index']]['column']);
 
                 if ($found < 0) {
                     $found = 'newline';
