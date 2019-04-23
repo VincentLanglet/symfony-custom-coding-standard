@@ -11,8 +11,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Vincent Langlet",
-            "email": "vincentl@theodo.fr"
+            "name": "Vincent Langlet"
         }
     ],
     "require": {
