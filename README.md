@@ -5,8 +5,6 @@
 
 Customized coding standards for Symfony projects.
 
-Former `Symfony3-custom-coding-standard` repository.
-
 Documentation
 -------------
   * [Coding Standard](docs/standards.md)
