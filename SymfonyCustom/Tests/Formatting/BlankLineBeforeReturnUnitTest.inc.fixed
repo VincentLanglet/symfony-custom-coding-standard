@@ -31,6 +31,12 @@ function validFunctionReturnFive()
     return;
 }
 
+function validFunctionReturnSix()
+{
+    /** comment */
+    return;
+}
+
 function invalidFunctionReturnOne()
 {
     echo "";

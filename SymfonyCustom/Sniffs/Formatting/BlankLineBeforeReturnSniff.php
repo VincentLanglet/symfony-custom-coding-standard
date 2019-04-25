@@ -37,12 +37,14 @@ class BlankLineBeforeReturnSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
         $current = $stackPtr;
         $previousLine = $tokens[$stackPtr]['line'] - 1;
-        $prevLineTokens  = array();
+        $prevLineTokens = array();
 
         while ($current >= 0 && $tokens[$current]['line'] >= $previousLine) {
             if ($tokens[$current]['line'] === $previousLine
                 && 'T_WHITESPACE' !== $tokens[$current]['type']
                 && 'T_COMMENT' !== $tokens[$current]['type']
+                && 'T_DOC_COMMENT_STRING' !== $tokens[$current]['type']
+                && 'T_DOC_COMMENT_OPEN_TAG' !== $tokens[$current]['type']
                 && 'T_DOC_COMMENT_CLOSE_TAG' !== $tokens[$current]['type']
                 && 'T_DOC_COMMENT_WHITESPACE' !== $tokens[$current]['type']
             ) {
@@ -62,7 +64,7 @@ class BlankLineBeforeReturnSniff implements Sniff
             $fix = $phpcsFile->addFixableError(
                 'Missing blank line before return statement',
                 $stackPtr,
-                'MissedBlankLineBeforeRetrun'
+                'MissedBlankLineBeforeReturn'
             );
 
             if (true === $fix) {
