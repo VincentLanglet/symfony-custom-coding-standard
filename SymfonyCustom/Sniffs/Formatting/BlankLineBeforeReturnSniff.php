@@ -35,33 +35,34 @@ class BlankLineBeforeReturnSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        $current = $stackPtr;
-        $previousLine = $tokens[$stackPtr]['line'] - 1;
-        $prevLineTokens = array();
+        $current = $stackPtr - 1;
+        $prevToken = null;
+        $returnOrCommentLine = $tokens[$stackPtr]['line'];
 
-        while ($current >= 0 && $tokens[$current]['line'] >= $previousLine) {
-            if ($tokens[$current]['line'] === $previousLine
-                && 'T_WHITESPACE' !== $tokens[$current]['type']
-                && 'T_COMMENT' !== $tokens[$current]['type']
-                && 'T_DOC_COMMENT_STRING' !== $tokens[$current]['type']
-                && 'T_DOC_COMMENT_OPEN_TAG' !== $tokens[$current]['type']
-                && 'T_DOC_COMMENT_TAG' !== $tokens[$current]['type']
-                && 'T_DOC_COMMENT_CLOSE_TAG' !== $tokens[$current]['type']
-                && 'T_DOC_COMMENT_WHITESPACE' !== $tokens[$current]['type']
-            ) {
-                $prevLineTokens[] = $tokens[$current]['type'];
+        while ($current >= 0 && null === $prevToken) {
+            if ('T_WHITESPACE' !== $tokens[$current]['type']) {
+                if ($this->isComment($tokens[$current])) {
+                    if ($returnOrCommentLine > $tokens[$current]['line'] + 1) {
+                        $prevToken = $tokens[$current];
+                    } else {
+                        $returnOrCommentLine = $tokens[$current]['line'];
+                    }
+                } else {
+                    $prevToken = $tokens[$current];
+                }
             }
             $current--;
         }
 
-        if (isset($prevLineTokens[0])
-            && ('T_OPEN_CURLY_BRACKET' === $prevLineTokens[0]
-            || 'T_COLON' === $prevLineTokens[0])
-        ) {
+        if (!$prevToken) {
             return;
         }
 
-        if (count($prevLineTokens) > 0) {
+        if ('T_OPEN_CURLY_BRACKET' === $prevToken['type'] || 'T_COLON' === $prevToken['type']) {
+            return;
+        }
+
+        if ($returnOrCommentLine - 1 === $prevToken['line']) {
             $fix = $phpcsFile->addFixableError(
                 'Missing blank line before return statement',
                 $stackPtr,
@@ -71,7 +72,9 @@ class BlankLineBeforeReturnSniff implements Sniff
             if (true === $fix) {
                 $phpcsFile->fixer->beginChangeset();
                 $i = 1;
-                while ('T_WHITESPACE' === $tokens[$stackPtr - $i]['type']) {
+                while ('T_WHITESPACE' === $tokens[$stackPtr - $i]['type']
+                    || $this->isComment($tokens[$stackPtr - $i])
+                ) {
                     $i++;
                 }
                 $phpcsFile->fixer->addNewLine($stackPtr - $i);
@@ -80,5 +83,20 @@ class BlankLineBeforeReturnSniff implements Sniff
         }
 
         return;
+    }
+
+    /**
+     * @param array $token
+     *
+     * @return bool
+     */
+    private function isComment(array $token)
+    {
+        return 'T_COMMENT' === $token['type']
+            || 'T_DOC_COMMENT_STRING' === $token['type']
+            || 'T_DOC_COMMENT_OPEN_TAG' === $token['type']
+            || 'T_DOC_COMMENT_TAG' === $token['type']
+            || 'T_DOC_COMMENT_CLOSE_TAG' === $token['type']
+            || 'T_DOC_COMMENT_WHITESPACE' === $token['type'];
     }
 }
