@@ -5,7 +5,7 @@ This standard can be installed with the [Composer](https://getcomposer.org/) dep
 1. Add the coding standard as a dependency of your project
 
 ```
-composer require --dev vincentlanglet/symfony3-custom-coding-standard
+composer require --dev vincentlanglet/symfony-custom-coding-standard
 ```
 
 2. Add the coding standard to the PHP_CodeSniffer install path
@@ -14,7 +14,7 @@ The path is relative to the php_codesniffer install path.
 This is important to make it work both in your vagrant, local machine and PHPStorm
 
 ```
-bin/phpcs --config-set installed_paths ../../vincentlanglet/symfony3-custom-coding-standard
+bin/phpcs --config-set installed_paths ../../vincentlanglet/symfony-custom-coding-standard
 ```
 
 3. Check the installed coding standards

@@ -22,7 +22,7 @@ class BlankLineBeforeReturnUnitTest extends AbstractSniffUnitTest
     public function getErrorList()
     {
         return array(
-            37 => 1,
+            43 => 1,
         );
     }
 
