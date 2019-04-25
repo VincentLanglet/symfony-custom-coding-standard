@@ -4,6 +4,7 @@ namespace SymfonyCustom\Sniffs\Formatting;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Util\Tokens;
 
 /**
  * Throws errors if there's no blank line before return statements.
@@ -92,11 +93,6 @@ class BlankLineBeforeReturnSniff implements Sniff
      */
     private function isComment(array $token)
     {
-        return 'T_COMMENT' === $token['type']
-            || 'T_DOC_COMMENT_STRING' === $token['type']
-            || 'T_DOC_COMMENT_OPEN_TAG' === $token['type']
-            || 'T_DOC_COMMENT_TAG' === $token['type']
-            || 'T_DOC_COMMENT_CLOSE_TAG' === $token['type']
-            || 'T_DOC_COMMENT_WHITESPACE' === $token['type'];
+        return in_array($token['code'], Tokens::$commentTokens);
     }
 }

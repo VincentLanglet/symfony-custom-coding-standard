@@ -8,11 +8,11 @@ use Route;
 use ORM;
 use Truc;
 use Machin;
-use Machine;
 use Unused;
 use Client;
 use Clients;
 use PasClient;
+use Somewhere\Something;
 
 class Container
 {
@@ -23,9 +23,9 @@ class Container
      *
      * @param Toto $toto
      * @var Truc $truc
-     * @return Machin|Machine
+     * @return Machin|\Machine
      */
-    function test (Bar $bar)
+    function test (Bar $bar): Something
     {
         /** @var Client|Clients[]|PasClient $client */
 
