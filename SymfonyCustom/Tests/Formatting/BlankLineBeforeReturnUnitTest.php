@@ -24,6 +24,7 @@ class BlankLineBeforeReturnUnitTest extends AbstractSniffUnitTest
         return array(
             60 => 1,
             67 => 1,
+            76 => 1,
         );
     }
 

@@ -102,11 +102,6 @@ class UnusedUseSniff implements Sniff
 
         while (false !== $classUsed) {
             if (strtolower($tokens[$classUsed]['content']) === $lowerClassName) {
-                // If the name is used in a PHP 7 function return type declaration stop.
-                if (T_RETURN_TYPE === $tokens[$classUsed]['code']) {
-                    return;
-                }
-
                 $beforeUsage = $phpcsFile->findPrevious(
                     Tokens::$emptyTokens,
                     ($classUsed - 1),
@@ -125,10 +120,7 @@ class UnusedUseSniff implements Sniff
                 }
             }
 
-            $classUsed = $phpcsFile->findNext(
-                [T_STRING, T_RETURN_TYPE],
-                ($classUsed + 1)
-            );
+            $classUsed = $phpcsFile->findNext([T_STRING], ($classUsed + 1));
         }
 
         // More checks

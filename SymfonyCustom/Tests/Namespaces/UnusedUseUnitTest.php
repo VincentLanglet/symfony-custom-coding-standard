@@ -22,7 +22,7 @@ class UnusedUseUnitTest extends AbstractSniffUnitTest
     public function getErrorList()
     {
         return array(
-            12 => 1,
+            11 => 1,
         );
     }
 
