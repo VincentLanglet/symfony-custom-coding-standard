@@ -94,3 +94,12 @@ function testToIgnore2()
 {
     $test = 42;
 }
+
+function toIgnore1()
+{
+    $test = 42;
+}
+function toIgnore2()
+{
+    $test = 42;
+}

@@ -43,26 +43,8 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
             }
         }
 
-        $name              = $phpcsFile->getDeclarationName($stackPtr);
-        $isTestFunction    = strpos($name, 'test') === 0;
-        $isAllowedFunction = in_array($name, ['setUp', 'tearDown']);
-        $commentRequired   = !$isTestFunction && !$isAllowedFunction;
-
-        if (T_DOC_COMMENT_CLOSE_TAG !== $tokens[$commentEnd]['code']
-            && T_COMMENT !== $tokens[$commentEnd]['code']
-        ) {
-            $hasComment = false;
-            $phpcsFile->recordMetric($stackPtr, 'Function has doc comment', 'no');
-
-            if ($commentRequired) {
-                $phpcsFile->addError('Missing function doc comment', $stackPtr, 'Missing');
-
-                return;
-            }
-        } else {
-            $hasComment = true;
-            $phpcsFile->recordMetric($stackPtr, 'Function has doc comment', 'yes');
-        }
+        $hasComment = T_DOC_COMMENT_CLOSE_TAG === $tokens[$commentEnd]['code']
+            || T_COMMENT === $tokens[$commentEnd]['code'];
 
         if ($hasComment) {
             if (T_COMMENT === $tokens[$commentEnd]['code']) {
