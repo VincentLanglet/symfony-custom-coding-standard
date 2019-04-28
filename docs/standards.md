@@ -147,3 +147,9 @@ we do not respect this rule:
 ```
 <rule ref="SymfonyCustom.Namespaces.UnusedUse"/>
 ```
+
+- Add a single space around comment tag (`@var`, `@return`, `...`)
+
+```
+<rule ref="SymfonyCustom.WhiteSpace.DocCommentTagSpacing"/>
+```
