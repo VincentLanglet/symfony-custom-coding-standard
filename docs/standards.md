@@ -21,6 +21,17 @@ We imported the [PSR2 Standard](./standards/psr2.md) with these overrides:
 </rule>
 ```
 
+- PhpDoc comments MUSE use an indent of 4 spaces, and MUST NOT use tabs for indenting.
+```
+<rule ref="Generic.WhiteSpace.ScopeIndent">
+    <properties>
+        <property name="ignoreIndentationTokens" type="array">
+            <element value="T_COMMENT"/>
+        </property>
+    </properties>
+</rule>
+```
+
 ## From symfony
 
 We mainly respect the [Symfony Standard](./standards/symfony.md) but

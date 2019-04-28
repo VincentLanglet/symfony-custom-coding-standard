@@ -5,6 +5,7 @@
 
     <!-- We should only be concerned by src and tests folder -->
     <exclude-pattern>*/app/*</exclude-pattern>
+    <exclude-pattern>*/bin/*</exclude-pattern>
     <exclude-pattern>*/var/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/web/*</exclude-pattern>
@@ -29,6 +30,15 @@
     <!-- Override FunctionDeclaration to check space after type hinting -->
     <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint">
         <severity>5</severity>
+    </rule>
+
+    <!-- Override ScopeIndent to check phpDoc comments indent-->
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <properties>
+            <property name="ignoreIndentationTokens" type="array">
+                <element value="T_COMMENT"/>
+            </property>
+        </properties>
     </rule>
 
     <!-- **************** -->
