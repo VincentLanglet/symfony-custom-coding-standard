@@ -21,7 +21,7 @@ class FunctionCommentUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             5   => 1,
             10  => 2,
             43  => 1,
@@ -30,7 +30,7 @@ class FunctionCommentUnitTest extends AbstractSniffUnitTest
             83  => 1,
             93  => 1,
             102 => 1,
-        );
+        ];
     }
 
     /**
@@ -43,6 +43,6 @@ class FunctionCommentUnitTest extends AbstractSniffUnitTest
      */
     protected function getWarningList()
     {
-        return array();
+        return [];
     }
 }

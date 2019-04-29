@@ -20,9 +20,9 @@ class BlankLineBeforeReturnSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_RETURN
-        );
+        ];
     }
 
     /**

@@ -18,10 +18,10 @@ class OpenBracketSpacingSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_OPEN_CURLY_BRACKET,
             T_OPEN_PARENTHESIS,
-        );
+        ];
     }
 
     /**
@@ -45,7 +45,7 @@ class OpenBracketSpacingSniff implements Sniff
                 $error,
                 ($stackPtr + 1),
                 'OpeningWhitespace',
-                array($tokens[$stackPtr]['content'])
+                [$tokens[$stackPtr]['content']]
             );
 
             if (true === $fix) {

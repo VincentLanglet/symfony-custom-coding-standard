@@ -19,10 +19,10 @@ class CloseBracketSpacingSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_CLOSE_CURLY_BRACKET,
             T_CLOSE_PARENTHESIS,
-        );
+        ];
     }
 
     /**
@@ -49,7 +49,7 @@ class CloseBracketSpacingSniff implements Sniff
                     $error,
                     ($stackPtr - 1),
                     'ClosingWhitespace',
-                    array($tokens[$stackPtr]['content'])
+                    [$tokens[$stackPtr]['content']]
                 );
 
                 if (true === $fix) {

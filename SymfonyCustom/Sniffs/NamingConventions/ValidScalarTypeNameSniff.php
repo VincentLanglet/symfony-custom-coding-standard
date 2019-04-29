@@ -16,12 +16,12 @@ class ValidScalarTypeNameSniff implements Sniff
      *
      * @var array
      */
-    public $types = array(
+    public $types = [
         'boolean' => 'bool',
         'double'  => 'float',
         'integer' => 'int',
         'real'    => 'float',
-    );
+    ];
 
     /**
      * A list of tokenizers this sniff supports.
@@ -69,7 +69,7 @@ class ValidScalarTypeNameSniff implements Sniff
         foreach ($tokens[$stackPtr]['comment_tags'] as $commentTag) {
             if (in_array(
                 $tokens[$commentTag]['content'],
-                array('@param', '@return', '@var')
+                ['@param', '@return', '@var']
             )
             ) {
                 $docString = $phpcsFile->findNext(T_DOC_COMMENT_STRING, $commentTag);
@@ -120,7 +120,7 @@ class ValidScalarTypeNameSniff implements Sniff
                 'For type-hinting in PHPDocs and casting, use %s instead of %s',
                 $stackPtr,
                 '',
-                array($validTypeName, $typeName)
+                [$validTypeName, $typeName]
             );
             if ($needFix) {
                 $tokens = $phpcsFile->getTokens();

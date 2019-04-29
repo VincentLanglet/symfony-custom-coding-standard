@@ -18,12 +18,12 @@ class YodaConditionSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_IS_EQUAL,
             T_IS_NOT_EQUAL,
             T_IS_IDENTICAL,
             T_IS_NOT_IDENTICAL,
-        );
+        ];
     }
 
     /**
@@ -62,7 +62,7 @@ class YodaConditionSniff implements Sniff
             // If this is a function call or something, we are OK.
             if (in_array(
                 $tokens[$i]['code'],
-                array(T_CONSTANT_ENCAPSED_STRING, T_CLOSE_PARENTHESIS, T_OPEN_PARENTHESIS, T_RETURN),
+                [T_CONSTANT_ENCAPSED_STRING, T_CLOSE_PARENTHESIS, T_OPEN_PARENTHESIS, T_RETURN],
                 true
             )
             ) {
@@ -86,9 +86,9 @@ class YodaConditionSniff implements Sniff
             );
         }
 
-        if (in_array($tokens[$nextNonEmpty]['code'], array(T_SELF, T_PARENT, T_STATIC), true)) {
+        if (in_array($tokens[$nextNonEmpty]['code'], [T_SELF, T_PARENT, T_STATIC], true)) {
             $nextNonEmpty = $phpcsFile->findNext(
-                array_merge(Tokens::$emptyTokens, array(T_DOUBLE_COLON)),
+                array_merge(Tokens::$emptyTokens, [T_DOUBLE_COLON]),
                 ($nextNonEmpty + 1),
                 null,
                 true

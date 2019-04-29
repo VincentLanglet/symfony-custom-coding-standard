@@ -99,7 +99,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
             if (count($realParams) > 0) {
                 foreach ($realParams as $neededParam) {
                     $error = 'Doc comment for parameter "%s" missing';
-                    $data  = array($neededParam['name']);
+                    $data  = [$neededParam['name']];
                     $phpcsFile->addError($error, $stackPtr, 'MissingParamTag', $data);
                 }
             }
@@ -198,7 +198,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                 $rule = 'SpacingBeforeFunction';
             }
 
-            $data = array($found);
+            $data = [$found];
             $fix = $phpcsFile->addFixableError($error, $commentStart, $rule, $data);
 
             if (true === $fix) {

@@ -17,9 +17,9 @@ class ObjectInstantiationSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_NEW,
-        );
+        ];
     }
 
     /**
@@ -33,13 +33,13 @@ class ObjectInstantiationSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        $allowed = array(
+        $allowed = [
             T_STRING,
             T_NS_SEPARATOR,
             T_VARIABLE,
             T_STATIC,
             T_SELF,
-        );
+        ];
 
         $object = $stackPtr;
         $line   = $tokens[$object]['line'];

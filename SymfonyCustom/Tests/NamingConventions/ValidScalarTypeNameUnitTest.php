@@ -21,7 +21,7 @@ class ValidScalarTypeNameUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             26 => 1,
             27 => 1,
             28 => 1,
@@ -43,7 +43,7 @@ class ValidScalarTypeNameUnitTest extends AbstractSniffUnitTest
             49 => 1,
             50 => 1,
             51 => 1,
-        );
+        ];
     }
 
     /**
@@ -56,6 +56,6 @@ class ValidScalarTypeNameUnitTest extends AbstractSniffUnitTest
      */
     protected function getWarningList()
     {
-        return array();
+        return [];
     }
 }

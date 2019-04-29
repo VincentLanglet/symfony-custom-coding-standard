@@ -18,13 +18,13 @@ class UnaryOperatorSpacingSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_DEC,
             T_INC,
             T_MINUS,
             T_PLUS,
             T_BOOLEAN_NOT,
-        );
+        ];
     }
 
     /**
@@ -81,7 +81,7 @@ class UnaryOperatorSpacingSniff implements Sniff
 
         // Find the last syntax item to determine if this is an unary operator.
         $lastSyntaxItem = $phpcsFile->findPrevious(
-            array(T_WHITESPACE),
+            [T_WHITESPACE],
             $stackPtr - 1,
             ($tokens[$stackPtr]['column']) * -1,
             true,
@@ -90,7 +90,7 @@ class UnaryOperatorSpacingSniff implements Sniff
         );
         $operatorSuffixAllowed = in_array(
             $tokens[$lastSyntaxItem]['code'],
-            array(
+            [
                 T_LNUMBER,
                 T_DNUMBER,
                 T_CLOSE_PARENTHESIS,
@@ -98,7 +98,7 @@ class UnaryOperatorSpacingSniff implements Sniff
                 T_CLOSE_SQUARE_BRACKET,
                 T_VARIABLE,
                 T_STRING,
-            )
+            ]
         );
 
         // Check plus / minus value assignments or comparisons.

@@ -15,10 +15,10 @@ class DocCommentForbiddenTagsSniff implements Sniff
      *
      * @var array
      */
-    public $tags = array(
+    public $tags = [
         '@package',
         '@subpackage',
-    );
+    ];
 
     /**
      * A list of tokenizers this sniff supports.
@@ -27,9 +27,9 @@ class DocCommentForbiddenTagsSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_DOC_COMMENT_TAG
-        );
+        ];
     }
 
     /**
@@ -53,7 +53,7 @@ class DocCommentForbiddenTagsSniff implements Sniff
                 'The %s annotation is forbidden to use',
                 $stackPtr,
                 '',
-                array($tokens[$stackPtr]['content'])
+                [$tokens[$stackPtr]['content']]
             );
         }
     }

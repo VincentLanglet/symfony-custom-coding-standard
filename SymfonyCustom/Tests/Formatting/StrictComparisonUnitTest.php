@@ -18,7 +18,7 @@ class StrictComparisonUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -28,9 +28,9 @@ class StrictComparisonUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array(
+        return [
             3 => 1,
             5 => 1,
-        );
+        ];
     }
 }

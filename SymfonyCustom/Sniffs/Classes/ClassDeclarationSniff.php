@@ -14,11 +14,11 @@ class ClassDeclarationSniff
      */
     public function register()
     {
-        return array(
+        return [
             T_CLASS,
             T_INTERFACE,
             T_TRAIT,
-        );
+        ];
     }
 
     /**
@@ -39,7 +39,7 @@ class ClassDeclarationSniff
             return;
         }
 
-        $nextElement = $phpcsFile->findNext(array(T_WHITESPACE), $openingBrace + 1, null, true);
+        $nextElement = $phpcsFile->findNext([T_WHITESPACE], $openingBrace + 1, null, true);
 
         if ($tokens[$openingBrace]['line'] + 1 < $tokens[$nextElement]['line']) {
             $fix = $phpcsFile->addFixableError(

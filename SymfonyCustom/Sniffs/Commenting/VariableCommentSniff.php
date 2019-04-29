@@ -21,14 +21,14 @@ class VariableCommentSniff extends AbstractVariableSniff
     public function processMemberVar(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        $ignore = array(
+        $ignore = [
             T_PUBLIC,
             T_PRIVATE,
             T_PROTECTED,
             T_VAR,
             T_STATIC,
             T_WHITESPACE,
-        );
+        ];
 
         $commentEnd = $phpcsFile->findPrevious($ignore, ($stackPtr - 1), null, true);
         if (false === $commentEnd
@@ -125,7 +125,7 @@ class VariableCommentSniff extends AbstractVariableSniff
             $error = 'Expected 1 blank line before docblock; %s found';
             $rule = 'SpacingBeforeDocblock';
 
-            $data = array($found);
+            $data = [$found];
             $fix = $phpcsFile->addFixableError($error, $commentStart, $rule, $data);
 
             if (true === $fix) {

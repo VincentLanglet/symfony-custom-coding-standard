@@ -21,11 +21,11 @@ class EmptyLinesUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             3 => 1,
             6 => 1,
             7 => 1,
-        );
+        ];
     }
 
     /**
@@ -38,6 +38,6 @@ class EmptyLinesUnitTest extends AbstractSniffUnitTest
      */
     protected function getWarningList()
     {
-        return array();
+        return [];
     }
 }

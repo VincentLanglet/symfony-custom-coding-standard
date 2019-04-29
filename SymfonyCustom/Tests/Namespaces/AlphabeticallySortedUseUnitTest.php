@@ -21,10 +21,10 @@ class AlphabeticallySortedUseUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             8  => 1,
             22 => 1,
-        );
+        ];
     }
 
     /**
@@ -37,6 +37,6 @@ class AlphabeticallySortedUseUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array();
+        return [];
     }
 }

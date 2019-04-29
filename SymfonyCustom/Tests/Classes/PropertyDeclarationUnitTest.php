@@ -21,9 +21,9 @@ class PropertyDeclarationUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             9 => 1,
-        );
+        ];
     }
 
     /**
@@ -36,6 +36,6 @@ class PropertyDeclarationUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array();
+        return [];
     }
 }

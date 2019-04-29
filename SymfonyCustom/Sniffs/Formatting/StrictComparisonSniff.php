@@ -15,10 +15,10 @@ class StrictComparisonSniff implements Sniff
      *
      * @var array
      */
-    public $operators = array(
+    public $operators = [
         'T_IS_EQUAL'     => '===',
         'T_IS_NOT_EQUAL' => '!==',
-    );
+    ];
 
     /**
      * A list of tokenizers this sniff supports.
@@ -27,10 +27,10 @@ class StrictComparisonSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_IS_EQUAL,
             T_IS_NOT_EQUAL,
-        );
+        ];
     }
 
     /**
@@ -50,10 +50,10 @@ class StrictComparisonSniff implements Sniff
             'The %s comparator is not recommended, use %s instead',
             $stackPtr,
             '',
-            array(
+            [
                 $tokens[$stackPtr]['content'],
                 $this->operators[$tokens[$stackPtr]['type']],
-            )
+            ]
         );
     }
 }

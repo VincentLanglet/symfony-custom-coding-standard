@@ -21,10 +21,10 @@ class ScopeOrderUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             9  => 1,
             20 => 1,
-        );
+        ];
     }
 
     /**
@@ -37,6 +37,6 @@ class ScopeOrderUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array();
+        return [];
     }
 }
