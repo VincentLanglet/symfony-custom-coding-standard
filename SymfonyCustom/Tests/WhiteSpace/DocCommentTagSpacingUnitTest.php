@@ -25,10 +25,10 @@ class DocCommentTagSpacingUnitTest extends AbstractSniffUnitTest
             11 => 1,
             13 => 1,
             14 => 1,
-            21 => 1,
-            22 => 1,
-            24 => 1,
-            28 => 1,
+            29 => 1,
+            30 => 1,
+            32 => 1,
+            36 => 1,
         );
     }
 

@@ -13,7 +13,15 @@ class DocCommentTagSpacingUnitTest
      *  @see otherFunctions()
      * @see       anotherFunctions()
      */
-     public $variableName = array();
+    public $variableName = array();
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\SerializedName("libelle")
+     */
+    private $label;
 
     /**
      * T_VARIABLE check, var in string and in function.
