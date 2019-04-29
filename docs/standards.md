@@ -53,6 +53,12 @@ we do not respect this rule:
 <rule ref="Generic.Formatting.SpaceAfterCast"/>
 ```
 
+- Do not use space inside type casting
+
+```
+<rule ref="Squiz.WhiteSpace.CastSpacing"/>
+```
+
 - Use lowercase for PHP functions
 
 ```
@@ -102,6 +108,18 @@ we do not respect this rule:
 
 ```
 <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+```
+
+- Do not use empty php statement
+
+```
+<rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
+```
+
+- Add a single space before and after logical operator
+
+```
+<rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
 ```
 
 ### Custom

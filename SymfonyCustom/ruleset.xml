@@ -81,4 +81,7 @@
     </rule>
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
+    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
 </ruleset>
