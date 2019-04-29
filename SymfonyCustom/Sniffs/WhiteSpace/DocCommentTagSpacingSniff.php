@@ -11,6 +11,44 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class DocCommentTagSpacingSniff implements Sniff
 {
     /**
+     * A list of PHPDoc tags that are checked.
+     *
+     * @var array
+     */
+    public $tags = array(
+        '@api',
+        '@author',
+        '@category',
+        '@copyright',
+        '@covers',
+        '@dataProvider',
+        '@deprecated',
+        '@example',
+        '@filesource',
+        '@global',
+        '@ignore',
+        '@internal',
+        '@license',
+        '@link',
+        '@method',
+        '@package',
+        '@param',
+        '@property',
+        '@property-read',
+        '@property-write',
+        '@return',
+        '@see',
+        '@since',
+        '@source',
+        '@subpackage',
+        '@throws',
+        '@todo',
+        '@uses',
+        '@var',
+        '@version',
+    );
+
+    /**
      * Returns an array of tokens this test wants to listen for.
      *
      * @return array
@@ -49,22 +87,26 @@ class DocCommentTagSpacingSniff implements Sniff
                 if (true === $fix) {
                     $phpcsFile->fixer->addContentBefore($stackPtr, ' ');
                 }
-            } elseif (1 !== $tokens[($stackPtr - 1)]['length']) {
-                $error = 'There should be only one space before a doc comment tag "%s"';
-                $fix = $phpcsFile->addFixableError(
-                    $error,
-                    ($stackPtr + 1),
-                    'DocCommentTagSpacing',
-                    [$tokens[$stackPtr]['content']]
-                );
+            } elseif (1 < $tokens[($stackPtr - 1)]['length']) {
+                $isCustomTag = !in_array($tokens[$stackPtr]['content'], $this->tags);
 
-                if (true === $fix) {
-                    $phpcsFile->fixer->replaceToken($stackPtr - 1, ' ');
+                // Custom tags are not checked cause there is annotation with array params
+                if (!$isCustomTag) {
+                    $error = 'There should be only one space before a doc comment tag "%s"';
+                    $fix = $phpcsFile->addFixableError(
+                        $error,
+                        ($stackPtr + 1),
+                        'DocCommentTagSpacing',
+                        [$tokens[$stackPtr]['content']]
+                    );
+
+                    if (true === $fix) {
+                        $phpcsFile->fixer->replaceToken($stackPtr - 1, ' ');
+                    }
                 }
             }
         }
 
-        // No need to check for space after a doc comment tag
         if (isset($tokens[($stackPtr + 1)])
             && $tokens[$stackPtr]['line'] === $tokens[($stackPtr + 1)]['line']
             && T_DOC_COMMENT_WHITESPACE === $tokens[($stackPtr + 1)]['code']
