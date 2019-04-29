@@ -98,6 +98,12 @@ we do not respect this rule:
 <rule ref="Squiz.PHP.ForbiddenFunctions"/>
 ```
 
+- Use short array syntax
+
+```
+<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+```
+
 ### Custom
 - Some others checks are made about array (`=>` alignments and indentation)
 

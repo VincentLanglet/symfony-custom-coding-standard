@@ -80,4 +80,5 @@
         </properties>
     </rule>
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 </ruleset>
