@@ -3,6 +3,12 @@
 
 We imported the [PSR2 Standard](./standards/psr2.md) with these overrides:
 
+- There is not line length limit
+
+```
+<exclude ref="Generic.Files.LineLength">
+```
+
 - There MUST NOT be trailing whitespace at the end of blank lines
 
 ```
@@ -41,7 +47,7 @@ we do not respect this rule:
 
 ## Others
 ### Imported
-- Do not use `<?` to define a php file
+- Do not use `<?` to define a PHP file
 
 ```
 <rule ref="Generic.PHP.DisallowShortOpenTag"/>
@@ -110,7 +116,7 @@ we do not respect this rule:
 <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 ```
 
-- Do not use empty php statement
+- Do not use empty PHP statement
 
 ```
 <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>

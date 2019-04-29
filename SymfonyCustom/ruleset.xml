@@ -17,8 +17,10 @@
     <!-- ***  PSR2  *** -->
     <!-- ************** -->
 
-    <!-- Include the whole PSR-2 (so PSR-1) standard -->
-    <rule ref="PSR2"/>
+    <!-- Include the whole PSR-2 (so PSR-1) standard without the file length limit -->
+    <rule ref="PSR2">
+        <exclude name="Generic.Files.LineLength"/>
+    </rule>
 
     <!-- Override SuperfluousWhitespace to not ignore blank lines -->
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
