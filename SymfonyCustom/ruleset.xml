@@ -81,9 +81,20 @@
             <property name="ignoreNewlines" value="true"/>
         </properties>
     </rule>
+    <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true"/>
+        </properties>
+    </rule>
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
     <rule ref="Squiz.WhiteSpace.CastSpacing"/>
+    <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing"/>
+    <rule ref="Generic.Strings.UnnecessaryStringConcat">
+        <properties>
+            <property name="allowMultiline" value="true"/>
+        </properties>
+    </rule>
 </ruleset>

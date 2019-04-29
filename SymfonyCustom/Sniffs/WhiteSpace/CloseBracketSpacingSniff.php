@@ -22,6 +22,7 @@ class CloseBracketSpacingSniff implements Sniff
         return [
             T_CLOSE_CURLY_BRACKET,
             T_CLOSE_PARENTHESIS,
+            T_CLOSE_SHORT_ARRAY,
         ];
     }
 

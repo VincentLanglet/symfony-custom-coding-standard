@@ -12,7 +12,12 @@ From [symfony standard](http://symfony.com/doc/current/contributing/code/standar
  with the exception of the concatenation (`.`) operator
 
 ```
-<rule ref="Squiz.WhiteSpace.OperatorSpacing"/>
+<rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+<rule ref="Squiz.WhiteSpace.OperatorSpacing">
+    <properties>
+        <property name="ignoreNewlines" value="true"/>
+    </properties>
+</rule>
 <rule ref="Squiz.Strings.ConcatenationSpacing">
     <properties>
         <property name="ignoreNewlines" value="true"/>

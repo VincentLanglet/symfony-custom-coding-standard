@@ -122,10 +122,30 @@ we do not respect this rule:
 <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
 ```
 
-- Add a single space before and after logical operator
+- Add a single space around logical operator (`&&`, `||`, `...`)
 
 ```
 <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+```
+
+- Do not use space around object operators (`->`)
+
+```
+<rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
+    <properties>
+        <property name="ignoreNewlines" value="true"/>
+    </properties>
+</rule>
+```
+
+- Do not use unnecessary concat operator
+
+```
+<rule ref="Generic.Strings.UnnecessaryStringConcat">
+    <properties>
+        <property name="allowMultiline" value="true"/>
+    </properties>
+</rule>
 ```
 
 ### Custom
@@ -135,7 +155,7 @@ we do not respect this rule:
 <rule ref="SymfonyCustom.Array.ArrayDeclaration"/>
 ```
 
-- Do not use spaces after `(` or `{` and before `)` or `}`
+- Do not use spaces after `(`, `{` or `[` and before `)`, `}` or `]`
 
 ```
 <rule ref="SymfonyCustom.WhiteSpace.CloseBracketSpacing"/>

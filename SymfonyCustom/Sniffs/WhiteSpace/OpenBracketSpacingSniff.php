@@ -21,6 +21,7 @@ class OpenBracketSpacingSniff implements Sniff
         return [
             T_OPEN_CURLY_BRACKET,
             T_OPEN_PARENTHESIS,
+            T_OPEN_SHORT_ARRAY,
         ];
     }
 

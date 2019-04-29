@@ -25,6 +25,7 @@ class CloseBracketSpacingUnitTest extends AbstractSniffUnitTest
             3 => 1,
             5 => 2,
             7 => 1,
+            9 => 1,
         ];
     }
 
