@@ -20,6 +20,16 @@ class DocCommentTagSpacingUnitTest
      *
      * @JMS\Type("string")
      * @JMS\SerializedName("libelle")
+     * @ORM\AttributeOverrides({
+     *     @ORM\AttributeOverride(
+     *         name="email",
+     *         column=@ORM\Column(type="string", name="email", length=255, unique=false, nullable=true)
+     *     ),
+     *     @ORM\AttributeOverride(
+     *         name="emailCanonical",
+     *         column=@ORM\Column(type="string", name="email_canonical", length=255, unique=false, nullable=true)
+     *     )
+     * })
      */
     private $label;
 

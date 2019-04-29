@@ -20,6 +20,8 @@ class DocCommentGroupSameTypeSniff implements Sniff
         '@author',
         '@category',
         '@copyright',
+        '@covers',
+        '@dataProvider',
         '@deprecated',
         '@example',
         '@filesource',
