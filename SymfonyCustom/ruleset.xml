@@ -3,16 +3,6 @@
     <!-- See http://symfony.com/doc/current/contributing/code/standards.html -->
     <description>The SymfonyCustom coding standard.</description>
 
-    <!-- We should only be concerned by src and tests folder -->
-    <exclude-pattern>*/app/*</exclude-pattern>
-    <exclude-pattern>*/bin/*</exclude-pattern>
-    <exclude-pattern>*/var/*</exclude-pattern>
-    <exclude-pattern>*/vendor/*</exclude-pattern>
-    <exclude-pattern>*/web/*</exclude-pattern>
-
-    <!-- There should not be any code in the bundle Resources directory. -->
-    <exclude-pattern>*/Resources/*</exclude-pattern>
-
     <!-- ************** -->
     <!-- ***  PSR2  *** -->
     <!-- ************** -->
