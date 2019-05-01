@@ -3,6 +3,12 @@
 
 We imported the [PSR2 Standard](./standards/psr2.md) with these overrides:
 
+- There is not line length limit
+
+```
+<exclude ref="Generic.Files.LineLength">
+```
+
 - There MUST NOT be trailing whitespace at the end of blank lines
 
 ```
@@ -41,7 +47,7 @@ we do not respect this rule:
 
 ## Others
 ### Imported
-- Do not use `<?` to define a php file
+- Do not use `<?` to define a PHP file
 
 ```
 <rule ref="Generic.PHP.DisallowShortOpenTag"/>
@@ -51,6 +57,12 @@ we do not respect this rule:
 
 ```
 <rule ref="Generic.Formatting.SpaceAfterCast"/>
+```
+
+- Do not use space inside type casting
+
+```
+<rule ref="Squiz.WhiteSpace.CastSpacing"/>
 ```
 
 - Use lowercase for PHP functions
@@ -98,6 +110,44 @@ we do not respect this rule:
 <rule ref="Squiz.PHP.ForbiddenFunctions"/>
 ```
 
+- Use short array syntax
+
+```
+<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+```
+
+- Do not use empty PHP statement
+
+```
+<rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
+```
+
+- Add a single space around logical operator (`&&`, `||`, `...`)
+
+```
+<rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+```
+
+- Do not use space around object operators (`->`)
+
+```
+<rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
+    <properties>
+        <property name="ignoreNewlines" value="true"/>
+    </properties>
+</rule>
+```
+
+- Do not use unnecessary concat operator
+
+```
+<rule ref="Generic.Strings.UnnecessaryStringConcat">
+    <properties>
+        <property name="allowMultiline" value="true"/>
+    </properties>
+</rule>
+```
+
 ### Custom
 - Some others checks are made about array (`=>` alignments and indentation)
 
@@ -105,7 +155,7 @@ we do not respect this rule:
 <rule ref="SymfonyCustom.Array.ArrayDeclaration"/>
 ```
 
-- Do not use spaces after `(` or `{` and before `)` or `}`
+- Do not use spaces after `(`, `{` or `[` and before `)`, `}` or `]`
 
 ```
 <rule ref="SymfonyCustom.WhiteSpace.CloseBracketSpacing"/>

@@ -17,12 +17,12 @@ class ValidClassNameSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_INTERFACE,
             T_TRAIT,
             T_EXTENDS,
             T_ABSTRACT,
-        );
+        ];
     }
 
     /**

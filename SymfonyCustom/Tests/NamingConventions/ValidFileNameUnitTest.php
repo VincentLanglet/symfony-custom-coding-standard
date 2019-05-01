@@ -45,6 +45,6 @@ class ValidFileNameUnitTest extends AbstractSniffUnitTest
      */
     protected function getWarningList()
     {
-        return array();
+        return [];
     }
 }

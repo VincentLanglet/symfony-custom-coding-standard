@@ -15,7 +15,7 @@ class DocCommentTagSpacingSniff implements Sniff
      *
      * @var array
      */
-    public $tags = array(
+    public $tags = [
         '@api',
         '@author',
         '@category',
@@ -46,7 +46,7 @@ class DocCommentTagSpacingSniff implements Sniff
         '@uses',
         '@var',
         '@version',
-    );
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -55,9 +55,9 @@ class DocCommentTagSpacingSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_DOC_COMMENT_TAG
-        );
+        ];
     }
 
     /**
@@ -117,7 +117,7 @@ class DocCommentTagSpacingSniff implements Sniff
                 $error,
                 ($stackPtr + 1),
                 'DocCommentTagSpacing',
-                array($tokens[$stackPtr]['content'])
+                [$tokens[$stackPtr]['content']]
             );
 
             if (true === $fix) {

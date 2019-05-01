@@ -21,7 +21,7 @@ class UnaryOperatorSpacingUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             4  => 1,
             7  => 1,
             9  => 1,
@@ -29,7 +29,7 @@ class UnaryOperatorSpacingUnitTest extends AbstractSniffUnitTest
             14 => 1,
             17 => 1,
             18 => 1,
-        );
+        ];
     }
 
     /**
@@ -42,6 +42,6 @@ class UnaryOperatorSpacingUnitTest extends AbstractSniffUnitTest
      */
     protected function getWarningList()
     {
-        return array();
+        return [];
     }
 }

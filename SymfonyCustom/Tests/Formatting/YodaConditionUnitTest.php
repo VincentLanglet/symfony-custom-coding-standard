@@ -18,7 +18,7 @@ class YodaConditionUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             2  => 2,
             4  => 2,
             11 => 1,
@@ -32,7 +32,7 @@ class YodaConditionUnitTest extends AbstractSniffUnitTest
             87 => 1,
             92 => 1,
             95 => 1,
-        );
+        ];
     }
 
     /**
@@ -42,6 +42,6 @@ class YodaConditionUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array();
+        return [];
     }
 }

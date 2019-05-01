@@ -21,14 +21,14 @@ class DocCommentForbiddenTagsUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             6  => 1,
             7  => 1,
             11 => 1,
             15 => 1,
             20 => 1,
             21 => 1,
-        );
+        ];
     }
 
     /**
@@ -41,6 +41,6 @@ class DocCommentForbiddenTagsUnitTest extends AbstractSniffUnitTest
      */
     protected function getWarningList()
     {
-        return array();
+        return [];
     }
 }

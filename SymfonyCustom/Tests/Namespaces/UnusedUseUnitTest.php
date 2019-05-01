@@ -21,9 +21,9 @@ class UnusedUseUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             11 => 1,
-        );
+        ];
     }
 
     /**
@@ -36,6 +36,6 @@ class UnusedUseUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array();
+        return [];
     }
 }

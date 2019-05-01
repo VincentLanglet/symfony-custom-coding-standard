@@ -21,9 +21,9 @@ class UserDeprecatedUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             30 => 1,
-        );
+        ];
     }
 
     /**
@@ -36,6 +36,6 @@ class UserDeprecatedUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array();
+        return [];
     }
 }

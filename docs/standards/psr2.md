@@ -71,24 +71,12 @@
 <rule ref="PSR2.Files.ClosingTag"/>
 ```
 
-- The soft limit on line length MUST be 120 characters;
- automated style checkers MUST warn but MUST NOT error at the soft limit.
-
-```
-<rule ref="Generic.Files.LineLength">
-    <properties>
-        <property name="lineLimit" value="120"/>
-        <property name="absoluteLineLimit" value="0"/>
-    </properties>
-</rule>
-```
-
 - There MUST NOT be trailing whitespace at the end of non-blank lines.
 
 ```
 <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
     <properties>
-    <property name="ignoreBlankLines" value="true"/>
+        <property name="ignoreBlankLines" value="true"/>
     </properties>
 </rule>
 <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.StartFile">

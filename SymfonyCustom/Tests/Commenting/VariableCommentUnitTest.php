@@ -21,7 +21,7 @@ class VariableCommentUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             21  => 1,
             24  => 1,
             56  => 1,
@@ -30,7 +30,7 @@ class VariableCommentUnitTest extends AbstractSniffUnitTest
             84  => 1,
             122 => 1,
             124 => 1,
-        );
+        ];
     }
 
     /**
@@ -43,6 +43,6 @@ class VariableCommentUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array();
+        return [];
     }
 }

@@ -21,11 +21,11 @@ class BlankLineBeforeReturnUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             60 => 1,
             67 => 1,
             76 => 1,
-        );
+        ];
     }
 
     /**
@@ -38,6 +38,6 @@ class BlankLineBeforeReturnUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array();
+        return [];
     }
 }

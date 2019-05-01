@@ -18,7 +18,7 @@ class UnusedUseSniff implements Sniff
      */
     public function register()
     {
-        return array(T_USE);
+        return [T_USE];
     }
 
     /**

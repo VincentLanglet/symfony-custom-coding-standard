@@ -16,7 +16,7 @@ class MethodScopeSniff extends AbstractScopeSniff
      */
     public function __construct()
     {
-        parent::__construct(array(T_CLASS), array(T_FUNCTION));
+        parent::__construct([T_CLASS], [T_FUNCTION]);
     }
 
     /**
@@ -50,7 +50,7 @@ class MethodScopeSniff extends AbstractScopeSniff
             || ($tokens[$modifier]['line'] !== $tokens[$stackPtr]['line'])
         ) {
             $error = 'No scope modifier specified for function "%s"';
-            $data  = array($methodName);
+            $data  = [$methodName];
             $phpcsFile->addError($error, $stackPtr, 'Missing', $data);
         }
     }

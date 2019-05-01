@@ -15,7 +15,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
      *
      * @var array
      */
-    public $tags = array(
+    public $tags = [
         '@api',
         '@author',
         '@category',
@@ -46,7 +46,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
         '@uses',
         '@var',
         '@version',
-    );
+    ];
 
     /**
      * A list of tokenizers this sniff supports.
@@ -55,9 +55,9 @@ class DocCommentGroupSameTypeSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_DOC_COMMENT_OPEN_TAG
-        );
+        ];
     }
 
     /**
@@ -148,7 +148,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
 
                             if ($previousLine === $commentTagLine - 1) {
                                 $firstOnLine = $phpcsFile->findFirstOnLine(
-                                    array(),
+                                    [],
                                     $commentTag,
                                     true
                                 );

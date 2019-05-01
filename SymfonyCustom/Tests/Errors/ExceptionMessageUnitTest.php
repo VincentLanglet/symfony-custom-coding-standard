@@ -21,9 +21,9 @@ class ExceptionMessageUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             17 => 1,
-        );
+        ];
     }
 
     /**
@@ -36,6 +36,6 @@ class ExceptionMessageUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array();
+        return [];
     }
 }

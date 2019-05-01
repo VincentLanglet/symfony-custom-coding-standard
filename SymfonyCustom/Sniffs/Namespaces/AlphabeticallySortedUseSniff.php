@@ -22,7 +22,7 @@ class AlphabeticallySortedUseSniff implements Sniff
      */
     public function register()
     {
-        return array(T_USE);
+        return [T_USE];
     }
 
     /**
@@ -84,7 +84,7 @@ class AlphabeticallySortedUseSniff implements Sniff
         }
 
         // Ignore USE keywords inside class and trait
-        if ($phpcsFile->hasCondition($stackPtr, array(T_CLASS, T_TRAIT)) === true) {
+        if ($phpcsFile->hasCondition($stackPtr, [T_CLASS, T_TRAIT]) === true) {
             return true;
         }
 

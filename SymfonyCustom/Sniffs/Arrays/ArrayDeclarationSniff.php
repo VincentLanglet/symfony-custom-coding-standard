@@ -38,10 +38,10 @@ class ArrayDeclarationSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_ARRAY,
             T_OPEN_SHORT_ARRAY,
-        );
+        ];
     }
 
     /**
@@ -151,7 +151,7 @@ class ArrayDeclarationSniff implements Sniff
         // Check if there are multiple values. If so, then it has to be multiple lines
         // unless it is contained inside a function call or condition.
         $valueCount = 0;
-        $commas     = array();
+        $commas     = [];
         for ($i = ($arrayStart + 1); $i < $arrayEnd; $i++) {
             // Skip bracketed statements, like function calls.
             if (T_OPEN_PARENTHESIS === $tokens[$i]['code']) {
@@ -182,7 +182,7 @@ class ArrayDeclarationSniff implements Sniff
             if (T_WHITESPACE !== $tokens[($nextArrow - 1)]['code']) {
                 $content = $tokens[($nextArrow - 1)]['content'];
                 $error   = 'Expected 1 space between "%s" and double arrow; 0 found';
-                $data    = array($content);
+                $data    = [$content];
                 $fix     = $phpcsFile->addFixableError($error, $nextArrow, 'NoSpaceBeforeDoubleArrow', $data);
                 if (true === $fix) {
                     $phpcsFile->fixer->addContentBefore($nextArrow, ' ');
@@ -192,7 +192,7 @@ class ArrayDeclarationSniff implements Sniff
                 if (1 !== $spaceLength) {
                     $content = $tokens[($nextArrow - 2)]['content'];
                     $error   = 'Expected 1 space between "%s" and double arrow; %s found';
-                    $data    = array($content, $spaceLength);
+                    $data    = [$content, $spaceLength];
 
                     $fix = $phpcsFile->addFixableError($error, $nextArrow, 'SpaceBeforeDoubleArrow', $data);
                     if (true === $fix) {
@@ -204,7 +204,7 @@ class ArrayDeclarationSniff implements Sniff
             if (T_WHITESPACE !== $tokens[($nextArrow + 1)]['code']) {
                 $content = $tokens[($nextArrow + 1)]['content'];
                 $error   = 'Expected 1 space between double arrow and "%s"; 0 found';
-                $data    = array($content);
+                $data    = [$content];
 
                 $fix     = $phpcsFile->addFixableError($error, $nextArrow, 'NoSpaceAfterDoubleArrow', $data);
                 if (true === $fix) {
@@ -215,7 +215,7 @@ class ArrayDeclarationSniff implements Sniff
                 if (1 !== $spaceLength) {
                     $content = $tokens[($nextArrow + 2)]['content'];
                     $error   = 'Expected 1 space between double arrow and "%s"; %s found';
-                    $data    = array($content, $spaceLength);
+                    $data    = [$content, $spaceLength];
 
                     $fix = $phpcsFile->addFixableError($error, $nextArrow, 'SpaceAfterDoubleArrow', $data);
                     if (true === $fix) {
@@ -300,7 +300,7 @@ class ArrayDeclarationSniff implements Sniff
             $expected = ($currentIndent);
             $found    = ($tokens[$arrayEnd]['column'] - 1);
             $error    = 'Closing parenthesis not aligned correctly; expected %s space(s) but found %s';
-            $data     = array($expected, $found);
+            $data     = [$expected, $found];
 
             $fix = $phpcsFile->addFixableError($error, $arrayEnd, 'CloseBraceNotAligned', $data);
             if (true === $fix) {
@@ -314,7 +314,7 @@ class ArrayDeclarationSniff implements Sniff
 
         $keyUsed    = false;
         $singleUsed = false;
-        $indices    = array();
+        $indices    = [];
         $maxLength  = 0;
 
         if (T_ARRAY === $tokens[$stackPtr]['code']) {
@@ -340,7 +340,7 @@ class ArrayDeclarationSniff implements Sniff
             ) {
                 // Let subsequent calls of this test handle nested arrays.
                 if (T_DOUBLE_ARROW !== $tokens[$lastToken]['code']) {
-                    $indices[] = array('value' => $nextToken);
+                    $indices[] = ['value' => $nextToken];
                     $lastToken = $nextToken;
                 }
 
@@ -369,7 +369,7 @@ class ArrayDeclarationSniff implements Sniff
                 continue;
             }
 
-            $currentEntry = array();
+            $currentEntry = [];
 
             if (T_COMMA === $tokens[$nextToken]['code']) {
                 $stackPtrCount = 0;
@@ -410,10 +410,10 @@ class ArrayDeclarationSniff implements Sniff
                         }
 
                         $error = 'Expected 0 spaces between "%s" and comma; %s found';
-                        $data  = array(
+                        $data  = [
                             $content,
                             $spaceLength,
-                        );
+                        ];
 
                         $fix = $phpcsFile->addFixableError($error, $nextToken, 'SpaceBeforeComma', $data);
                         if (true === $fix) {
@@ -428,7 +428,7 @@ class ArrayDeclarationSniff implements Sniff
                         true
                     );
 
-                    $indices[]  = array('value' => $valueContent);
+                    $indices[]  = ['value' => $valueContent];
                     $singleUsed = true;
                 }
 
@@ -540,7 +540,7 @@ class ArrayDeclarationSniff implements Sniff
                     $found = ($tokens[$first]['column'] - 1);
                     if ($found !== $expected) {
                         $error = 'Array value not aligned correctly; expected %s spaces but found %s';
-                        $data  = array($expected, $found);
+                        $data  = [$expected, $found];
 
                         $fix = $phpcsFile->addFixableError($error, $value['value'], 'ValueNotAligned', $data);
                         if (true === $fix) {
@@ -636,7 +636,7 @@ class ArrayDeclarationSniff implements Sniff
                 $expected = ($indicesStart - 1);
                 $found    = ($tokens[$index['index']]['column'] - 1);
                 $error    = 'Array key not aligned correctly; expected %s spaces but found %s';
-                $data     = array($expected, $found);
+                $data     = [$expected, $found];
 
                 $fix = $phpcsFile->addFixableError($error, $index['index'], 'KeyNotAligned', $data);
 
@@ -661,7 +661,7 @@ class ArrayDeclarationSniff implements Sniff
                 }
 
                 $error    = 'Array double arrow not aligned correctly; expected %s space(s) but found %s';
-                $data     = array($expected, $found);
+                $data     = [$expected, $found];
 
                 if ('newline' !== $found || false === $this->ignoreNewLines) {
                     $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'DoubleArrowNotAligned', $data);
@@ -786,7 +786,7 @@ class ArrayDeclarationSniff implements Sniff
                 $content     = $tokens[($nextComma - 2)]['content'];
                 $spaceLength = $tokens[($nextComma - 1)]['length'];
                 $error       = 'Expected 0 spaces between "%s" and comma; %s found';
-                $data        = array($content, $spaceLength);
+                $data        = [$content, $spaceLength];
 
                 $fix = $phpcsFile->addFixableError($error, $nextComma, 'SpaceBeforeComma', $data);
                 if (true === $fix) {

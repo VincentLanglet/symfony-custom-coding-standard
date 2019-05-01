@@ -21,14 +21,14 @@ class ValidClassNameUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             3  => 1,
             11 => 1,
             19 => 1,
             23 => 1,
             31 => 1,
             35 => 1,
-        );
+        ];
     }
 
     /**
@@ -41,6 +41,6 @@ class ValidClassNameUnitTest extends AbstractSniffUnitTest
      */
     protected function getWarningList()
     {
-        return array();
+        return [];
     }
 }

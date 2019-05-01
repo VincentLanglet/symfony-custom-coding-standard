@@ -21,7 +21,7 @@ class DocCommentTagSpacingUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             11 => 1,
             13 => 1,
             14 => 1,
@@ -29,7 +29,7 @@ class DocCommentTagSpacingUnitTest extends AbstractSniffUnitTest
             40 => 1,
             42 => 1,
             46 => 1,
-        );
+        ];
     }
 
     /**
@@ -42,6 +42,6 @@ class DocCommentTagSpacingUnitTest extends AbstractSniffUnitTest
      */
     protected function getWarningList()
     {
-        return array();
+        return [];
     }
 }

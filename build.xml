@@ -44,6 +44,15 @@
         </exec>
     </target>
 
+    <target name="phpcbf" depends="symlink-cs" description="Find coding standard violations using PHP Code Sniffer">
+        <exec executable="${phpcbf.bin}" failonerror="true">
+            <arg value="--standard=SymfonyCustom"/>
+            <arg value="--extensions=php"/>
+            <arg value="--ignore=vendor/*"/>
+            <arg path="${basedir}"/>
+        </exec>
+    </target>
+
     <target name="symlink-cs" description="Symlink this coding standard" unless="symlink.exists">
         <symlink link="${phpcs.symlink.path}" resource="${basedir}/SymfonyCustom"/>
     </target>

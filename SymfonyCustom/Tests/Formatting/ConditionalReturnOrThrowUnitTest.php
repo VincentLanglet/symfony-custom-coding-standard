@@ -21,11 +21,11 @@ class ConditionalReturnOrThrowUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             22 => 1,
             37 => 1,
             44 => 1,
-        );
+        ];
     }
 
     /**
@@ -38,6 +38,6 @@ class ConditionalReturnOrThrowUnitTest extends AbstractSniffUnitTest
      */
     public function getWarningList()
     {
-        return array();
+        return [];
     }
 }

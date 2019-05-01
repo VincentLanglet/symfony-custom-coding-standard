@@ -21,11 +21,12 @@ class CloseBracketSpacingUnitTest extends AbstractSniffUnitTest
      */
     public function getErrorList()
     {
-        return array(
+        return [
             3 => 1,
             5 => 2,
             7 => 1,
-        );
+            9 => 1,
+        ];
     }
 
     /**
@@ -38,6 +39,6 @@ class CloseBracketSpacingUnitTest extends AbstractSniffUnitTest
      */
     protected function getWarningList()
     {
-        return array();
+        return [];
     }
 }
