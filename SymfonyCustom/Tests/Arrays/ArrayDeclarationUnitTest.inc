@@ -70,9 +70,41 @@ class TestClass
             'short_name' => 'big'
         );
 
+        $array1 = [
+            [
+                '<span>',
+            ]
+            ,
+            [
+                '<span>',
+            ],
+        ];
+
+        $array2 = array(
+            [
+                '<span>',
+            ],[
+                '<span>',
+            ],
+        );
+
+        $array3 = array(
+            'a' => ['<span>']
+            ,['<span>'],
+            'b' => ['<span>']
+            ,['<span>'],
+        );
+
+        $array4 = array(
+            ['<span>']
+            ,'a' => ['<span>'],
+            ['<span>']
+            ,'b' => ['<span>']
+        );
+
         $utf8 = array(
-            '/[áàâãªäå]/u' => 'a',
-            '/[ÁÀÂÃÄÅ]/u'  => 'A',
+            '/[áàâãªäå]/u' => 'a'
+            ,'/[ÁÀÂÃÄÅ]/u'  => 'A',
             '/[ÍÌÎÏ]/u'    => 'I',
             '/[íìîï]/u'    => 'i',
             '/[éèêë]/u'    => 'e',
