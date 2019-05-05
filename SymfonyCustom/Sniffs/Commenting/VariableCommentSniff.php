@@ -94,6 +94,19 @@ class VariableCommentSniff extends AbstractVariableSniff
             return;
         }
 
+        $content = explode(' ', $tokens[$string]['content']);
+        if (in_array($tokens[$stackPtr]['content'], $content)) {
+            $error = '@var annotations should not contain the variable name';
+            $fix = $phpcsFile->addFixableError($error, $foundVar, 'NamedVar');
+
+            if (true === $fix) {
+                $newContent = array_filter($content, function ($value) use ($tokens, $stackPtr) {
+                    return $tokens[$stackPtr]['content'] !== $value;
+                });
+                $phpcsFile->fixer->replaceToken($string, implode(' ', $newContent));
+            }
+        }
+
         $this->processWhitespace($phpcsFile, $commentStart);
     }
 
