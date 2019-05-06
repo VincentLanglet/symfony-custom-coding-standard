@@ -138,16 +138,6 @@ we do not respect this rule:
 </rule>
 ```
 
-- Do not use unnecessary concat operator
-
-```
-<rule ref="Generic.Strings.UnnecessaryStringConcat">
-    <properties>
-        <property name="allowMultiline" value="true"/>
-    </properties>
-</rule>
-```
-
 ### Custom
 - Some others checks are made about array (`=>` alignments and indentation)
 
