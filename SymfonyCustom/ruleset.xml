@@ -82,9 +82,4 @@
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
     <rule ref="Squiz.WhiteSpace.CastSpacing"/>
     <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing"/>
-    <rule ref="Generic.Strings.UnnecessaryStringConcat">
-        <properties>
-            <property name="allowMultiline" value="true"/>
-        </properties>
-    </rule>
 </ruleset>
