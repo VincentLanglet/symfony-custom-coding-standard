@@ -56,7 +56,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
     public function register()
     {
         return [
-            T_DOC_COMMENT_OPEN_TAG
+            T_DOC_COMMENT_OPEN_TAG,
         ];
     }
 

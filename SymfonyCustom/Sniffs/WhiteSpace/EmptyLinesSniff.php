@@ -18,7 +18,7 @@ class EmptyLinesSniff implements Sniff
     public function register()
     {
         return [
-            T_WHITESPACE
+            T_WHITESPACE,
         ];
     }
 

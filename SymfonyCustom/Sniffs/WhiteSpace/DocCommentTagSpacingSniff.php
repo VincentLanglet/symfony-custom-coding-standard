@@ -56,7 +56,7 @@ class DocCommentTagSpacingSniff implements Sniff
     public function register()
     {
         return [
-            T_DOC_COMMENT_TAG
+            T_DOC_COMMENT_TAG,
         ];
     }
 
