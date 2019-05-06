@@ -104,6 +104,7 @@ class VariableCommentUnitTest
      */
     protected function checkVariable($var1, $var2)
     {
+        /** @var string $var4 */
         $var4 = 'A normal variable';
         $var5 = PHP_CodeSniffer_Tokens::$operators;
         echo "Printing $var1 $var2 in a double quoted  string\n";
@@ -125,4 +126,9 @@ class VariableCommentUnitTest
      * @var int
      */
     private $noNewLine;
+
+    /**
+     * @var string $withVarName
+     */
+    private $withVarName;
 }
