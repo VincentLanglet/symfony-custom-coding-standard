@@ -109,8 +109,13 @@ class UnusedUseSniff implements Sniff
                     true
                 );
 
-                // If a backslash is used before the class name then this is some other use statement.
-                if (T_USE !== $tokens[$beforeUsage]['code'] && T_NS_SEPARATOR !== $tokens[$beforeUsage]['code']) {
+                if (!in_array($tokens[$beforeUsage]['code'], [
+                    T_USE,
+                    // If a backslash is used before the class name then this is some other use statement.
+                    T_NS_SEPARATOR,
+                    // If an object operator is used before the class name then is a class property.
+                    T_OBJECT_OPERATOR,
+                ])) {
                     return;
                 }
 

@@ -23,6 +23,7 @@ class UnusedUseUnitTest extends AbstractSniffUnitTest
     {
         return [
             11 => 1,
+            16 => 1,
         ];
     }
 

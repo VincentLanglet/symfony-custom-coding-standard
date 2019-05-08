@@ -13,6 +13,7 @@ use Client;
 use Clients;
 use PasClient;
 use Somewhere\Something;
+use Somewhere\SomethingElse;
 
 class Container
 {
@@ -28,7 +29,8 @@ class Container
     function test (Bar $bar): Something
     {
         /** @var Client|Clients[]|PasClient $client */
+        $client = [$this->somethingElse];
 
-        return;
+        return $client;
     }
 }

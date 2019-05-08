@@ -182,7 +182,7 @@ Covered by `PSR1` completed by
 
 - Add PHPDoc blocks for all classes, methods, and functions
 
-We added exceptions for functions `setUp`, `tearDown` and `tests` with no `@param` or `@return`
+We added exceptions for functions with no `@param` or `@return`
 ```
 <rule ref="SymfonyCustom.Commenting.ClassComment"/>
 <rule ref="SymfonyCustom.Commenting.FunctionComment"/>
