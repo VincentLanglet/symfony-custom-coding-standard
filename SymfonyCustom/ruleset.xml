@@ -3,6 +3,9 @@
     <!-- See http://symfony.com/doc/current/contributing/code/standards.html -->
     <description>The SymfonyCustom coding standard.</description>
 
+    <arg name="extensions" value="php,inc"/>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
     <!-- ************** -->
     <!-- ***  PSR2  *** -->
     <!-- ************** -->
