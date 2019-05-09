@@ -202,3 +202,9 @@ we do not respect this rule:
 ```
 <rule ref="SymfonyCustom.WhiteSpace.DocCommentTagSpacing"/>
 ```
+
+- Add a single space before `namespace` declaration
+
+```
+<rule ref="SymfonyCustom.Namespaces.NamespaceDeclaration"/>
+```
