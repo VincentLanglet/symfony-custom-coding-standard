@@ -138,12 +138,9 @@ we do not respect this rule:
 </rule>
 ```
 
-- DocComment should start on a new line, end on a new line and be correctly indented
+- DocComment should be correctly indented
 
 ```
-<rule ref="Generic.Commenting.DocComment">
-    <exclude name="Generic.Commenting.DocComment.MissingShort"/>
-</rule>
 <rule ref="Squiz.Commenting.DocCommentAlignment"/>
 ```
 
