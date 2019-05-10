@@ -9,7 +9,7 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
  *
  * @group SymfonyCustom
  */
-class UnusedUseUnitTest extends AbstractSniffUnitTest
+class NamespaceDeclarationUnitTest extends AbstractSniffUnitTest
 {
     /**
      * Returns the lines where errors should occur.
@@ -22,8 +22,9 @@ class UnusedUseUnitTest extends AbstractSniffUnitTest
     public function getErrorList()
     {
         return [
-            11 => 1,
-            16 => 1,
+            2 => 1,
+            7 => 1,
+            8 => 1,
         ];
     }
 

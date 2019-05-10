@@ -3,6 +3,9 @@
     <!-- See http://symfony.com/doc/current/contributing/code/standards.html -->
     <description>The SymfonyCustom coding standard.</description>
 
+    <arg name="extensions" value="php,inc"/>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
     <!-- ************** -->
     <!-- ***  PSR2  *** -->
     <!-- ************** -->
@@ -60,12 +63,10 @@
     </rule>
 
     <!-- Added by VincentLanglet repo -->
-    <rule ref="Generic.PHP.ForbiddenFunctions"/>
-    <rule ref="Squiz.PHP.DiscouragedFunctions"/>
-    <rule ref="Squiz.Strings.DoubleQuoteUsage">
-        <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
-    </rule>
+    <!-- Whitespace -->
+    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
     <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
     <rule ref="Squiz.WhiteSpace.OperatorSpacing">
         <properties>
             <property name="ignoreNewlines" value="true"/>
@@ -77,9 +78,19 @@
         </properties>
     </rule>
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+
+    <!-- Comment -->
+    <rule ref="Generic.Commenting.DocComment">
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+    </rule>
+    <rule ref="Squiz.Commenting.DocCommentAlignment"/>
+
+    <!-- Others -->
+    <rule ref="Generic.PHP.ForbiddenFunctions"/>
+    <rule ref="Squiz.PHP.DiscouragedFunctions"/>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Squiz.Strings.DoubleQuoteUsage">
+        <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
+    </rule>
     <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
-    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
-    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
-    <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing"/>
 </ruleset>

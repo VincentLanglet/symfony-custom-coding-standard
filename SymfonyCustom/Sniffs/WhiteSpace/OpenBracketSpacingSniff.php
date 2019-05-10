@@ -6,7 +6,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Checks that there is no white space after an opening bracket, for "(" and "{".
+ * Checks that there is no white space after an opening bracket, for "(", "{", and array bracket.
  * Square Brackets are handled by Squiz_Sniffs_Arrays_ArrayBracketSpacingSniff.
  */
 class OpenBracketSpacingSniff implements Sniff

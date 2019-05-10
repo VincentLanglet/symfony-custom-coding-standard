@@ -138,6 +138,15 @@ we do not respect this rule:
 </rule>
 ```
 
+- DocComment should start on a new line, end on a new line and be correctly indented
+
+```
+<rule ref="Generic.Commenting.DocComment">
+    <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+</rule>
+<rule ref="Squiz.Commenting.DocCommentAlignment"/>
+```
+
 ### Custom
 - Some others checks are made about array (`=>` alignments and indentation)
 
@@ -192,4 +201,10 @@ we do not respect this rule:
 
 ```
 <rule ref="SymfonyCustom.WhiteSpace.DocCommentTagSpacing"/>
+```
+
+- Add a single space before `namespace` declaration
+
+```
+<rule ref="SymfonyCustom.Namespaces.NamespaceDeclaration"/>
 ```

@@ -27,7 +27,8 @@ class Container
     function test (Bar $bar): Something
     {
         /** @var Client|Clients[]|PasClient $client */
+        $client = [$this->somethingElse];
 
-        return;
+        return $client;
     }
 }
