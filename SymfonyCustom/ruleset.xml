@@ -79,8 +79,10 @@
     </rule>
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
 
-    <!-- Others -->
-    <rule ref="Squiz.Commenting.DocCommentAlignment"/>
+    <rule ref="Squiz.Commenting.DocCommentAlignment">
+        <!-- Allow to indent special annotations like @ORM\AttributeOverride -->
+        <exclude name="Squiz.Commenting.DocCommentAlignment.SpaceAfterStar"/>
+    </rule>
     <rule ref="Generic.PHP.ForbiddenFunctions"/>
     <rule ref="Squiz.PHP.DiscouragedFunctions"/>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>

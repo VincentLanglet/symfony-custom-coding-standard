@@ -141,7 +141,9 @@ we do not respect this rule:
 - DocComment should be correctly indented
 
 ```
-<rule ref="Squiz.Commenting.DocCommentAlignment"/>
+<rule ref="Squiz.Commenting.DocCommentAlignment">
+    <exclude name="Squiz.Commenting.DocCommentAlignment.SpaceAfterStar"/>
+</rule>
 ```
 
 ### Custom
