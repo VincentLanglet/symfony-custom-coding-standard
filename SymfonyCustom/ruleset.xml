@@ -79,13 +79,8 @@
     </rule>
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
 
-    <!-- Comment -->
-    <rule ref="Generic.Commenting.DocComment">
-        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
-    </rule>
-    <rule ref="Squiz.Commenting.DocCommentAlignment"/>
-
     <!-- Others -->
+    <rule ref="Squiz.Commenting.DocCommentAlignment"/>
     <rule ref="Generic.PHP.ForbiddenFunctions"/>
     <rule ref="Squiz.PHP.DiscouragedFunctions"/>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
