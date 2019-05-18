@@ -7,7 +7,7 @@
         "coding standard",
         "phpcs"
     ],
-    "homepage": "https://github.com/VincentLanglet/Symfony-coding-standard",
+    "homepage": "https://github.com/VincentLanglet/Symfony-custom-coding-standard",
     "license": "MIT",
     "authors": [
         {
