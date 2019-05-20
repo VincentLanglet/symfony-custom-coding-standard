@@ -33,6 +33,10 @@
             <arg value="--group=SymfonyCustom"/>
             <arg value="${phpcs.dir}/tests/AllTests.php"/>
         </exec>
+        <exec executable="${phpunit.bin}" failonerror="true" >
+            <arg value="--verbose"/>
+            <arg value="TwigCS"/>
+        </exec>
     </target>
 
     <target name="phpcs" depends="symlink-cs" description="Find coding standard violations using PHP Code Sniffer">

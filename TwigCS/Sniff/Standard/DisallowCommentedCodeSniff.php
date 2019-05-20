@@ -1,0 +1,52 @@
+<?php
+
+namespace TwigCS\Sniff\Standard;
+
+use TwigCS\Sniff\AbstractPreParserSniff;
+use TwigCS\Token\Token;
+
+/**
+ * Disallow keeping commented code.
+ *
+ * This will be triggered if `{{` or `{%` is found inside a comment.
+ */
+class DisallowCommentedCodeSniff extends AbstractPreParserSniff
+{
+    /**
+     * @param Token   $token
+     * @param int     $tokenPosition
+     * @param Token[] $tokens
+     *
+     * @return Token
+     */
+    public function process(Token $token, $tokenPosition, $tokens)
+    {
+        if ($this->isTokenMatching($token, Token::COMMENT_START_TYPE)) {
+            $i = $tokenPosition;
+            $found = false;
+            while (!$this->isTokenMatching($tokens[$i], Token::COMMENT_END_TYPE)
+                || $this->isTokenMatching($tokens[$i], Token::EOF_TYPE)
+            ) {
+                if ($this->isTokenMatching($tokens[$i], Token::TEXT_TYPE, '{{')
+                    || $this->isTokenMatching($tokens[$i], Token::TEXT_TYPE, '{%')
+                ) {
+                    $found = true;
+
+                    break;
+                }
+
+                ++$i;
+            }
+
+            if ($found) {
+                $this->addMessage(
+                    $this::MESSAGE_TYPE_WARNING,
+                    'Probable commented code found; keeping commented code is usually not advised',
+                    $token
+                );
+            }
+        }
+
+        return $token;
+    }
+}
