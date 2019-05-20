@@ -337,8 +337,9 @@ class ArrayDeclarationSniff implements Sniff
                     $nextToken = $tokens[$nextToken]['scope_closer'];
                     continue;
                 case T_OPEN_PARENTHESIS:
-                    $parenthesisOwner = $tokens[$nextToken]['parenthesis_owner'];
-                    if (false === isset($parenthesisOwner) || $parenthesisOwner !== $stackPtr) {
+                    if (false === isset($tokens[$nextToken]['parenthesis_owner'])
+                        || $tokens[$nextToken]['parenthesis_owner'] !== $stackPtr
+                    ) {
                         $nextToken = $tokens[$nextToken]['parenthesis_closer'];
                         continue;
                     }
