@@ -8,7 +8,7 @@ use TwigCS\Token\Token;
 /**
  * Base for all pre-parser sniff.
  *
- * A post parser sniff should be useful to check code formatting mainly such as:
+ * A pre parser sniff should be useful to check code formatting mainly such as:
  * whitespaces, too many blank lines or trailing commas;
  *
  * Use `AbstractPostParserSniff` for higher-order checks.
@@ -24,7 +24,7 @@ abstract class AbstractPreParserSniff extends AbstractSniff implements PreParser
     }
 
     /**
-     * Helper method to match a token of a given $type and $value.
+     * Helper method to match a token of a given type and value.
      *
      * @param Token  $token
      * @param int    $type

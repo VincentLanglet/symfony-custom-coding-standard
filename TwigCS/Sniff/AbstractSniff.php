@@ -10,20 +10,6 @@ use TwigCS\Report\Report;
 abstract class AbstractSniff implements SniffInterface
 {
     /**
-     * Default options for all sniffs.
-     *
-     * @var array
-     */
-    protected static $defaultOptions = [];
-
-    /**
-     * Computed options of this sniffs.
-     *
-     * @var array
-     */
-    protected $options;
-
-    /**
      * When process is called, it will fill this report with the potential violations.
      *
      * @var Report
@@ -35,26 +21,10 @@ abstract class AbstractSniff implements SniffInterface
      */
     protected $messages;
 
-    /**
-     * @param array $options Each sniff can defined its options.
-     */
-    public function __construct($options = [])
+    public function __construct()
     {
         $this->messages = [];
         $this->report   = null;
-        $this->options  = array_merge(self::$defaultOptions, $options);
-
-        $this->configure();
-    }
-
-    /**
-     * Configure this sniff based on its options.
-     *
-     * @return void
-     */
-    public function configure()
-    {
-        // Nothing.
     }
 
     /**

@@ -77,7 +77,7 @@ class Report
      */
     public function getMessages($filters = [])
     {
-        if (!$filters) {
+        if (empty($filters)) {
             // Return all messages, without filtering.
             return $this->messages;
         }

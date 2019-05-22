@@ -27,7 +27,7 @@ class Linter
     /**
      * @var SniffsExtension
      */
-    protected $sniffExtension;
+    protected $sniffsExtension;
 
     /**
      * @var TokenizerInterface
@@ -41,7 +41,7 @@ class Linter
     public function __construct(Environment $env, TokenizerInterface $tokenizer)
     {
         $this->env = $env;
-        $this->sniffExtension = $this->env->getExtension('TwigCS\Extension\SniffsExtension');
+        $this->sniffsExtension = $this->env->getExtension('TwigCS\Extension\SniffsExtension');
         $this->tokenizer = $tokenizer;
     }
 
@@ -80,7 +80,7 @@ class Linter
 
         foreach ($ruleset->getSniffs() as $sniff) {
             if ($sniff instanceof PostParserSniffInterface) {
-                $this->sniffExtension->addSniff($sniff);
+                $this->sniffsExtension->addSniff($sniff);
             }
 
             $sniff->enable($report);
@@ -98,7 +98,7 @@ class Linter
         restore_error_handler();
         foreach ($ruleset->getSniffs() as $sniff) {
             if ($sniff instanceof PostParserSniffInterface) {
-                $this->sniffExtension->removeSniff($sniff);
+                $this->sniffsExtension->removeSniff($sniff);
             }
 
             $sniff->disable();

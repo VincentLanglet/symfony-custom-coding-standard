@@ -116,7 +116,6 @@ abstract class AbstractPostParserSniff extends AbstractSniff implements PostPars
             },
             'tag'      => function (Node $node, $type, $name) {
                 return $node->getNodeTag() === $name;
-                /* && $node->hasAttribute('name') && $name === $node->getAttribute('name') */
             },
         ];
 

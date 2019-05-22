@@ -44,11 +44,11 @@ abstract class AbstractSniffTest extends TestCase
     /**
      * @param string         $filename
      * @param SniffInterface $sniff
-     * @param string[]       $expects
+     * @param array          $expects
      *
      * @throws \Exception
      */
-    protected function checkGenericSniff($filename, SniffInterface $sniff, $expects)
+    protected function checkGenericSniff($filename, SniffInterface $sniff, array $expects)
     {
         $file = __DIR__.'/Fixtures/'.$filename;
 
