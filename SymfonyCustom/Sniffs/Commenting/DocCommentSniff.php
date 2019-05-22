@@ -61,7 +61,36 @@ class DocCommentSniff implements Sniff
         if (false === $short) {
             // No content at all.
             $error = 'Doc comment is empty';
-            $phpcsFile->addError($error, $stackPtr, 'Empty');
+
+            $next = $phpcsFile->findNext(T_WHITESPACE, $commentEnd + 1, null, true);
+            $hasSameLineNext = $next && $tokens[$next]['line'] === $tokens[$commentEnd]['line'];
+            $previous = $phpcsFile->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);
+            $hasSameLinePrevious = $tokens[$previous]['line'] === $tokens[$stackPtr]['line'];
+
+            $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Empty');
+
+            if (true === $fix) {
+                $phpcsFile->fixer->beginChangeset();
+
+                $end = $hasSameLineNext ? $next : $commentEnd + 1;
+                for ($i = $stackPtr; $i < $end; $i++) {
+                    $phpcsFile->fixer->replaceToken($i, '');
+                }
+
+                if (!$hasSameLineNext) {
+                    $previous = $phpcsFile->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);
+                    for ($i = $stackPtr - 1; $i > $previous; $i--) {
+                        if ($tokens[$i]['line'] < $tokens[$stackPtr]['line']) {
+                            $phpcsFile->fixer->replaceToken($i, '');
+                            break;
+                        }
+
+                        $phpcsFile->fixer->replaceToken($i, '');
+                    }
+                }
+
+                $phpcsFile->fixer->endChangeset();
+            }
 
             return;
         }

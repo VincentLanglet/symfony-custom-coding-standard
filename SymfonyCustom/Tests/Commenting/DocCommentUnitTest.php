@@ -29,6 +29,10 @@ class DocCommentUnitTest extends AbstractSniffUnitTest
             26 => 1,
             28 => 1,
             34 => 1,
+            36 => 1,
+            38 => 1,
+            40 => 1,
+            42 => 1,
         ];
     }
 

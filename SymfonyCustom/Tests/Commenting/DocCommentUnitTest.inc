@@ -32,4 +32,14 @@ class Test
 
     /**
      * Short description.   */
+
+    private $a; /**  */
+
+    private $b; /**  */ private $c;
+
+    /**  */ private $d;
+
+    private $e; /**
+                 *
+                 */ private $f;
 }
