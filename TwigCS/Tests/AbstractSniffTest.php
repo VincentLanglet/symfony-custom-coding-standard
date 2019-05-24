@@ -2,6 +2,7 @@
 
 namespace TwigCS\Tests;
 
+use \Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Twig\Loader\LoaderInterface;
@@ -34,7 +35,7 @@ abstract class AbstractSniffTest extends TestCase
         $this->env = new StubbedEnvironment(
             $twigLoaderInterface,
             [
-                'stub_tags'  => ['dump', 'render', 'some_other_block', 'stylesheets', 'trans'],
+                'stub_tags'  => ['render', 'some_other_block', 'stylesheets'],
                 'stub_tests' => ['some_test'],
             ]
         );
@@ -45,17 +46,20 @@ abstract class AbstractSniffTest extends TestCase
      * @param string         $filename
      * @param SniffInterface $sniff
      * @param array          $expects
-     *
-     * @throws \Exception
      */
     protected function checkGenericSniff($filename, SniffInterface $sniff, array $expects)
     {
         $file = __DIR__.'/Fixtures/'.$filename;
 
         $ruleset = new Ruleset();
-        $ruleset->addSniff($sniff);
+        try {
+            $ruleset->addSniff($sniff);
+            $report = $this->lint->run($file, $ruleset);
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
 
-        $report = $this->lint->run($file, $ruleset);
+            return;
+        }
 
         $this->assertEquals(count($expects), $report->getTotalWarnings() + $report->getTotalErrors());
         if ($expects) {

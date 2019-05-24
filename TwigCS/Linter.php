@@ -2,6 +2,8 @@
 
 namespace TwigCS;
 
+use \Exception;
+use \Traversable;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
@@ -12,7 +14,7 @@ use TwigCS\Ruleset\Ruleset;
 use TwigCS\Sniff\PostParserSniffInterface;
 use TwigCS\Sniff\PreParserSniffInterface;
 use TwigCS\Sniff\SniffInterface;
-use TwigCS\Token\TokenizerInterface;
+use TwigCS\Token\Tokenizer;
 
 /**
  * Linter is the main class and will process twig files against a set of rules.
@@ -30,17 +32,18 @@ class Linter
     protected $sniffsExtension;
 
     /**
-     * @var TokenizerInterface
+     * @var Tokenizer
      */
     protected $tokenizer;
 
     /**
-     * @param Environment        $env
-     * @param TokenizerInterface $tokenizer
+     * @param Environment $env
+     * @param Tokenizer   $tokenizer
      */
-    public function __construct(Environment $env, TokenizerInterface $tokenizer)
+    public function __construct(Environment $env, Tokenizer $tokenizer)
     {
         $this->env = $env;
+
         $this->sniffsExtension = $this->env->getExtension('TwigCS\Extension\SniffsExtension');
         $this->tokenizer = $tokenizer;
     }
@@ -52,15 +55,17 @@ class Linter
      * @param Ruleset      $ruleset Set of rules to check.
      *
      * @return Report an object with all violations and stats.
+     *
+     * @throws Exception
      */
     public function run($files, Ruleset $ruleset)
     {
-        if (!is_array($files) && !$files instanceof \Traversable) {
+        if (!is_array($files) && !$files instanceof Traversable) {
             $files = [$files];
         }
 
         if (empty($files)) {
-            throw new \Exception('No files to process, provide at least one file to be linted');
+            throw new Exception('No files to process, provide at least one file to be linted');
         }
 
         // setUp
@@ -70,8 +75,8 @@ class Linter
                 $sniffViolation = new SniffViolation(
                     SniffInterface::MESSAGE_TYPE_NOTICE,
                     $msg,
-                    '',
-                    ''
+                    null,
+                    null
                 );
 
                 $report->addMessage($sniffViolation);
@@ -139,11 +144,11 @@ class Linter
         // Tokenizer.
         try {
             $stream = $this->tokenizer->tokenize($twigSource);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $sniffViolation = new SniffViolation(
                 SniffInterface::MESSAGE_TYPE_ERROR,
-                sprintf('Unable to tokenize file "%s"', (string) $file),
-                '',
+                sprintf('Unable to tokenize file'),
+                null,
                 (string) $file
             );
 

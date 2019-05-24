@@ -91,10 +91,9 @@ class SniffViolation
             case SniffInterface::MESSAGE_TYPE_WARNING:
                 return 'WARNING';
             case SniffInterface::MESSAGE_TYPE_ERROR:
+            default:
                 return 'ERROR';
         }
-
-        throw new \Exception(sprintf('Unknown level "%s"', $this->level));
     }
 
     /**
@@ -112,10 +111,9 @@ class SniffViolation
             case 'WARNING':
                 return SniffInterface::MESSAGE_TYPE_WARNING;
             case 'ERROR':
+            default:
                 return SniffInterface::MESSAGE_TYPE_ERROR;
         }
-
-        throw new \Exception(sprintf('Unknown level "%s"', $level));
     }
 
     /**

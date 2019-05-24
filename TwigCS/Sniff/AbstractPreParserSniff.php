@@ -2,6 +2,7 @@
 
 namespace TwigCS\Sniff;
 
+use \Exception;
 use TwigCS\Report\SniffViolation;
 use TwigCS\Token\Token;
 
@@ -46,6 +47,8 @@ abstract class AbstractPreParserSniff extends AbstractSniff implements PreParser
      * @param Token  $token
      *
      * @return self
+     *
+     * @throws Exception
      */
     public function addMessage($messageType, $message, Token $token)
     {

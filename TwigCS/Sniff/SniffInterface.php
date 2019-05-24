@@ -2,6 +2,7 @@
 
 namespace TwigCS\Sniff;
 
+use \Exception;
 use TwigCS\Report\Report;
 
 /**
@@ -42,7 +43,7 @@ interface SniffInterface
      *
      * @return Report
      *
-     * @throws \Exception A disabled sniff has no current report.
+     * @throws Exception A disabled sniff has no current report.
      */
     public function getReport();
 

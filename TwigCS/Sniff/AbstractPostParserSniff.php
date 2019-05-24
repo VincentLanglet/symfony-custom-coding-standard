@@ -2,6 +2,7 @@
 
 namespace TwigCS\Sniff;
 
+use \Exception;
 use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
@@ -38,6 +39,8 @@ abstract class AbstractPostParserSniff extends AbstractSniff implements PostPars
      * @param Node   $node
      *
      * @return self
+     *
+     * @throws Exception
      */
     public function addMessage($messageType, $message, Node $node)
     {
@@ -56,7 +59,7 @@ abstract class AbstractPostParserSniff extends AbstractSniff implements PostPars
     /**
      * @param Node $node
      *
-     * @return string
+     * @return int|null
      */
     public function getTemplateLine(Node $node)
     {
@@ -68,7 +71,7 @@ abstract class AbstractPostParserSniff extends AbstractSniff implements PostPars
             return $node->getLine();
         }
 
-        return '';
+        return null;
     }
 
     /**

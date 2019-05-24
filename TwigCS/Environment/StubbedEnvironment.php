@@ -2,6 +2,13 @@
 
 namespace TwigCS\Environment;
 
+use \Closure;
+use Symfony\Bridge\Twig\TokenParser\DumpTokenParser;
+use Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser;
+use Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
+use Symfony\Bridge\Twig\TokenParser\TransChoiceTokenParser;
+use Symfony\Bridge\Twig\TokenParser\TransDefaultDomainTokenParser;
+use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 use Twig\TwigFilter;
@@ -31,7 +38,7 @@ class StubbedEnvironment extends Environment
     private $stubTests;
 
     /**
-     * @var \Closure
+     * @var Closure
      */
     private $stubCallable;
 
@@ -42,6 +49,13 @@ class StubbedEnvironment extends Environment
     public function __construct(LoaderInterface $loader = null, $options = [])
     {
         parent::__construct($loader, $options);
+
+        $this->addTokenParser(new DumpTokenParser());
+        $this->addTokenParser(new FormThemeTokenParser());
+        $this->addTokenParser(new StopwatchTokenParser(false));
+        $this->addTokenParser(new TransChoiceTokenParser());
+        $this->addTokenParser(new TransDefaultDomainTokenParser());
+        $this->addTokenParser(new TransTokenParser());
 
         $this->stubCallable  = function () {
             /* This will be used as stub filter, function or test */

@@ -46,33 +46,40 @@ class TextFormatter
                 'level' => $level,
             ]);
 
-            $this->io->text((count($fileMessages) > 0 ? '<fg=red>KO</fg=red>' : '<info>OK</info>').' '.$file);
+            if (count($fileMessages) > 0) {
+                $this->io->text('<fg=red>KO</fg=red> '.$file);
+            }
 
             $rows = [];
             foreach ($fileMessages as $message) {
                 $lines = $this->getContext(file_get_contents($file), $message->getLine(), $this::ERROR_CONTEXT_LIMIT);
 
                 $formattedText = [];
+                if (!$message->getLine()) {
+                    $formattedText[] = $this->formatErrorMessage($message);
+                }
+
                 foreach ($lines as $no => $code) {
                     $formattedText[] = sprintf($this::ERROR_LINE_FORMAT, $no, wordwrap($code, $this::ERROR_LINE_WIDTH));
 
                     if ($no === $message->getLine()) {
-                        $formattedText[] = sprintf(
-                            '<fg=red>'.$this::ERROR_LINE_FORMAT.'</fg=red>',
-                            $this::ERROR_CURSOR_CHAR,
-                            wordwrap($message->getMessage(), $this::ERROR_LINE_WIDTH)
-                        );
+                        $formattedText[] = $this->formatErrorMessage($message);
                     }
                 }
 
+                if (count($rows) > 0) {
+                    $rows[] = new TableSeparator();
+                }
+
                 $rows[] = [
-                    new TableCell('<comment>'.$message->getLevelAsString().'</comment>', ['rowspan' => 2]),
+                    new TableCell('<comment>'.$message->getLevelAsString().'</comment>'),
                     implode("\n", $formattedText),
                 ];
-                $rows[] = new TableSeparator();
             }
 
-            $this->io->table([], $rows);
+            if (count($rows) > 0) {
+                $this->io->table([], $rows);
+            }
         }
 
         $summaryString = sprintf(
@@ -130,5 +137,19 @@ class TextFormatter
         }
 
         return $result;
+    }
+
+    /**
+     * @param SniffViolation $message
+     *
+     * @return string
+     */
+    protected function formatErrorMessage(SniffViolation $message)
+    {
+        return sprintf(
+            '<fg=red>'.$this::ERROR_LINE_FORMAT.'</fg=red>',
+            $this::ERROR_CURSOR_CHAR,
+            wordwrap($message->getMessage(), $this::ERROR_LINE_WIDTH)
+        );
     }
 }

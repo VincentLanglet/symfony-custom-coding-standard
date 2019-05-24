@@ -2,6 +2,7 @@
 
 namespace TwigCS\Config;
 
+use \Exception;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -43,6 +44,8 @@ class Config
      * Find all files to process, based on a file or directory and exclude patterns.
      *
      * @return array
+     *
+     * @throws Exception
      */
     public function findFiles()
     {
@@ -74,11 +77,13 @@ class Config
      * @param string $key
      *
      * @return mixed
+     *
+     * @throws Exception
      */
     public function get($key)
     {
         if (!isset($this->config[$key])) {
-            throw new \Exception(sprintf('Configuration key "%s" does not exist', $key));
+            throw new Exception(sprintf('Configuration key "%s" does not exist', $key));
         }
 
         return $this->config[$key];

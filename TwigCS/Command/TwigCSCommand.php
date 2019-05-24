@@ -2,6 +2,7 @@
 
 namespace TwigCS\Command;
 
+use \Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -65,7 +66,7 @@ class TwigCSCommand extends Command
      *
      * @return int
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

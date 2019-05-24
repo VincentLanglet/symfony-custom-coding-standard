@@ -2,6 +2,7 @@
 
 namespace TwigCS\Token;
 
+use \Exception;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
@@ -39,6 +40,8 @@ class TokenParser extends AbstractTokenParser
      * @param Token $token
      *
      * @return Node
+     *
+     * @throws Exception
      */
     public function parse(Token $token)
     {
@@ -75,6 +78,8 @@ class TokenParser extends AbstractTokenParser
      * @param TokenStream $stream
      *
      * @return bool
+     *
+     * @throws Exception
      */
     private function hasBody(TokenStream $stream)
     {

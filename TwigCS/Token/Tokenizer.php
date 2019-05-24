@@ -2,6 +2,7 @@
 
 namespace TwigCS\Token;
 
+use \Exception;
 use Twig\Environment;
 use Twig\Lexer;
 use Twig\Source;
@@ -9,7 +10,7 @@ use Twig\Source;
 /**
  * An override of Twig's Lexer to add whitespace and new line detection.
  */
-class Tokenizer implements TokenizerInterface
+class Tokenizer
 {
     const STATE_DATA          = Lexer::STATE_DATA;
     const STATE_BLOCK         = Lexer::STATE_BLOCK;
@@ -92,27 +93,20 @@ class Tokenizer implements TokenizerInterface
     public function __construct(Environment $env, array $options = [])
     {
         $this->options = array_merge([
-            'tag_comment'           => ['{#', '#}'],
-            'tag_block'             => ['{%', '%}'],
-            'tag_variable'          => ['{{', '}}'],
-            'whitespace_trim'       => '-',
-            'whitespace_line_trim'  => '~',
-            'whitespace_line_chars' => ' \t\0\x0B',
-            'interpolation'         => ['#{', '}'],
+            'tag_comment'     => ['{#', '#}'],
+            'tag_block'       => ['{%', '%}'],
+            'tag_variable'    => ['{{', '}}'],
+            'whitespace_trim' => '-',
+            'interpolation'   => ['#{', '}'],
         ], $options);
 
         $tokenizerHelper = new TokenizerHelper($env, $this->options);
         $this->regexes = [
-            'lex_var'             => $tokenizerHelper->getVarRegex(),
-            'lex_block'           => $tokenizerHelper->getBlockRegex(),
-            'lex_raw_data'        => $tokenizerHelper->getRawDataRegex(),
-            'operator'            => $tokenizerHelper->getOperatorRegex(),
-            'lex_comment'         => $tokenizerHelper->getCommentRegex(),
-            'lex_block_raw'       => $tokenizerHelper->getBlockRawRegex(),
-            'lex_block_line'      => $tokenizerHelper->getBlockLineRegex(),
-            'lex_tokens_start'    => $tokenizerHelper->getTokensStartRegex(),
-            'interpolation_start' => $tokenizerHelper->getInterpolationStartRegex(),
-            'interpolation_end'   => $tokenizerHelper->getInterpolationEndRegex(),
+            'lex_block'        => $tokenizerHelper->getBlockRegex(),
+            'lex_comment'      => $tokenizerHelper->getCommentRegex(),
+            'lex_variable'     => $tokenizerHelper->getVariableRegex(),
+            'operator'         => $tokenizerHelper->getOperatorRegex(),
+            'lex_tokens_start' => $tokenizerHelper->getTokensStartRegex(),
         ];
     }
 
@@ -120,6 +114,8 @@ class Tokenizer implements TokenizerInterface
      * @param Source $source
      *
      * @return Token[]
+     *
+     * @throws Exception
      */
     public function tokenize(Source $source)
     {
@@ -127,7 +123,14 @@ class Tokenizer implements TokenizerInterface
         $this->preflightSource($this->code);
 
         while ($this->cursor < $this->end) {
-            $nextToken = $this->getTokenPosition();
+            $lastToken = $this->getTokenPosition();
+            $nextToken = $this->getTokenPosition(1);
+
+            while (null !== $nextToken && $nextToken['position'] < $this->cursor) {
+                $this->moveCurrentPosition();
+                $lastToken = $nextToken;
+                $nextToken = $this->getTokenPosition(1);
+            }
 
             switch ($this->getState()) {
                 case self::STATE_BLOCK:
@@ -139,26 +142,20 @@ class Tokenizer implements TokenizerInterface
                 case self::STATE_COMMENT:
                     $this->lexComment();
                     break;
-//                case self::STATE_STRING:
-//                    $this->lexString();
-//                    break;
-//                case self::STATE_INTERPOLATION:
-//                    $this->lexInterpolation();
-//                    break;
                 case self::STATE_DATA:
-                    if ($this->cursor === $nextToken['position']) {
+                    if (null !== $lastToken && $this->cursor === $lastToken['position']) {
                         $this->lexStart();
                     } else {
                         $this->lexData();
                     }
                     break;
                 default:
-                    throw new \Exception('Unhandled state in tokenize', 1);
+                    throw new Exception('Unhandled state in tokenize', 1);
             }
         }
 
         if (self::STATE_DATA !== $this->getState()) {
-            throw new \Exception('Error Processing Request', 1);
+            throw new Exception('Error Processing Request', 1);
         }
 
         $this->pushToken(Token::EOF_TYPE);
@@ -178,7 +175,7 @@ class Tokenizer implements TokenizerInterface
         $this->state = [];
 
         $this->code = str_replace(["\r\n", "\r"], "\n", $source->getCode());
-        $this->end = \strlen($this->code);
+        $this->end = strlen($this->code);
         $this->filename = $source->getName();
     }
 
@@ -199,12 +196,12 @@ class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function popState()
     {
         if (0 === count($this->state)) {
-            throw new \Exception('Cannot pop state without a previous state');
+            throw new Exception('Cannot pop state without a previous state');
         }
         array_pop($this->state);
     }
@@ -230,15 +227,19 @@ class Tokenizer implements TokenizerInterface
     }
 
     /**
+     * @param int $offset
+     *
      * @return array|null
      */
-    protected function getTokenPosition()
+    protected function getTokenPosition($offset = 0)
     {
-        if (empty($this->tokenPositions) || !isset($this->tokenPositions[$this->currentPosition])) {
+        if (empty($this->tokenPositions)
+            || !isset($this->tokenPositions[$this->currentPosition + $offset])
+        ) {
             return null;
         }
 
-        return $this->tokenPositions[$this->currentPosition];
+        return $this->tokenPositions[$this->currentPosition + $offset];
     }
 
     /**
@@ -272,39 +273,38 @@ class Tokenizer implements TokenizerInterface
      * @param int    $endType
      * @param string $endRegex
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function lex($endType, $endRegex)
     {
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+
         if (!isset($match[0])) {
-            // Should not happen, but in case it is;
-            throw new \Exception(sprintf('Unclosed "%s" in "%s" at line %d', $endType, $this->filename, $this->line));
-        }
-        if ($match[0][1] === $this->cursor) {
+            $this->lexExpression();
+        } elseif ($match[0][1] === $this->cursor) {
             $this->pushToken($endType, $match[0][0]);
             $this->moveCursor($match[0][0]);
             $this->moveCurrentPosition();
             $this->popState();
+        } elseif ($this->getState() === self::STATE_COMMENT) {
+            // Parse as text until the end position.
+            $this->lexData($match[0][1]);
         } else {
-            if ($this->getState() === self::STATE_COMMENT) {
-                // Parse as text until the end position.
-                $this->lexData($match[0][1]);
-            } else {
-                while ($this->cursor < $match[0][1]) {
-                    $this->lexExpression();
-                }
+            while ($this->cursor < $match[0][1]) {
+                $this->lexExpression();
             }
         }
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function lexExpression()
     {
         $currentToken = $this->code[$this->cursor];
-        if (' ' === $currentToken) {
+        if (preg_match('/\t/', $currentToken)) {
+            $this->lexTab();
+        } elseif (' ' === $currentToken) {
             $this->lexWhitespace();
         } elseif (PHP_EOL === $currentToken) {
             $this->lexEOL();
@@ -332,11 +332,11 @@ class Tokenizer implements TokenizerInterface
             } elseif (false !== strpos(')]}', $this->code[$this->cursor])) {
                 // closing bracket
                 if (empty($this->brackets)) {
-                    throw new \Exception(sprintf('Unexpected "%s".', $this->code[$this->cursor]));
+                    throw new Exception(sprintf('Unexpected "%s"', $this->code[$this->cursor]));
                 }
                 $expect = array_pop($this->brackets)[0];
                 if (strtr($expect, '([{', ')]}') !== $this->code[$this->cursor]) {
-                    throw new \Exception(sprintf('Unclosed "%s".', $expect));
+                    throw new Exception(sprintf('Unclosed "%s"', $expect));
                 }
             }
             $this->pushToken(Token::PUNCTUATION_TYPE, $this->code[$this->cursor]);
@@ -347,12 +347,12 @@ class Tokenizer implements TokenizerInterface
             $this->moveCursor($match[0]);
         } else {
             // unlexable
-            throw new \Exception(sprintf('Unexpected character "%s".', $this->code[$this->cursor]));
+            throw new Exception(sprintf('Unexpected character "%s"', $currentToken));
         }
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function lexBlock()
     {
@@ -360,7 +360,7 @@ class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function lexVariable()
     {
@@ -368,7 +368,7 @@ class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function lexComment()
     {
@@ -384,6 +384,7 @@ class Tokenizer implements TokenizerInterface
         if (0 === $limit && null !== $nextToken) {
             $limit = $nextToken['position'];
         }
+
         $currentToken = $this->code[$this->cursor];
         if (preg_match('/\t/', $currentToken)) {
             $this->lexTab();
@@ -408,7 +409,7 @@ class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function lexStart()
     {
@@ -423,7 +424,7 @@ class Tokenizer implements TokenizerInterface
             $state = self::STATE_VAR;
             $tokenType = Token::VAR_START_TYPE;
         } else {
-            throw new \Exception(sprintf('Unhandled tag "%s" in lexStart', $tokenStart['match']), 1);
+            throw new Exception(sprintf('Unhandled tag "%s" in lexStart', $tokenStart['match']), 1);
         }
 
         $this->pushToken($tokenType, $tokenStart['fullMatch']);
