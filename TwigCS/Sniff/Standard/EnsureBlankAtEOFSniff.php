@@ -2,6 +2,7 @@
 
 namespace TwigCS\Sniff\Standard;
 
+use \Exception;
 use TwigCS\Sniff\AbstractPreParserSniff;
 use TwigCS\Token\Token;
 
@@ -16,6 +17,8 @@ class EnsureBlankAtEOFSniff extends AbstractPreParserSniff
      * @param Token[] $tokens
      *
      * @return Token
+     *
+     * @throws Exception
      */
     public function process(Token $token, $tokenPosition, $tokens)
     {

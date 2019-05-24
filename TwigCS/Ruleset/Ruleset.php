@@ -2,6 +2,7 @@
 
 namespace TwigCS\Ruleset;
 
+use \Exception;
 use TwigCS\Sniff\PostParserSniffInterface;
 use TwigCS\Sniff\PreParserSniffInterface;
 use TwigCS\Sniff\SniffInterface;
@@ -69,6 +70,8 @@ class Ruleset
      * @param SniffInterface $sniff
      *
      * @return $this
+     *
+     * @throws Exception
      */
     public function addSniff(SniffInterface $sniff)
     {
@@ -88,7 +91,7 @@ class Ruleset
             return $this;
         }
 
-        throw new \Exception(sprintf(
+        throw new Exception(sprintf(
             'Unknown type of sniff "%s", expected one of: "%s"',
             $sniff->getType(),
             implode(', ', [SniffInterface::TYPE_PRE_PARSER, SniffInterface::TYPE_POST_PARSER])

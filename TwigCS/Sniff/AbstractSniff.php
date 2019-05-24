@@ -2,6 +2,7 @@
 
 namespace TwigCS\Sniff;
 
+use \Exception;
 use TwigCS\Report\Report;
 
 /**
@@ -51,11 +52,13 @@ abstract class AbstractSniff implements SniffInterface
 
     /**
      * @return Report
+     *
+     * @throws Exception
      */
     public function getReport()
     {
         if (null === $this->report) {
-            throw new \Exception('Sniff is disabled!');
+            throw new Exception('Sniff is disabled!');
         }
 
         return $this->report;
