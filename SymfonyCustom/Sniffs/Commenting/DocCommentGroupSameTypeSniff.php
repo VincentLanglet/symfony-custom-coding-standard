@@ -36,6 +36,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
         '@property',
         '@property-read',
         '@property-write',
+        '@required',
         '@return',
         '@see',
         '@since',
