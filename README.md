@@ -7,5 +7,6 @@ Customized coding standards for Symfony projects.
 
 Documentation
 -------------
-  * [PHP Coding Standard](docs/standards.md)
   * [Installation](docs/installation.md)
+  * [Php Coding Standard](docs/php.md)
+  * [Twig Coding Standard](docs/twig.md)
