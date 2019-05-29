@@ -70,19 +70,6 @@ class Linter
 
         // setUp
         $report = new Report();
-        set_error_handler(function ($type, $msg) use ($report) {
-            if (E_USER_DEPRECATED === $type) {
-                $sniffViolation = new SniffViolation(
-                    SniffInterface::MESSAGE_TYPE_NOTICE,
-                    $msg,
-                    null,
-                    null
-                );
-
-                $report->addMessage($sniffViolation);
-            }
-        });
-
         foreach ($ruleset->getSniffs() as $sniff) {
             if ($sniff instanceof PostParserSniffInterface) {
                 $this->sniffsExtension->addSniff($sniff);
@@ -93,14 +80,15 @@ class Linter
 
         // Process
         foreach ($files as $file) {
+            $this->setErrorHandler($report, $file);
             $this->processTemplate($file, $ruleset, $report);
 
             // Add this file to the report.
             $report->addFile($file);
         }
+        restore_error_handler();
 
         // tearDown
-        restore_error_handler();
         foreach ($ruleset->getSniffs() as $sniff) {
             if ($sniff instanceof PostParserSniffInterface) {
                 $this->sniffsExtension->removeSniff($sniff);
@@ -132,8 +120,8 @@ class Linter
             $sniffViolation = new SniffViolation(
                 SniffInterface::MESSAGE_TYPE_ERROR,
                 $e->getRawMessage(),
-                $e->getTemplateLine(),
-                $e->getSourceContext()->getName()
+                $e->getSourceContext()->getName(),
+                $e->getTemplateLine()
             );
 
             $report->addMessage($sniffViolation);
@@ -148,7 +136,6 @@ class Linter
             $sniffViolation = new SniffViolation(
                 SniffInterface::MESSAGE_TYPE_ERROR,
                 sprintf('Unable to tokenize file'),
-                null,
                 (string) $file
             );
 
@@ -166,5 +153,24 @@ class Linter
         }
 
         return true;
+    }
+
+    /**
+     * @param Report      $report
+     * @param string|null $file
+     */
+    protected function setErrorHandler(Report $report, $file = null)
+    {
+        set_error_handler(function ($type, $message) use ($report, $file) {
+            if (E_USER_DEPRECATED === $type) {
+                $sniffViolation = new SniffViolation(
+                    SniffInterface::MESSAGE_TYPE_NOTICE,
+                    $message,
+                    $file
+                );
+
+                $report->addMessage($sniffViolation);
+            }
+        });
     }
 }
