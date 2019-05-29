@@ -52,7 +52,12 @@ abstract class AbstractPreParserSniff extends AbstractSniff implements PreParser
      */
     public function addMessage($messageType, $message, Token $token)
     {
-        $sniffViolation = new SniffViolation($messageType, $message, $token->getLine(), $token->getFilename());
+        $sniffViolation = new SniffViolation(
+            $messageType,
+            $message,
+            $token->getFilename(),
+            $token->getLine()
+        );
         $sniffViolation->setLinePosition($token->getPosition());
 
         $this->getReport()->addMessage($sniffViolation);

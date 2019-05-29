@@ -26,7 +26,7 @@ class SniffViolation
     /**
      * Line number for the violation.
      *
-     * @var int
+     * @var int|null
      */
     protected $line;
 
@@ -52,12 +52,12 @@ class SniffViolation
     protected $sniff;
 
     /**
-     * @param int    $level
-     * @param string $message
-     * @param int    $line
-     * @param string $filename
+     * @param int      $level
+     * @param string   $message
+     * @param string   $filename
+     * @param int|null $line
      */
-    public function __construct($level, $message, $line, $filename)
+    public function __construct($level, $message, $filename, $line = null)
     {
         $this->level        = $level;
         $this->message      = $message;
@@ -129,7 +129,7 @@ class SniffViolation
     /**
      * Get the line number where this violation occured.
      *
-     * @return int
+     * @return int|null
      */
     public function getLine()
     {

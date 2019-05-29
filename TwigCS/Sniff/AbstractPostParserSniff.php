@@ -47,8 +47,8 @@ abstract class AbstractPostParserSniff extends AbstractSniff implements PostPars
         $sniffViolation = new SniffViolation(
             $messageType,
             $message,
-            $this->getTemplateLine($node),
-            $this->getTemplateName($node)
+            $this->getTemplateName($node),
+            $this->getTemplateLine($node)
         );
 
         $this->getReport()->addMessage($sniffViolation);
