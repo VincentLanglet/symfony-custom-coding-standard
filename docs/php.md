@@ -1,4 +1,4 @@
-# PHP CS Coding Standard Rules
+# PHP Coding Standard Rules
 ## From PSR2
 
 We imported the [PSR2 Standard](./standards/psr2.md) with these overrides:
