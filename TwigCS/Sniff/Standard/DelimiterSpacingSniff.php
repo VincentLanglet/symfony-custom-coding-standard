@@ -9,7 +9,7 @@ use TwigCS\Token\Token;
 /**
  * Ensure there is one space before and after a delimiter {{, {%, {#, }}, %} and #}
  */
-class EnsureWhitespaceDelimiterSniff extends AbstractPreParserSniff
+class DelimiterSpacingSniff extends AbstractPreParserSniff
 {
     /**
      * @param Token   $token

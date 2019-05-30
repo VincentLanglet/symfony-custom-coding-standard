@@ -9,7 +9,7 @@ use TwigCS\Token\Token;
 /**
  * Ensure that files ends with one blank line.
  */
-class EnsureBlankAtEOFSniff extends AbstractPreParserSniff
+class BlankEOFSniff extends AbstractPreParserSniff
 {
     /**
      * @param Token   $token
