@@ -62,7 +62,7 @@ class DelimiterSpacingSniff extends AbstractPreParserSniff
         if (1 !== $count) {
             $this->addMessage(
                 $this::MESSAGE_TYPE_ERROR,
-                sprintf('Expecting 1 whitespace AFTER start of expression eg. "{{" or "{%%"; found %d', $count),
+                sprintf('Expecting 1 whitespace after "%s"; found %d', $token->getValue(), $count),
                 $token
             );
         }
@@ -91,7 +91,7 @@ class DelimiterSpacingSniff extends AbstractPreParserSniff
         if (1 !== $count) {
             $this->addMessage(
                 $this::MESSAGE_TYPE_ERROR,
-                sprintf('Expecting 1 whitespace BEFORE end of expression eg. "}}" or "%%}"; found %d', $count),
+                sprintf('Expecting 1 whitespace before "%s"; found %d', $token->getValue(), $count),
                 $token
             );
         }

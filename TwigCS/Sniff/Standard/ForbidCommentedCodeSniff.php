@@ -44,7 +44,7 @@ class ForbidCommentedCodeSniff extends AbstractPreParserSniff
             if ($found) {
                 $this->addMessage(
                     $this::MESSAGE_TYPE_WARNING,
-                    'Probable commented code found; keeping commented code is usually not advised',
+                    'Probable commented code found; keeping commented code is not advised',
                     $token
                 );
             }
