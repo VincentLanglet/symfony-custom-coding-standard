@@ -279,7 +279,7 @@ class Tokenizer
     {
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
 
-        if (!isset($match[0])) {
+        if (!empty($this->brackets) || !isset($match[0])) {
             $this->lexExpression();
         } elseif ($match[0][1] === $this->cursor) {
             $this->pushToken($endType, $match[0][0]);
@@ -290,6 +290,7 @@ class Tokenizer
             // Parse as text until the end position.
             $this->lexData($match[0][1]);
         } else {
+            // Should not happen
             while ($this->cursor < $match[0][1]) {
                 $this->lexExpression();
             }
