@@ -4,7 +4,6 @@ namespace TwigCS\Token;
 
 use \Exception;
 use Twig\Environment;
-use Twig\Lexer;
 use Twig\Source;
 
 /**
@@ -12,19 +11,19 @@ use Twig\Source;
  */
 class Tokenizer
 {
-    const STATE_DATA          = Lexer::STATE_DATA;
-    const STATE_BLOCK         = Lexer::STATE_BLOCK;
-    const STATE_VAR           = Lexer::STATE_VAR;
-    const STATE_STRING        = Lexer::STATE_STRING;
-    const STATE_INTERPOLATION = Lexer::STATE_INTERPOLATION;
+    const STATE_DATA          = 0;
+    const STATE_BLOCK         = 1;
+    const STATE_VAR           = 2;
+    const STATE_STRING        = 3;
+    const STATE_INTERPOLATION = 4;
     const STATE_COMMENT       = 5;
 
-    const REGEX_NAME            = Lexer::REGEX_NAME;
-    const REGEX_NUMBER          = Lexer::REGEX_NUMBER;
-    const REGEX_STRING          = Lexer::REGEX_STRING;
-    const REGEX_DQ_STRING_DELIM = Lexer::REGEX_DQ_STRING_DELIM;
-    const REGEX_DQ_STRING_PART  = Lexer::REGEX_DQ_STRING_PART;
-    const PUNCTUATION           = Lexer::PUNCTUATION;
+    const REGEX_NAME            = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
+    const REGEX_NUMBER          = '/[0-9]+(?:\.[0-9]+)?/A';
+    const REGEX_STRING          = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
+    const REGEX_DQ_STRING_DELIM = '/"/A';
+    const REGEX_DQ_STRING_PART  = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
+    const PUNCTUATION           = '()[]{}?:.,|';
 
     /**
      * @var array
