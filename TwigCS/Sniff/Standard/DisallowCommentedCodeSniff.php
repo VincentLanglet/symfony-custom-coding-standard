@@ -11,7 +11,7 @@ use TwigCS\Token\Token;
  *
  * This will be triggered if `{{` or `{%` is found inside a comment.
  */
-class ForbidCommentedCodeSniff extends AbstractSniff
+class DisallowCommentedCodeSniff extends AbstractSniff
 {
     /**
      * @param Token   $token
