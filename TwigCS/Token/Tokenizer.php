@@ -435,14 +435,30 @@ class Tokenizer
 
     protected function lexTab()
     {
-        $this->pushToken(Token::TAB_TYPE);
-        $this->moveCursor($this->code[$this->cursor]);
+        $currentToken = $this->code[$this->cursor];
+        $whitespace = '';
+
+        while (preg_match('/\t/', $currentToken)) {
+            $whitespace .= $currentToken;
+            $this->moveCursor($currentToken);
+            $currentToken = $this->code[$this->cursor];
+        }
+
+        $this->pushToken(Token::TAB_TYPE, $whitespace);
     }
 
     protected function lexWhitespace()
     {
-        $this->pushToken(Token::WHITESPACE_TYPE, $this->code[$this->cursor]);
-        $this->moveCursor($this->code[$this->cursor]);
+        $currentToken = $this->code[$this->cursor];
+        $whitespace = '';
+
+        while (' ' === $currentToken) {
+            $whitespace .= $currentToken;
+            $this->moveCursor($currentToken);
+            $currentToken = $this->code[$this->cursor];
+        }
+
+        $this->pushToken(Token::WHITESPACE_TYPE, $whitespace);
     }
 
     protected function lexEOL()

@@ -48,17 +48,17 @@ class DelimiterSpacingSniff extends AbstractPreParserSniff
      */
     public function processStart(Token $token, $tokenPosition, $tokens)
     {
-        $offset = 1;
-        while ($this->isTokenMatching($tokens[$tokenPosition + $offset], Token::WHITESPACE_TYPE)) {
-            ++$offset;
-        }
-
         // Ignore new line
-        if ($this->isTokenMatching($tokens[$tokenPosition + $offset], Token::EOL_TYPE)) {
+        if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::EOL_TYPE)) {
             return;
         }
 
-        $count = $offset - 1;
+        if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TYPE)) {
+            $count = strlen($tokens[$tokenPosition + 1]->getValue());
+        } else {
+            $count = 0;
+        }
+
         if (1 !== $count) {
             $this->addMessage(
                 $this::MESSAGE_TYPE_ERROR,
@@ -77,17 +77,17 @@ class DelimiterSpacingSniff extends AbstractPreParserSniff
      */
     public function processEnd(Token $token, $tokenPosition, $tokens)
     {
-        $offset = 1;
-        while ($this->isTokenMatching($tokens[$tokenPosition - $offset], Token::WHITESPACE_TYPE)) {
-            ++$offset;
-        }
-
         // Ignore new line
-        if ($this->isTokenMatching($tokens[$tokenPosition - $offset], Token::EOL_TYPE)) {
+        if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::EOL_TYPE)) {
             return;
         }
 
-        $count = $offset - 1;
+        if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TYPE)) {
+            $count = strlen($tokens[$tokenPosition - 1]->getValue());
+        } else {
+            $count = 0;
+        }
+
         if (1 !== $count) {
             $this->addMessage(
                 $this::MESSAGE_TYPE_ERROR,
