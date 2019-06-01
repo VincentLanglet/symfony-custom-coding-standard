@@ -77,8 +77,7 @@ abstract class AbstractSniff implements SniffInterface
      */
     public function isTokenMatching(Token $token, $type, $value = null)
     {
-        return $token->getType() === $type
-            && (null === $value || (null !== $value && $token->getValue() === $value));
+        return $token->getType() === $type && (null === $value || $token->getValue() === $value);
     }
 
     /**
