@@ -10,9 +10,9 @@ use TwigCS\Tests\AbstractSniffTest;
  */
 class DelimiterSpacingTest extends AbstractSniffTest
 {
-    public function testSniff1()
+    public function testSniff()
     {
-        $this->checkGenericSniff('delimiterSpacing.twig', new DelimiterSpacingSniff(), [
+        $this->checkGenericSniff(new DelimiterSpacingSniff(), [
             [12, 1],
             [12, 12],
             [12, 15],

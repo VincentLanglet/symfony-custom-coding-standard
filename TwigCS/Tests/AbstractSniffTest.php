@@ -3,6 +3,7 @@
 namespace TwigCS\Tests;
 
 use \Exception;
+use \ReflectionClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Twig\Loader\LoaderInterface;
@@ -43,16 +44,16 @@ abstract class AbstractSniffTest extends TestCase
     }
 
     /**
-     * @param string         $filename
      * @param SniffInterface $sniff
      * @param array          $expects
      */
-    protected function checkGenericSniff($filename, SniffInterface $sniff, array $expects)
+    protected function checkGenericSniff(SniffInterface $sniff, array $expects)
     {
-        $file = __DIR__.'/Fixtures/'.$filename;
-
         $ruleset = new Ruleset();
         try {
+            $class = new ReflectionClass(get_called_class());
+            $file = __DIR__.'/Fixtures/'.$class->getShortName().'.twig';
+
             $ruleset->addSniff($sniff);
             $report = $this->lint->run($file, $ruleset);
         } catch (Exception $e) {

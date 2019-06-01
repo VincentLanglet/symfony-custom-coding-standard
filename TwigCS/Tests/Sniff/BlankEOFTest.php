@@ -10,9 +10,9 @@ use TwigCS\Tests\AbstractSniffTest;
  */
 class BlankEOFTest extends AbstractSniffTest
 {
-    public function testSniff1()
+    public function testSniff()
     {
-        $this->checkGenericSniff('blankEOF.twig', new BlankEOFSniff(), [
+        $this->checkGenericSniff(new BlankEOFSniff(), [
             [4, 1],
         ]);
     }
