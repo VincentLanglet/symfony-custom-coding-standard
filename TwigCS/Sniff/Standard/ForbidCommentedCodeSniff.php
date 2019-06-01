@@ -3,7 +3,7 @@
 namespace TwigCS\Sniff\Standard;
 
 use \Exception;
-use TwigCS\Sniff\AbstractPreParserSniff;
+use TwigCS\Sniff\AbstractSniff;
 use TwigCS\Token\Token;
 
 /**
@@ -11,7 +11,7 @@ use TwigCS\Token\Token;
  *
  * This will be triggered if `{{` or `{%` is found inside a comment.
  */
-class ForbidCommentedCodeSniff extends AbstractPreParserSniff
+class ForbidCommentedCodeSniff extends AbstractSniff
 {
     /**
      * @param Token   $token

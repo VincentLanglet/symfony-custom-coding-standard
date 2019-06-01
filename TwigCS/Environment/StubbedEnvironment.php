@@ -14,8 +14,6 @@ use Twig\Loader\LoaderInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
-use TwigCS\Extension\SniffsExtension;
-use TwigCS\Token\TokenParser;
 
 /**
  * Provide stubs for all filters, functions, tests and tags that are not defined in twig's core.
@@ -56,28 +54,6 @@ class StubbedEnvironment extends Environment
         $this->addTokenParser(new TransChoiceTokenParser());
         $this->addTokenParser(new TransDefaultDomainTokenParser());
         $this->addTokenParser(new TransTokenParser());
-
-        $this->stubCallable  = function () {
-            /* This will be used as stub filter, function or test */
-        };
-
-        $this->stubFilters   = [];
-        $this->stubFunctions = [];
-
-        if (isset($options['stub_tags'])) {
-            foreach ($options['stub_tags'] as $tag) {
-                $this->addTokenParser(new TokenParser($tag));
-            }
-        }
-
-        $this->stubTests = [];
-        if (isset($options['stub_tests'])) {
-            foreach ($options['stub_tests'] as $test) {
-                $this->stubTests[$test] = new TwigTest('stub', $this->stubCallable);
-            }
-        }
-
-        $this->addExtension(new SniffsExtension());
     }
 
     /**
@@ -111,19 +87,14 @@ class StubbedEnvironment extends Environment
     /**
      * @param string $name
      *
-     * @return false|TwigTest
+     * @return TwigTest
      */
     public function getTest($name)
     {
-        $test = parent::getTest($name);
-        if ($test) {
-            return $test;
+        if (!isset($this->stubTests[$name])) {
+            $this->stubTests[$name] = new TwigTest('stub', $this->stubCallable);
         }
 
-        if (isset($this->stubTests[$name])) {
-            return $this->stubTests[$name];
-        }
-
-        return false;
+        return $this->stubTests[$name];
     }
 }

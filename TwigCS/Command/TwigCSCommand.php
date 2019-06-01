@@ -81,7 +81,7 @@ class TwigCSCommand extends Command
             'workingDirectory' => $currentDir,
         ]);
 
-        $twig     = new StubbedEnvironment(new ArrayLoader(), ['stub_tags' => $config->get('stub')]);
+        $twig     = new StubbedEnvironment(new ArrayLoader());
         $linter   = new Linter($twig, new Tokenizer($twig));
         $factory  = new RulesetFactory();
         $reporter = new TextFormatter($input, $output);

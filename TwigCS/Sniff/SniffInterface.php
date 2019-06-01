@@ -4,6 +4,7 @@ namespace TwigCS\Sniff;
 
 use \Exception;
 use TwigCS\Report\Report;
+use TwigCS\Token\Token;
 
 /**
  * Interface for all sniffs.
@@ -14,14 +15,11 @@ interface SniffInterface
     const MESSAGE_TYPE_WARNING = 1;
     const MESSAGE_TYPE_ERROR   = 2;
 
-    const TYPE_PRE_PARSER  = 'lint.pre_parser';
-    const TYPE_POST_PARSER = 'lint.post_parser';
-
     /**
      * Enable the sniff.
      *
-     * Once the sniff is enabled, it will be registered and executed when a template is tokenized or parsed. Messages
-     * will be added to the given `$report` object.
+     * Once the sniff is enabled, it will be registered and executed when a template is tokenized or parsed.
+     * Messages will be added to the given `$report` object.
      *
      * @param Report $report
      *
@@ -48,9 +46,9 @@ interface SniffInterface
     public function getReport();
 
     /**
-     * Get the type of sniff.
-     *
-     * @return string One of `TYPE` constants.
+     * @param Token   $token
+     * @param int     $tokenPosition
+     * @param Token[] $stream
      */
-    public function getType();
+    public function process(Token $token, $tokenPosition, $stream);
 }

@@ -3,13 +3,13 @@
 namespace TwigCS\Sniff\Standard;
 
 use \Exception;
-use TwigCS\Sniff\AbstractPreParserSniff;
+use TwigCS\Sniff\AbstractSniff;
 use TwigCS\Token\Token;
 
 /**
  * Ensure that files ends with one blank line.
  */
-class BlankEOFSniff extends AbstractPreParserSniff
+class BlankEOFSniff extends AbstractSniff
 {
     /**
      * @param Token   $token

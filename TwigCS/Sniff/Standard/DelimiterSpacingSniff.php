@@ -3,13 +3,13 @@
 namespace TwigCS\Sniff\Standard;
 
 use \Exception;
-use TwigCS\Sniff\AbstractPreParserSniff;
+use TwigCS\Sniff\AbstractSniff;
 use TwigCS\Token\Token;
 
 /**
  * Ensure there is one space before and after a delimiter {{, {%, {#, }}, %} and #}
  */
-class DelimiterSpacingSniff extends AbstractPreParserSniff
+class DelimiterSpacingSniff extends AbstractSniff
 {
     /**
      * @param Token   $token

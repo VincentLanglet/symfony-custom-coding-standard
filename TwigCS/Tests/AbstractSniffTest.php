@@ -33,13 +33,7 @@ abstract class AbstractSniffTest extends TestCase
     {
         /** @var LoaderInterface|MockObject $twigLoaderInterface */
         $twigLoaderInterface = $this->getMockBuilder(LoaderInterface::class)->getMock();
-        $this->env = new StubbedEnvironment(
-            $twigLoaderInterface,
-            [
-                'stub_tags'  => ['render', 'some_other_block', 'stylesheets'],
-                'stub_tests' => ['some_test'],
-            ]
-        );
+        $this->env = new StubbedEnvironment($twigLoaderInterface);
         $this->lint = new Linter($this->env, new Tokenizer($this->env));
     }
 

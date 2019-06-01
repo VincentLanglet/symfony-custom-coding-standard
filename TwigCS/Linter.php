@@ -7,12 +7,9 @@ use \Traversable;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
-use TwigCS\Extension\SniffsExtension;
 use TwigCS\Report\Report;
 use TwigCS\Report\SniffViolation;
 use TwigCS\Ruleset\Ruleset;
-use TwigCS\Sniff\PostParserSniffInterface;
-use TwigCS\Sniff\PreParserSniffInterface;
 use TwigCS\Sniff\SniffInterface;
 use TwigCS\Token\Tokenizer;
 
@@ -27,11 +24,6 @@ class Linter
     protected $env;
 
     /**
-     * @var SniffsExtension
-     */
-    protected $sniffsExtension;
-
-    /**
      * @var Tokenizer
      */
     protected $tokenizer;
@@ -44,7 +36,6 @@ class Linter
     {
         $this->env = $env;
 
-        $this->sniffsExtension = $this->env->getExtension('TwigCS\Extension\SniffsExtension');
         $this->tokenizer = $tokenizer;
     }
 
@@ -68,13 +59,8 @@ class Linter
             throw new Exception('No files to process, provide at least one file to be linted');
         }
 
-        // setUp
         $report = new Report();
         foreach ($ruleset->getSniffs() as $sniff) {
-            if ($sniff instanceof PostParserSniffInterface) {
-                $this->sniffsExtension->addSniff($sniff);
-            }
-
             $sniff->enable($report);
         }
 
@@ -90,10 +76,6 @@ class Linter
 
         // tearDown
         foreach ($ruleset->getSniffs() as $sniff) {
-            if ($sniff instanceof PostParserSniffInterface) {
-                $this->sniffsExtension->removeSniff($sniff);
-            }
-
             $sniff->disable();
         }
 
@@ -144,8 +126,8 @@ class Linter
             return false;
         }
 
-        /** @var PreParserSniffInterface[] $sniffs */
-        $sniffs = $ruleset->getSniffs(SniffInterface::TYPE_PRE_PARSER);
+        /** @var SniffInterface[] $sniffs */
+        $sniffs = $ruleset->getSniffs();
         foreach ($sniffs as $sniff) {
             foreach ($stream as $index => $token) {
                 $sniff->process($token, $index, $stream);

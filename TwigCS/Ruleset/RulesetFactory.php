@@ -2,7 +2,6 @@
 
 namespace TwigCS\Ruleset;
 
-use \Exception;
 use \SplFileInfo;
 use Symfony\Component\Finder\Finder;
 
@@ -15,8 +14,6 @@ class RulesetFactory
      * Create a new set of rule.
      *
      * @return Ruleset
-     *
-     * @throws Exception
      */
     public function createStandardRuleset()
     {
