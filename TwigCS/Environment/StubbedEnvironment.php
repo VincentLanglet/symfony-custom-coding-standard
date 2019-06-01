@@ -2,7 +2,6 @@
 
 namespace TwigCS\Environment;
 
-use \Closure;
 use Symfony\Bridge\Twig\TokenParser\DumpTokenParser;
 use Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser;
 use Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
@@ -36,11 +35,6 @@ class StubbedEnvironment extends Environment
     private $stubTests;
 
     /**
-     * @var Closure
-     */
-    private $stubCallable;
-
-    /**
      * @param LoaderInterface|null $loader
      * @param array                $options
      */
@@ -54,6 +48,10 @@ class StubbedEnvironment extends Environment
         $this->addTokenParser(new TransChoiceTokenParser());
         $this->addTokenParser(new TransDefaultDomainTokenParser());
         $this->addTokenParser(new TransTokenParser());
+
+        $this->stubFilters = [];
+        $this->stubFunctions = [];
+        $this->stubTests = [];
     }
 
     /**
@@ -64,7 +62,7 @@ class StubbedEnvironment extends Environment
     public function getFilter($name)
     {
         if (!isset($this->stubFilters[$name])) {
-            $this->stubFilters[$name] = new TwigFilter('stub', $this->stubCallable);
+            $this->stubFilters[$name] = new TwigFilter('stub');
         }
 
         return $this->stubFilters[$name];
@@ -78,7 +76,7 @@ class StubbedEnvironment extends Environment
     public function getFunction($name)
     {
         if (!isset($this->stubFunctions[$name])) {
-            $this->stubFunctions[$name] = new TwigFunction('stub', $this->stubCallable);
+            $this->stubFunctions[$name] = new TwigFunction('stub');
         }
 
         return $this->stubFunctions[$name];
@@ -92,7 +90,7 @@ class StubbedEnvironment extends Environment
     public function getTest($name)
     {
         if (!isset($this->stubTests[$name])) {
-            $this->stubTests[$name] = new TwigTest('stub', $this->stubCallable);
+            $this->stubTests[$name] = new TwigTest('stub');
         }
 
         return $this->stubTests[$name];
