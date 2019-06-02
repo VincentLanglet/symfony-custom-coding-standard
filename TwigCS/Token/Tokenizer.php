@@ -270,34 +270,6 @@ class Tokenizer
     }
 
     /**
-     * @param int    $endType
-     * @param string $endRegex
-     *
-     * @throws Exception
-     */
-    protected function lex($endType, $endRegex)
-    {
-        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
-
-        if (!empty($this->brackets) || !isset($match[0])) {
-            $this->lexExpression();
-        } elseif ($match[0][1] === $this->cursor) {
-            $this->pushToken($endType, $match[0][0]);
-            $this->moveCursor($match[0][0]);
-            $this->moveCurrentPosition();
-            $this->popState();
-        } elseif ($this->getState() === self::STATE_COMMENT) {
-            // Parse as text until the end position.
-            $this->lexData($match[0][1]);
-        } else {
-            // Should not happen
-            while ($this->cursor < $match[0][1]) {
-                $this->lexExpression();
-            }
-        }
-    }
-
-    /**
      * @throws Exception
      */
     protected function lexExpression()
@@ -357,7 +329,17 @@ class Tokenizer
      */
     protected function lexBlock()
     {
-        $this->lex(Token::BLOCK_END_TYPE, $this->regexes['lex_block']);
+        $endRegex = $this->regexes['lex_block'];
+        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+
+        if (!empty($this->brackets) || !isset($match[0])) {
+            $this->lexExpression();
+        } else {
+            $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
+            $this->moveCursor($match[0][0]);
+            $this->moveCurrentPosition();
+            $this->popState();
+        }
     }
 
     /**
@@ -365,7 +347,17 @@ class Tokenizer
      */
     protected function lexVariable()
     {
-        $this->lex(Token::VAR_END_TYPE, $this->regexes['lex_variable']);
+        $endRegex = $this->regexes['lex_variable'];
+        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+
+        if (!empty($this->brackets) || !isset($match[0])) {
+            $this->lexExpression();
+        } else {
+            $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
+            $this->moveCursor($match[0][0]);
+            $this->moveCurrentPosition();
+            $this->popState();
+        }
     }
 
     /**
@@ -373,7 +365,20 @@ class Tokenizer
      */
     protected function lexComment()
     {
-        $this->lex(Token::COMMENT_END_TYPE, $this->regexes['lex_comment']);
+        $endRegex = $this->regexes['lex_comment'];
+        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+
+        if (!isset($match[0])) {
+            throw new Exception('Unclosed comment');
+        } elseif ($match[0][1] === $this->cursor) {
+            $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
+            $this->moveCursor($match[0][0]);
+            $this->moveCurrentPosition();
+            $this->popState();
+        } else {
+            // Parse as text until the end position.
+            $this->lexData($match[0][1]);
+        }
     }
 
     /**
