@@ -370,7 +370,8 @@ class Tokenizer
 
         if (!isset($match[0])) {
             throw new Exception('Unclosed comment');
-        } elseif ($match[0][1] === $this->cursor) {
+        }
+        if ($match[0][1] === $this->cursor) {
             $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
             $this->moveCurrentPosition();
