@@ -1,9 +1,9 @@
 <?php
 
-namespace TwigCS\Sniff\Standard;
+namespace TwigCS\Ruleset\Generic;
 
 use \Exception;
-use TwigCS\Sniff\AbstractPreParserSniff;
+use TwigCS\Sniff\AbstractSniff;
 use TwigCS\Token\Token;
 
 /**
@@ -11,7 +11,7 @@ use TwigCS\Token\Token;
  *
  * This will be triggered if `{{` or `{%` is found inside a comment.
  */
-class DisallowCommentedCodeSniff extends AbstractPreParserSniff
+class DisallowCommentedCodeSniff extends AbstractSniff
 {
     /**
      * @param Token   $token
@@ -22,7 +22,7 @@ class DisallowCommentedCodeSniff extends AbstractPreParserSniff
      *
      * @throws Exception
      */
-    public function process(Token $token, $tokenPosition, $tokens)
+    public function process(Token $token, int $tokenPosition, array $tokens)
     {
         if ($this->isTokenMatching($token, Token::COMMENT_START_TYPE)) {
             $i = $tokenPosition;
@@ -44,7 +44,7 @@ class DisallowCommentedCodeSniff extends AbstractPreParserSniff
             if ($found) {
                 $this->addMessage(
                     $this::MESSAGE_TYPE_WARNING,
-                    'Probable commented code found; keeping commented code is usually not advised',
+                    'Probable commented code found; keeping commented code is not advised',
                     $token
                 );
             }

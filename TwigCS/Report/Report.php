@@ -75,7 +75,7 @@ class Report
      *
      * @return SniffViolation[]
      */
-    public function getMessages($filters = [])
+    public function getMessages(array $filters = [])
     {
         if (empty($filters)) {
             // Return all messages, without filtering.
@@ -100,7 +100,7 @@ class Report
     /**
      * @param string $file
      */
-    public function addFile($file)
+    public function addFile(string $file)
     {
         $this->files[] = $file;
     }

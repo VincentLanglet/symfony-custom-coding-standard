@@ -19,7 +19,6 @@ class Config
         'exclude'          => [],
         'pattern'          => '*.twig',
         'paths'            => [],
-        'stub'             => [],
         'workingDirectory' => '',
     ];
 
@@ -30,14 +29,12 @@ class Config
      */
     protected $config;
 
-    public function __construct()
+    /**
+     * @param array $config
+     */
+    public function __construct(array $config = [])
     {
-        $args = func_get_args();
-
-        $this->config = $this::$defaultConfig;
-        foreach ($args as $arg) {
-            $this->config = array_merge($this->config, $arg);
-        }
+        $this->config = array_merge($this::$defaultConfig, $config);
     }
 
     /**
@@ -68,7 +65,7 @@ class Config
             $files->exclude($exclude);
         }
 
-        return $files;
+        return iterator_to_array($files, false);
     }
 
     /**
@@ -80,7 +77,7 @@ class Config
      *
      * @throws Exception
      */
-    public function get($key)
+    public function get(string $key)
     {
         if (!isset($this->config[$key])) {
             throw new Exception(sprintf('Configuration key "%s" does not exist', $key));

@@ -29,7 +29,7 @@ class TextFormatter
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    public function __construct($input, $output)
+    public function __construct(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
     }
@@ -38,7 +38,7 @@ class TextFormatter
      * @param Report      $report
      * @param string|null $level
      */
-    public function display(Report $report, $level = null)
+    public function display(Report $report, string $level = null)
     {
         foreach ($report->getFiles() as $file) {
             $fileMessages = $report->getMessages([
@@ -106,7 +106,7 @@ class TextFormatter
      *
      * @return array
      */
-    protected function getContext($template, $line, $context)
+    protected function getContext(string $template, int $line, int $context)
     {
         $lines = explode("\n", $template);
 

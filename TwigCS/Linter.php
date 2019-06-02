@@ -3,16 +3,12 @@
 namespace TwigCS;
 
 use \Exception;
-use \Traversable;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
-use TwigCS\Extension\SniffsExtension;
 use TwigCS\Report\Report;
 use TwigCS\Report\SniffViolation;
 use TwigCS\Ruleset\Ruleset;
-use TwigCS\Sniff\PostParserSniffInterface;
-use TwigCS\Sniff\PreParserSniffInterface;
 use TwigCS\Sniff\SniffInterface;
 use TwigCS\Token\Tokenizer;
 
@@ -27,11 +23,6 @@ class Linter
     protected $env;
 
     /**
-     * @var SniffsExtension
-     */
-    protected $sniffsExtension;
-
-    /**
      * @var Tokenizer
      */
     protected $tokenizer;
@@ -44,37 +35,27 @@ class Linter
     {
         $this->env = $env;
 
-        $this->sniffsExtension = $this->env->getExtension('TwigCS\Extension\SniffsExtension');
         $this->tokenizer = $tokenizer;
     }
 
     /**
      * Run the linter on the given $files against the given $ruleset.
      *
-     * @param array|string $files   List of files to process.
-     * @param Ruleset      $ruleset Set of rules to check.
+     * @param array   $files   List of files to process.
+     * @param Ruleset $ruleset Set of rules to check.
      *
      * @return Report an object with all violations and stats.
      *
      * @throws Exception
      */
-    public function run($files, Ruleset $ruleset)
+    public function run(array $files, Ruleset $ruleset)
     {
-        if (!is_array($files) && !$files instanceof Traversable) {
-            $files = [$files];
-        }
-
         if (empty($files)) {
             throw new Exception('No files to process, provide at least one file to be linted');
         }
 
-        // setUp
         $report = new Report();
         foreach ($ruleset->getSniffs() as $sniff) {
-            if ($sniff instanceof PostParserSniffInterface) {
-                $this->sniffsExtension->addSniff($sniff);
-            }
-
             $sniff->enable($report);
         }
 
@@ -90,10 +71,6 @@ class Linter
 
         // tearDown
         foreach ($ruleset->getSniffs() as $sniff) {
-            if ($sniff instanceof PostParserSniffInterface) {
-                $this->sniffsExtension->removeSniff($sniff);
-            }
-
             $sniff->disable();
         }
 
@@ -109,7 +86,7 @@ class Linter
      *
      * @return bool
      */
-    public function processTemplate($file, $ruleset, $report)
+    public function processTemplate(string $file, Ruleset $ruleset, Report $report)
     {
         $twigSource = new Source(file_get_contents($file), $file, $file);
 
@@ -136,7 +113,7 @@ class Linter
             $sniffViolation = new SniffViolation(
                 SniffInterface::MESSAGE_TYPE_ERROR,
                 sprintf('Unable to tokenize file'),
-                (string) $file
+                $file
             );
 
             $report->addMessage($sniffViolation);
@@ -144,8 +121,8 @@ class Linter
             return false;
         }
 
-        /** @var PreParserSniffInterface[] $sniffs */
-        $sniffs = $ruleset->getSniffs(SniffInterface::TYPE_PRE_PARSER);
+        /** @var SniffInterface[] $sniffs */
+        $sniffs = $ruleset->getSniffs();
         foreach ($sniffs as $sniff) {
             foreach ($stream as $index => $token) {
                 $sniff->process($token, $index, $stream);
@@ -159,7 +136,7 @@ class Linter
      * @param Report      $report
      * @param string|null $file
      */
-    protected function setErrorHandler(Report $report, $file = null)
+    protected function setErrorHandler(Report $report, string $file = null)
     {
         set_error_handler(function ($type, $message) use ($report, $file) {
             if (E_USER_DEPRECATED === $type) {

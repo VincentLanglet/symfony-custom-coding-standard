@@ -3,9 +3,8 @@
 namespace TwigCS\Tests;
 
 use \Exception;
-use PHPUnit\Framework\MockObject\MockObject;
+use \ReflectionClass;
 use PHPUnit\Framework\TestCase;
-use Twig\Loader\LoaderInterface;
 use TwigCS\Environment\StubbedEnvironment;
 use TwigCS\Linter;
 use TwigCS\Report\SniffViolation;
@@ -30,31 +29,28 @@ abstract class AbstractSniffTest extends TestCase
 
     public function setUp()
     {
-        /** @var LoaderInterface|MockObject $twigLoaderInterface */
-        $twigLoaderInterface = $this->getMockBuilder(LoaderInterface::class)->getMock();
-        $this->env = new StubbedEnvironment(
-            $twigLoaderInterface,
-            [
-                'stub_tags'  => ['render', 'some_other_block', 'stylesheets'],
-                'stub_tests' => ['some_test'],
-            ]
-        );
+        $this->env = new StubbedEnvironment();
         $this->lint = new Linter($this->env, new Tokenizer($this->env));
     }
 
     /**
-     * @param string         $filename
+     * Should call $this->checkGenericSniff(new Sniff(), [...]);
+     */
+    abstract public function testSniff();
+
+    /**
      * @param SniffInterface $sniff
      * @param array          $expects
      */
-    protected function checkGenericSniff($filename, SniffInterface $sniff, array $expects)
+    protected function checkGenericSniff(SniffInterface $sniff, array $expects)
     {
-        $file = __DIR__.'/Fixtures/'.$filename;
-
         $ruleset = new Ruleset();
         try {
+            $class = new ReflectionClass(get_called_class());
+            $file = __DIR__.'/Fixtures/'.$class->getShortName().'.twig';
+
             $ruleset->addSniff($sniff);
-            $report = $this->lint->run($file, $ruleset);
+            $report = $this->lint->run([$file], $ruleset);
         } catch (Exception $e) {
             $this->fail($e->getMessage());
 

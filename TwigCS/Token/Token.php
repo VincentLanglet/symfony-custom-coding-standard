@@ -61,8 +61,13 @@ class Token
      * @param string      $filename
      * @param string|null $value
      */
-    public function __construct($type, $line, $position, $filename, $value = null)
-    {
+    public function __construct(
+        int $type,
+        int $line,
+        int $position,
+        string $filename,
+        string $value = null
+    ) {
         $this->type = $type;
         $this->line = $line;
         $this->position = $position;

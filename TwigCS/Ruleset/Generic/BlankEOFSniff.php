@@ -1,15 +1,15 @@
 <?php
 
-namespace TwigCS\Sniff\Standard;
+namespace TwigCS\Ruleset\Generic;
 
 use \Exception;
-use TwigCS\Sniff\AbstractPreParserSniff;
+use TwigCS\Sniff\AbstractSniff;
 use TwigCS\Token\Token;
 
 /**
  * Ensure that files ends with one blank line.
  */
-class EnsureBlankAtEOFSniff extends AbstractPreParserSniff
+class BlankEOFSniff extends AbstractSniff
 {
     /**
      * @param Token   $token
@@ -20,7 +20,7 @@ class EnsureBlankAtEOFSniff extends AbstractPreParserSniff
      *
      * @throws Exception
      */
-    public function process(Token $token, $tokenPosition, $tokens)
+    public function process(Token $token, int $tokenPosition, array $tokens)
     {
         if ($this->isTokenMatching($token, Token::EOF_TYPE)) {
             $i = 0;

@@ -189,7 +189,7 @@ class Tokenizer
     /**
      * @param int $state
      */
-    protected function pushState($state)
+    protected function pushState(int $state)
     {
         $this->state[] = $state;
     }
@@ -208,7 +208,7 @@ class Tokenizer
     /**
      * @param string $code
      */
-    protected function preflightSource($code)
+    protected function preflightSource(string $code)
     {
         $tokenPositions = [];
         preg_match_all($this->regexes['lex_tokens_start'], $code, $tokenPositions, PREG_OFFSET_CAPTURE);
@@ -230,7 +230,7 @@ class Tokenizer
      *
      * @return array|null
      */
-    protected function getTokenPosition($offset = 0)
+    protected function getTokenPosition(int $offset = 0)
     {
         if (empty($this->tokenPositions)
             || !isset($this->tokenPositions[$this->currentPosition + $offset])
@@ -244,7 +244,7 @@ class Tokenizer
     /**
      * @param int $value
      */
-    protected function moveCurrentPosition($value = 1)
+    protected function moveCurrentPosition(int $value = 1)
     {
         $this->currentPosition += $value;
     }
@@ -252,7 +252,7 @@ class Tokenizer
     /**
      * @param string $value
      */
-    protected function moveCursor($value)
+    protected function moveCursor(string $value)
     {
         $this->cursor += strlen($value);
         $this->line += substr_count($value, "\n");
@@ -262,37 +262,10 @@ class Tokenizer
      * @param int         $type
      * @param string|null $value
      */
-    protected function pushToken($type, $value = null)
+    protected function pushToken(int $type, string $value = null)
     {
         $tokenPositionInLine = $this->cursor - strrpos(substr($this->code, 0, $this->cursor), PHP_EOL);
         $this->tokens[] = new Token($type, $this->line, $tokenPositionInLine, $this->filename, $value);
-    }
-
-    /**
-     * @param int    $endType
-     * @param string $endRegex
-     *
-     * @throws Exception
-     */
-    protected function lex($endType, $endRegex)
-    {
-        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
-
-        if (!isset($match[0])) {
-            $this->lexExpression();
-        } elseif ($match[0][1] === $this->cursor) {
-            $this->pushToken($endType, $match[0][0]);
-            $this->moveCursor($match[0][0]);
-            $this->moveCurrentPosition();
-            $this->popState();
-        } elseif ($this->getState() === self::STATE_COMMENT) {
-            // Parse as text until the end position.
-            $this->lexData($match[0][1]);
-        } else {
-            while ($this->cursor < $match[0][1]) {
-                $this->lexExpression();
-            }
-        }
     }
 
     /**
@@ -355,7 +328,17 @@ class Tokenizer
      */
     protected function lexBlock()
     {
-        $this->lex(Token::BLOCK_END_TYPE, $this->regexes['lex_block']);
+        $endRegex = $this->regexes['lex_block'];
+        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+
+        if (!empty($this->brackets) || !isset($match[0])) {
+            $this->lexExpression();
+        } else {
+            $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
+            $this->moveCursor($match[0][0]);
+            $this->moveCurrentPosition();
+            $this->popState();
+        }
     }
 
     /**
@@ -363,7 +346,17 @@ class Tokenizer
      */
     protected function lexVariable()
     {
-        $this->lex(Token::VAR_END_TYPE, $this->regexes['lex_variable']);
+        $endRegex = $this->regexes['lex_variable'];
+        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+
+        if (!empty($this->brackets) || !isset($match[0])) {
+            $this->lexExpression();
+        } else {
+            $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
+            $this->moveCursor($match[0][0]);
+            $this->moveCurrentPosition();
+            $this->popState();
+        }
     }
 
     /**
@@ -371,13 +364,27 @@ class Tokenizer
      */
     protected function lexComment()
     {
-        $this->lex(Token::COMMENT_END_TYPE, $this->regexes['lex_comment']);
+        $endRegex = $this->regexes['lex_comment'];
+        preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
+
+        if (!isset($match[0])) {
+            throw new Exception('Unclosed comment');
+        }
+        if ($match[0][1] === $this->cursor) {
+            $this->pushToken(Token::COMMENT_END_TYPE, $match[0][0]);
+            $this->moveCursor($match[0][0]);
+            $this->moveCurrentPosition();
+            $this->popState();
+        } else {
+            // Parse as text until the end position.
+            $this->lexData($match[0][1]);
+        }
     }
 
     /**
      * @param int $limit
      */
-    protected function lexData($limit = 0)
+    protected function lexData(int $limit = 0)
     {
         $nextToken = $this->getTokenPosition();
         if (0 === $limit && null !== $nextToken) {
@@ -433,14 +440,30 @@ class Tokenizer
 
     protected function lexTab()
     {
-        $this->pushToken(Token::TAB_TYPE);
-        $this->moveCursor($this->code[$this->cursor]);
+        $currentToken = $this->code[$this->cursor];
+        $whitespace = '';
+
+        while (preg_match('/\t/', $currentToken)) {
+            $whitespace .= $currentToken;
+            $this->moveCursor($currentToken);
+            $currentToken = $this->code[$this->cursor];
+        }
+
+        $this->pushToken(Token::TAB_TYPE, $whitespace);
     }
 
     protected function lexWhitespace()
     {
-        $this->pushToken(Token::WHITESPACE_TYPE, $this->code[$this->cursor]);
-        $this->moveCursor($this->code[$this->cursor]);
+        $currentToken = $this->code[$this->cursor];
+        $whitespace = '';
+
+        while (' ' === $currentToken) {
+            $whitespace .= $currentToken;
+            $this->moveCursor($currentToken);
+            $currentToken = $this->code[$this->cursor];
+        }
+
+        $this->pushToken(Token::WHITESPACE_TYPE, $whitespace);
     }
 
     protected function lexEOL()

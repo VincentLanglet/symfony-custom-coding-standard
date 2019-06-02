@@ -21,7 +21,7 @@ class TokenParser extends AbstractTokenParser
     /**
      * @param string $name
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
     }
