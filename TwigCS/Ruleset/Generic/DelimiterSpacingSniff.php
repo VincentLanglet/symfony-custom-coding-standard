@@ -1,6 +1,6 @@
 <?php
 
-namespace TwigCS\Sniff\Standard;
+namespace TwigCS\Ruleset\Generic;
 
 use \Exception;
 use TwigCS\Sniff\AbstractSniff;

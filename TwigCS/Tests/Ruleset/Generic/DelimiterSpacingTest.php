@@ -1,8 +1,8 @@
 <?php
 
-namespace TwigCS\Tests\Sniff;
+namespace TwigCS\Tests\Ruleset\Generic;
 
-use TwigCS\Sniff\Standard\DelimiterSpacingSniff;
+use TwigCS\Ruleset\Generic\DelimiterSpacingSniff;
 use TwigCS\Tests\AbstractSniffTest;
 
 /**

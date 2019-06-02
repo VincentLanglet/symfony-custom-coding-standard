@@ -1,8 +1,8 @@
 <?php
 
-namespace TwigCS\Tests\Sniff;
+namespace TwigCS\Tests\Ruleset\Generic;
 
-use TwigCS\Sniff\Standard\DisallowCommentedCodeSniff;
+use TwigCS\Ruleset\Generic\DisallowCommentedCodeSniff;
 use TwigCS\Tests\AbstractSniffTest;
 
 /**

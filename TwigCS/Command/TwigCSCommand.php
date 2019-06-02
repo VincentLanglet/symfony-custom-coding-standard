@@ -8,12 +8,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Twig\Loader\ArrayLoader;
 use TwigCS\Config\Config;
 use TwigCS\Environment\StubbedEnvironment;
 use TwigCS\Linter;
 use TwigCS\Report\TextFormatter;
-use TwigCS\Ruleset\RulesetFactory;
+use TwigCS\Ruleset\Ruleset;
 use TwigCS\Token\Tokenizer;
 
 /**
@@ -33,16 +32,16 @@ class TwigCSCommand extends Command
                 new InputOption(
                     'exclude',
                     'e',
-                    InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                    InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                     'Excludes, based on regex, paths of files and folders from parsing',
-                    ['vendor/']
+                    []
                 ),
                 new InputOption(
                     'level',
                     'l',
                     InputOption::VALUE_OPTIONAL,
-                    'Allowed values are: warning, error',
-                    'warning'
+                    'Allowed values are notice, warning or error',
+                    'notice'
                 ),
                 new InputOption(
                     'working-dir',
@@ -81,26 +80,24 @@ class TwigCSCommand extends Command
             'workingDirectory' => $currentDir,
         ]);
 
-        $twig     = new StubbedEnvironment(new ArrayLoader());
-        $linter   = new Linter($twig, new Tokenizer($twig));
-        $factory  = new RulesetFactory();
-        $reporter = new TextFormatter($input, $output);
-        $exitCode = 0;
-
         // Get the rules to apply.
-        $ruleset = $factory->createStandardRuleset();
+        $ruleset = new Ruleset();
+        $ruleset->addStandard();
 
         // Execute the linter.
+        $twig = new StubbedEnvironment();
+        $linter = new Linter($twig, new Tokenizer($twig));
         $report = $linter->run($config->findFiles(), $ruleset);
 
         // Format the output.
+        $reporter = new TextFormatter($input, $output);
         $reporter->display($report, $level);
 
         // Return a meaningful error code.
         if ($report->getTotalErrors()) {
-            $exitCode = 1;
+            return 1;
         }
 
-        return $exitCode;
+        return 0;
     }
 }

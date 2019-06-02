@@ -2,6 +2,9 @@
 
 namespace TwigCS\Ruleset;
 
+use \Exception;
+use \SplFileInfo;
+use Symfony\Component\Finder\Finder;
 use TwigCS\Sniff\SniffInterface;
 
 /**
@@ -40,14 +43,29 @@ class Ruleset
     }
 
     /**
-     * @param string $sniffClass
+     * Create a new set of rule.
      *
-     * @return $this
+     * @param string $standardName
+     *
+     * @return Ruleset
+     *
+     * @throws Exception
      */
-    public function removeSniff($sniffClass)
+    public function addStandard($standardName = 'Generic')
     {
-        if (isset($this->sniffs[$sniffClass])) {
-            unset($this->sniffs[$sniffClass]);
+        try {
+            $finder = Finder::create()->in(__DIR__.'/'.$standardName)->files();
+        } catch (Exception $e) {
+            throw new Exception(sprintf('The standard "%s" is not found.', $standardName));
+        }
+
+        /** @var SplFileInfo $file */
+        foreach ($finder as $file) {
+            $class = __NAMESPACE__.'\\'.$standardName.'\\'.$file->getBasename('.php');
+
+            if (class_exists($class)) {
+                $this->addSniff(new $class());
+            }
         }
 
         return $this;

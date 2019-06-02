@@ -1,8 +1,8 @@
 <?php
 
-namespace TwigCS\Tests\Sniff;
+namespace TwigCS\Tests\Ruleset\Generic;
 
-use TwigCS\Sniff\Standard\BlankEOFSniff;
+use TwigCS\Ruleset\Generic\BlankEOFSniff;
 use TwigCS\Tests\AbstractSniffTest;
 
 /**

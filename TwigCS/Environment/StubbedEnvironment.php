@@ -9,7 +9,7 @@ use Symfony\Bridge\Twig\TokenParser\TransChoiceTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransDefaultDomainTokenParser;
 use Symfony\Bridge\Twig\TokenParser\TransTokenParser;
 use Twig\Environment;
-use Twig\Loader\LoaderInterface;
+use Twig\Loader\ArrayLoader;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -34,13 +34,9 @@ class StubbedEnvironment extends Environment
      */
     private $stubTests;
 
-    /**
-     * @param LoaderInterface|null $loader
-     * @param array                $options
-     */
-    public function __construct(LoaderInterface $loader = null, $options = [])
+    public function __construct()
     {
-        parent::__construct($loader, $options);
+        parent::__construct(new ArrayLoader());
 
         $this->addTokenParser(new DumpTokenParser());
         $this->addTokenParser(new FormThemeTokenParser());

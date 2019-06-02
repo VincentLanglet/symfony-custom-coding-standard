@@ -16,10 +16,9 @@ class Config
      * @var array
      */
     public static $defaultConfig = [
-        'exclude'          => [],
+        'exclude'          => ['vendor/'],
         'pattern'          => '*.twig',
         'paths'            => [],
-        'stub'             => [],
         'workingDirectory' => '',
     ];
 
