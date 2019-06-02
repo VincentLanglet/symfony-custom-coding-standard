@@ -3,7 +3,6 @@
 namespace TwigCS;
 
 use \Exception;
-use \Traversable;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
@@ -42,19 +41,15 @@ class Linter
     /**
      * Run the linter on the given $files against the given $ruleset.
      *
-     * @param array|string $files   List of files to process.
-     * @param Ruleset      $ruleset Set of rules to check.
+     * @param array   $files   List of files to process.
+     * @param Ruleset $ruleset Set of rules to check.
      *
      * @return Report an object with all violations and stats.
      *
      * @throws Exception
      */
-    public function run($files, Ruleset $ruleset)
+    public function run(array $files, Ruleset $ruleset)
     {
-        if (!is_array($files) && !$files instanceof Traversable) {
-            $files = [$files];
-        }
-
         if (empty($files)) {
             throw new Exception('No files to process, provide at least one file to be linted');
         }
@@ -91,7 +86,7 @@ class Linter
      *
      * @return bool
      */
-    public function processTemplate($file, $ruleset, $report)
+    public function processTemplate(string $file, Ruleset $ruleset, Report $report)
     {
         $twigSource = new Source(file_get_contents($file), $file, $file);
 
@@ -118,7 +113,7 @@ class Linter
             $sniffViolation = new SniffViolation(
                 SniffInterface::MESSAGE_TYPE_ERROR,
                 sprintf('Unable to tokenize file'),
-                (string) $file
+                $file
             );
 
             $report->addMessage($sniffViolation);
@@ -141,7 +136,7 @@ class Linter
      * @param Report      $report
      * @param string|null $file
      */
-    protected function setErrorHandler(Report $report, $file = null)
+    protected function setErrorHandler(Report $report, string $file = null)
     {
         set_error_handler(function ($type, $message) use ($report, $file) {
             if (E_USER_DEPRECATED === $type) {

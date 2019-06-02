@@ -269,7 +269,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
      *
      * @return bool True if the return does not return anything
      */
-    protected function isMatchingReturn($tokens, $returnPos)
+    protected function isMatchingReturn(array $tokens, $returnPos)
     {
         do {
             $returnPos++;

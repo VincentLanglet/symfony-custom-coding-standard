@@ -50,5 +50,5 @@ interface SniffInterface
      * @param int     $tokenPosition
      * @param Token[] $stream
      */
-    public function process(Token $token, $tokenPosition, $stream);
+    public function process(Token $token, int $tokenPosition, array $stream);
 }

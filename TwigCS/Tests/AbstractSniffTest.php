@@ -50,7 +50,7 @@ abstract class AbstractSniffTest extends TestCase
             $file = __DIR__.'/Fixtures/'.$class->getShortName().'.twig';
 
             $ruleset->addSniff($sniff);
-            $report = $this->lint->run($file, $ruleset);
+            $report = $this->lint->run([$file], $ruleset);
         } catch (Exception $e) {
             $this->fail($e->getMessage());
 

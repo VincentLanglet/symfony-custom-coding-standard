@@ -34,7 +34,7 @@ class TwigCSCommand extends Command
                     'e',
                     InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                     'Excludes, based on regex, paths of files and folders from parsing',
-                    []
+                    ['vendor/']
                 ),
                 new InputOption(
                     'level',

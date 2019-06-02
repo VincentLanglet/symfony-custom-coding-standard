@@ -20,7 +20,7 @@ class DelimiterSpacingSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    public function process(Token $token, $tokenPosition, $tokens)
+    public function process(Token $token, int $tokenPosition, array $tokens)
     {
         if ($this->isTokenMatching($token, Token::VAR_START_TYPE)
             || $this->isTokenMatching($token, Token::BLOCK_START_TYPE)

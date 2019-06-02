@@ -20,7 +20,7 @@ class BlankEOFSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    public function process(Token $token, $tokenPosition, $tokens)
+    public function process(Token $token, int $tokenPosition, array $tokens)
     {
         if ($this->isTokenMatching($token, Token::EOF_TYPE)) {
             $i = 0;

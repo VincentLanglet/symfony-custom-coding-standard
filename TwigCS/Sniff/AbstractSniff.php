@@ -75,7 +75,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @return bool
      */
-    public function isTokenMatching(Token $token, $type, $value = null)
+    public function isTokenMatching(Token $token, int $type, string $value = null)
     {
         return $token->getType() === $type && (null === $value || $token->getValue() === $value);
     }
@@ -91,7 +91,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    public function addMessage($messageType, $message, Token $token)
+    public function addMessage(int $messageType, string $message, Token $token)
     {
         $sniffViolation = new SniffViolation(
             $messageType,
@@ -111,7 +111,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @return string
      */
-    public function stringifyValue($token)
+    public function stringifyValue(Token $token)
     {
         if ($token->getType() === Token::STRING_TYPE) {
             return $token->getValue();

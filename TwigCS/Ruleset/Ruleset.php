@@ -51,7 +51,7 @@ class Ruleset
      *
      * @throws Exception
      */
-    public function addStandard($standardName = 'Generic')
+    public function addStandard(string $standardName = 'Generic')
     {
         try {
             $finder = Finder::create()->in(__DIR__.'/'.$standardName)->files();

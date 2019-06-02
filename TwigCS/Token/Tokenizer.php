@@ -190,7 +190,7 @@ class Tokenizer
     /**
      * @param int $state
      */
-    protected function pushState($state)
+    protected function pushState(int $state)
     {
         $this->state[] = $state;
     }
@@ -209,7 +209,7 @@ class Tokenizer
     /**
      * @param string $code
      */
-    protected function preflightSource($code)
+    protected function preflightSource(string $code)
     {
         $tokenPositions = [];
         preg_match_all($this->regexes['lex_tokens_start'], $code, $tokenPositions, PREG_OFFSET_CAPTURE);
@@ -231,7 +231,7 @@ class Tokenizer
      *
      * @return array|null
      */
-    protected function getTokenPosition($offset = 0)
+    protected function getTokenPosition(int $offset = 0)
     {
         if (empty($this->tokenPositions)
             || !isset($this->tokenPositions[$this->currentPosition + $offset])
@@ -245,7 +245,7 @@ class Tokenizer
     /**
      * @param int $value
      */
-    protected function moveCurrentPosition($value = 1)
+    protected function moveCurrentPosition(int $value = 1)
     {
         $this->currentPosition += $value;
     }
@@ -253,7 +253,7 @@ class Tokenizer
     /**
      * @param string $value
      */
-    protected function moveCursor($value)
+    protected function moveCursor(string $value)
     {
         $this->cursor += strlen($value);
         $this->line += substr_count($value, "\n");
@@ -263,7 +263,7 @@ class Tokenizer
      * @param int         $type
      * @param string|null $value
      */
-    protected function pushToken($type, $value = null)
+    protected function pushToken(int $type, string $value = null)
     {
         $tokenPositionInLine = $this->cursor - strrpos(substr($this->code, 0, $this->cursor), PHP_EOL);
         $this->tokens[] = new Token($type, $this->line, $tokenPositionInLine, $this->filename, $value);
@@ -384,7 +384,7 @@ class Tokenizer
     /**
      * @param int $limit
      */
-    protected function lexData($limit = 0)
+    protected function lexData(int $limit = 0)
     {
         $nextToken = $this->getTokenPosition();
         if (0 === $limit && null !== $nextToken) {

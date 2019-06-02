@@ -57,7 +57,7 @@ class SniffViolation
      * @param string   $filename
      * @param int|null $line
      */
-    public function __construct($level, $message, $filename, $line = null)
+    public function __construct(int $level, string $message, string $filename, int $line = null)
     {
         $this->level        = $level;
         $this->message      = $message;
@@ -99,11 +99,11 @@ class SniffViolation
     /**
      * Get the integer value for a given string $level.
      *
-     * @param int $level
+     * @param string $level
      *
      * @return int
      */
-    public static function getLevelAsInt($level)
+    public static function getLevelAsInt(string $level)
     {
         switch (strtoupper($level)) {
             case 'NOTICE':
@@ -143,7 +143,7 @@ class SniffViolation
      */
     public function getFilename()
     {
-        return (string) $this->filename;
+        return $this->filename;
     }
 
     /**
@@ -153,7 +153,7 @@ class SniffViolation
      *
      * @return self
      */
-    public function setLinePosition($linePosition)
+    public function setLinePosition(int $linePosition)
     {
         $this->linePosition = $linePosition;
 
