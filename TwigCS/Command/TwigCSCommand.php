@@ -55,7 +55,7 @@ class TwigCSCommand extends Command
                     'f',
                     InputOption::VALUE_NONE,
                     'Automatically fix all the fixable violations'
-                )
+                ),
             ])
             ->addArgument(
                 'paths',

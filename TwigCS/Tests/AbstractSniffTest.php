@@ -79,7 +79,7 @@ abstract class AbstractSniffTest extends TestCase
             $fixer->fixFile($file);
 
             $diff = $fixer->generateDiff($fixedFile);
-            if ("" !== $diff) {
+            if ('' !== $diff) {
                 $this->fail($diff);
             }
         }

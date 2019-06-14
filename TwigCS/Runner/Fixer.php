@@ -99,7 +99,6 @@ class Fixer
      */
     protected $numFixes = 0;
 
-
     /**
      * Starts fixing a new file.
      *
@@ -344,7 +343,6 @@ class Fixer
             $this->changeset = [];
         }
     }
-
 
     /**
      * Replace the entire contents of a token.
