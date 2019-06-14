@@ -57,16 +57,7 @@ class Linter
         $report = new Report();
 
         if ($fix) {
-            $fixer = new Fixer($ruleset, $this->tokenizer);
-
-            foreach ($ruleset->getSniffs() as $sniff) {
-                $sniff->enableFixer($fixer);
-            }
-
-            foreach ($files as $file) {
-                $fixer->fixFile($file);
-                file_put_contents($file, $fixer->getContents());
-            }
+            $this->fix($files, $ruleset);
         }
 
         foreach ($ruleset->getSniffs() as $sniff) {
@@ -90,6 +81,31 @@ class Linter
         }
 
         return $report;
+    }
+
+    /**
+     * @param array   $files
+     * @param Ruleset $ruleset
+     *
+     * @throws Exception
+     */
+    public function fix(array $files, Ruleset $ruleset)
+    {
+        $fixer = new Fixer($ruleset, $this->tokenizer);
+
+        foreach ($ruleset->getSniffs() as $sniff) {
+            $sniff->enableFixer($fixer);
+        }
+
+        foreach ($files as $file) {
+            $success = $fixer->fixFile($file);
+
+            if (!$success) {
+                throw new Exception("Cannot fix the file $file.");
+            }
+
+            file_put_contents($file, $fixer->getContents());
+        }
     }
 
     /**
