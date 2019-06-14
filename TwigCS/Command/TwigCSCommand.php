@@ -50,6 +50,12 @@ class TwigCSCommand extends Command
                     'Run as if this was started in <working-dir> instead of the current working directory',
                     getcwd()
                 ),
+                new InputOption(
+                    'fix',
+                    'f',
+                    InputOption::VALUE_NONE,
+                    'Automatically fix all the fixable violations'
+                )
             ])
             ->addArgument(
                 'paths',
@@ -69,10 +75,11 @@ class TwigCSCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $paths      = $input->getArgument('paths');
-        $exclude    = $input->getOption('exclude');
-        $level      = $input->getOption('level');
+        $paths = $input->getArgument('paths');
+        $exclude = $input->getOption('exclude');
+        $level = $input->getOption('level');
         $currentDir = $input->getOption('working-dir');
+        $fix = $input->getOption('fix');
 
         $config = new Config([
             'paths'            => $paths,
@@ -87,7 +94,7 @@ class TwigCSCommand extends Command
         // Execute the linter.
         $twig = new StubbedEnvironment();
         $linter = new Linter($twig, new Tokenizer($twig));
-        $report = $linter->run($config->findFiles(), $ruleset);
+        $report = $linter->run($config->findFiles(), $ruleset, $fix);
 
         // Format the output.
         $reporter = new TextFormatter($input, $output);
