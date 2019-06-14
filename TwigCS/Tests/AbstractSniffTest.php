@@ -6,9 +6,9 @@ use \Exception;
 use \ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use TwigCS\Environment\StubbedEnvironment;
-use TwigCS\Linter;
 use TwigCS\Report\SniffViolation;
 use TwigCS\Ruleset\Ruleset;
+use TwigCS\Runner\Linter;
 use TwigCS\Sniff\SniffInterface;
 use TwigCS\Token\Tokenizer;
 

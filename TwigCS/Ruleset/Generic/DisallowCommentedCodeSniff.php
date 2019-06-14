@@ -14,7 +14,6 @@ use TwigCS\Token\Token;
 class DisallowCommentedCodeSniff extends AbstractSniff
 {
     /**
-     * @param Token   $token
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
@@ -22,8 +21,10 @@ class DisallowCommentedCodeSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    public function process(Token $token, int $tokenPosition, array $tokens)
+    public function process(int $tokenPosition, array $tokens)
     {
+        $token = $tokens[$tokenPosition];
+
         if ($this->isTokenMatching($token, Token::COMMENT_START_TYPE)) {
             $i = $tokenPosition;
             $found = false;

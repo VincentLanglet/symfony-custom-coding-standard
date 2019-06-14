@@ -10,9 +10,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use TwigCS\Config\Config;
 use TwigCS\Environment\StubbedEnvironment;
-use TwigCS\Linter;
 use TwigCS\Report\TextFormatter;
 use TwigCS\Ruleset\Ruleset;
+use TwigCS\Runner\Linter;
 use TwigCS\Token\Tokenizer;
 
 /**

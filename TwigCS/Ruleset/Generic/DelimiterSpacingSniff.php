@@ -12,7 +12,6 @@ use TwigCS\Token\Token;
 class DelimiterSpacingSniff extends AbstractSniff
 {
     /**
-     * @param Token   $token
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
@@ -20,34 +19,37 @@ class DelimiterSpacingSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    public function process(Token $token, int $tokenPosition, array $tokens)
+    public function process(int $tokenPosition, array $tokens)
     {
+        $token = $tokens[$tokenPosition];
+
         if ($this->isTokenMatching($token, Token::VAR_START_TYPE)
             || $this->isTokenMatching($token, Token::BLOCK_START_TYPE)
             || $this->isTokenMatching($token, Token::COMMENT_START_TYPE)
         ) {
-            $this->processStart($token, $tokenPosition, $tokens);
+            $this->processStart($tokenPosition, $tokens);
         }
 
         if ($this->isTokenMatching($token, Token::VAR_END_TYPE)
             || $this->isTokenMatching($token, Token::BLOCK_END_TYPE)
             || $this->isTokenMatching($token, Token::COMMENT_END_TYPE)
         ) {
-            $this->processEnd($token, $tokenPosition, $tokens);
+            $this->processEnd($tokenPosition, $tokens);
         }
 
         return $token;
     }
 
     /**
-     * @param Token   $token
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
      * @throws Exception
      */
-    public function processStart(Token $token, $tokenPosition, $tokens)
+    public function processStart(int $tokenPosition, array $tokens)
     {
+        $token = $tokens[$tokenPosition];
+
         // Ignore new line
         if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::EOL_TYPE)) {
             return;
@@ -69,14 +71,15 @@ class DelimiterSpacingSniff extends AbstractSniff
     }
 
     /**
-     * @param Token   $token
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
      * @throws Exception
      */
-    public function processEnd(Token $token, $tokenPosition, $tokens)
+    public function processEnd(int $tokenPosition, array $tokens)
     {
+        $token = $tokens[$tokenPosition];
+
         // Ignore new line
         if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::EOL_TYPE)) {
             return;

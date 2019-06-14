@@ -12,7 +12,6 @@ use TwigCS\Token\Token;
 class BlankEOFSniff extends AbstractSniff
 {
     /**
-     * @param Token   $token
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
@@ -20,23 +19,38 @@ class BlankEOFSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    public function process(Token $token, int $tokenPosition, array $tokens)
+    public function process(int $tokenPosition, array $tokens)
     {
+        $token = $tokens[$tokenPosition];
+
         if ($this->isTokenMatching($token, Token::EOF_TYPE)) {
             $i = 0;
             while (isset($tokens[$tokenPosition - ($i + 1)])
                 && $this->isTokenMatching($tokens[$tokenPosition - ($i + 1)], Token::EOL_TYPE)
             ) {
-                ++$i;
+                $i++;
             }
 
             if (1 !== $i) {
                 // Either 0 or 2+ blank lines.
-                $this->addMessage(
+                $fix = $this->addFixableMessage(
                     $this::MESSAGE_TYPE_ERROR,
                     sprintf('A file must end with 1 blank line; found %d', $i),
                     $token
                 );
+
+                if ($fix) {
+                    if (0 === $i) {
+                        $this->fixer->addNewlineBefore($tokenPosition);
+                    } else {
+                        $this->fixer->beginChangeset();
+                        while ($i > 1) {
+                            $this->fixer->replaceToken($tokenPosition - $i, '');
+                            $i--;
+                        }
+                        $this->fixer->endChangeset();
+                    }
+                }
             }
         }
 

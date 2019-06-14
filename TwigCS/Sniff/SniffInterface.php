@@ -2,8 +2,8 @@
 
 namespace TwigCS\Sniff;
 
-use \Exception;
 use TwigCS\Report\Report;
+use TwigCS\Runner\Fixer;
 use TwigCS\Token\Token;
 
 /**
@@ -16,7 +16,7 @@ interface SniffInterface
     const MESSAGE_TYPE_ERROR   = 2;
 
     /**
-     * Enable the sniff.
+     * Enable the sniff report.
      *
      * Once the sniff is enabled, it will be registered and executed when a template is tokenized or parsed.
      * Messages will be added to the given `$report` object.
@@ -25,7 +25,16 @@ interface SniffInterface
      *
      * @return self
      */
-    public function enable(Report $report);
+    public function enableReport(Report $report);
+
+    /**
+     * Enable the sniff fixer.
+     *
+     * @param Fixer $fixer
+     *
+     * @return self
+     */
+    public function enableFixer(Fixer $fixer);
 
     /**
      * Disable the sniff.
@@ -37,18 +46,7 @@ interface SniffInterface
     public function disable();
 
     /**
-     * Get the current report.
-     *
-     * @return Report
-     *
-     * @throws Exception A disabled sniff has no current report.
-     */
-    public function getReport();
-
-    /**
-     * @param Token   $token
-     * @param int     $tokenPosition
      * @param Token[] $stream
      */
-    public function process(Token $token, int $tokenPosition, array $stream);
+    public function processFile(array $stream);
 }
