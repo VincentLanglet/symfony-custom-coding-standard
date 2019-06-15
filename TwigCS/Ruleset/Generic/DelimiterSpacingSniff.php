@@ -62,11 +62,19 @@ class DelimiterSpacingSniff extends AbstractSniff
         }
 
         if (1 !== $count) {
-            $this->addMessage(
+            $fix = $this->addFixableMessage(
                 $this::MESSAGE_TYPE_ERROR,
                 sprintf('Expecting 1 whitespace after "%s"; found %d', $token->getValue(), $count),
                 $token
             );
+
+            if ($fix) {
+                if (0 === $count) {
+                    $this->fixer->addContent($tokenPosition, ' ');
+                } else {
+                    $this->fixer->replaceToken($tokenPosition + 1, ' ');
+                }
+            }
         }
     }
 
@@ -92,11 +100,19 @@ class DelimiterSpacingSniff extends AbstractSniff
         }
 
         if (1 !== $count) {
-            $this->addMessage(
+            $fix = $this->addFixableMessage(
                 $this::MESSAGE_TYPE_ERROR,
                 sprintf('Expecting 1 whitespace before "%s"; found %d', $token->getValue(), $count),
                 $token
             );
+
+            if ($fix) {
+                if (0 === $count) {
+                    $this->fixer->addContentBefore($tokenPosition, ' ');
+                } else {
+                    $this->fixer->replaceToken($tokenPosition - 1, ' ');
+                }
+            }
         }
     }
 }
