@@ -22,17 +22,17 @@ class StubbedEnvironment extends Environment
     /**
      * @var TwigFilter[]
      */
-    private $stubFilters;
+    protected $stubFilters = [];
 
     /**
      * @var TwigFunction[]
      */
-    private $stubFunctions;
+    protected $stubFunctions = [];
 
     /**
      * @var TwigTest[]
      */
-    private $stubTests;
+    protected $stubTests = [];
 
     public function __construct()
     {
@@ -44,10 +44,6 @@ class StubbedEnvironment extends Environment
         $this->addTokenParser(new TransChoiceTokenParser());
         $this->addTokenParser(new TransDefaultDomainTokenParser());
         $this->addTokenParser(new TransTokenParser());
-
-        $this->stubFilters = [];
-        $this->stubFunctions = [];
-        $this->stubTests = [];
     }
 
     /**

@@ -6,9 +6,10 @@ use \Exception;
 use \ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use TwigCS\Environment\StubbedEnvironment;
-use TwigCS\Linter;
 use TwigCS\Report\SniffViolation;
 use TwigCS\Ruleset\Ruleset;
+use TwigCS\Runner\Fixer;
+use TwigCS\Runner\Linter;
 use TwigCS\Sniff\SniffInterface;
 use TwigCS\Token\Tokenizer;
 
@@ -17,22 +18,6 @@ use TwigCS\Token\Tokenizer;
  */
 abstract class AbstractSniffTest extends TestCase
 {
-    /**
-     * @var StubbedEnvironment
-     */
-    private $env;
-
-    /**
-     * @var Linter
-     */
-    private $lint;
-
-    public function setUp()
-    {
-        $this->env = new StubbedEnvironment();
-        $this->lint = new Linter($this->env, new Tokenizer($this->env));
-    }
-
     /**
      * Should call $this->checkGenericSniff(new Sniff(), [...]);
      */
@@ -44,13 +29,18 @@ abstract class AbstractSniffTest extends TestCase
      */
     protected function checkGenericSniff(SniffInterface $sniff, array $expects)
     {
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
+        $linter = new Linter($env, $tokenizer);
         $ruleset = new Ruleset();
+
         try {
             $class = new ReflectionClass(get_called_class());
-            $file = __DIR__.'/Fixtures/'.$class->getShortName().'.twig';
+            $className = $class->getShortName();
+            $file = __DIR__.'/Fixtures/'.$className.'.twig';
 
             $ruleset->addSniff($sniff);
-            $report = $this->lint->run([$file], $ruleset);
+            $report = $linter->run([$file], $ruleset);
         } catch (Exception $e) {
             $this->fail($e->getMessage());
 
@@ -67,6 +57,18 @@ abstract class AbstractSniffTest extends TestCase
             }, $report->getMessages());
 
             $this->assertEquals($expects, $messagePositions);
+        }
+
+        $fixedFile = __DIR__.'/Fixtures/'.$className.'.fixed.twig';
+        if (file_exists($fixedFile)) {
+            $fixer = new Fixer($ruleset, $tokenizer);
+            $sniff->enableFixer($fixer);
+            $fixer->fixFile($file);
+
+            $diff = $fixer->generateDiff($fixedFile);
+            if ('' !== $diff) {
+                $this->fail($diff);
+            }
         }
     }
 }

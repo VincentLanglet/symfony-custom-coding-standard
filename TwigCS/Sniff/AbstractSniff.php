@@ -5,6 +5,7 @@ namespace TwigCS\Sniff;
 use \Exception;
 use TwigCS\Report\Report;
 use TwigCS\Report\SniffViolation;
+use TwigCS\Runner\Fixer;
 use TwigCS\Token\Token;
 
 /**
@@ -17,53 +18,33 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @var Report
      */
-    protected $report;
+    protected $report = null;
 
     /**
-     * @var array
+     * @var Fixer
      */
-    protected $messages;
-
-    public function __construct()
-    {
-        $this->messages = [];
-        $this->report   = null;
-    }
+    protected $fixer = null;
 
     /**
      * @param Report $report
-     *
-     * @return self
      */
-    public function enable(Report $report)
+    public function enableReport(Report $report)
     {
         $this->report = $report;
-
-        return $this;
     }
 
     /**
-     * @return self
+     * @param Fixer $fixer
      */
+    public function enableFixer(Fixer $fixer)
+    {
+        $this->fixer = $fixer;
+    }
+
     public function disable()
     {
         $this->report = null;
-
-        return $this;
-    }
-
-    /**
-     * @return Report
-     *
-     * @throws Exception
-     */
-    public function getReport()
-    {
-        if (null === $this->report) {
-            throw new Exception('Sniff is disabled!');
-        }
-
-        return $this->report;
+        $this->fixer = null;
     }
 
     /**
@@ -87,12 +68,19 @@ abstract class AbstractSniff implements SniffInterface
      * @param string $message
      * @param Token  $token
      *
-     * @return self
-     *
      * @throws Exception
      */
     public function addMessage(int $messageType, string $message, Token $token)
     {
+        if (null === $this->report) {
+            if (null !== $this->fixer) {
+                // We are fixing the file, ignore this
+                return;
+            }
+
+            throw new Exception('Sniff is disabled!');
+        }
+
         $sniffViolation = new SniffViolation(
             $messageType,
             $message,
@@ -101,9 +89,23 @@ abstract class AbstractSniff implements SniffInterface
         );
         $sniffViolation->setLinePosition($token->getPosition());
 
-        $this->getReport()->addMessage($sniffViolation);
+        $this->report->addMessage($sniffViolation);
+    }
 
-        return $this;
+    /**
+     * @param int    $messageType
+     * @param string $message
+     * @param Token  $token
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function addFixableMessage(int $messageType, string $message, Token $token)
+    {
+        $this->addMessage($messageType, $message, $token);
+
+        return null !== $this->fixer;
     }
 
     /**
@@ -119,4 +121,20 @@ abstract class AbstractSniff implements SniffInterface
 
         return '\''.$token->getValue().'\'';
     }
+
+    /**
+     * @param array $stream
+     */
+    public function processFile(array $stream)
+    {
+        foreach ($stream as $index => $token) {
+            $this->process($index, $stream);
+        }
+    }
+
+    /**
+     * @param int     $tokenPosition
+     * @param Token[] $stream
+     */
+    abstract protected function process(int $tokenPosition, array $stream);
 }

@@ -15,12 +15,7 @@ class Ruleset
     /**
      * @var SniffInterface[]
      */
-    protected $sniffs;
-
-    public function __construct()
-    {
-        $this->sniffs = [];
-    }
+    protected $sniffs = [];
 
     /**
      * @return SniffInterface[]

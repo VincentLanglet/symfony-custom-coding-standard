@@ -1,6 +1,6 @@
 <?php
 
-namespace TwigCS;
+namespace TwigCS\Runner;
 
 use \Exception;
 use Twig\Environment;
@@ -34,7 +34,6 @@ class Linter
     public function __construct(Environment $env, Tokenizer $tokenizer)
     {
         $this->env = $env;
-
         $this->tokenizer = $tokenizer;
     }
 
@@ -43,25 +42,32 @@ class Linter
      *
      * @param array   $files   List of files to process.
      * @param Ruleset $ruleset Set of rules to check.
+     * @param bool    $fix     If true, the linter will fix the file
      *
      * @return Report an object with all violations and stats.
      *
      * @throws Exception
      */
-    public function run(array $files, Ruleset $ruleset)
+    public function run(array $files, Ruleset $ruleset, bool $fix = false)
     {
         if (empty($files)) {
             throw new Exception('No files to process, provide at least one file to be linted');
         }
 
         $report = new Report();
+
+        if ($fix) {
+            $this->fix($files, $ruleset);
+        }
+
         foreach ($ruleset->getSniffs() as $sniff) {
-            $sniff->enable($report);
+            $sniff->enableReport($report);
         }
 
         // Process
         foreach ($files as $file) {
             $this->setErrorHandler($report, $file);
+
             $this->processTemplate($file, $ruleset, $report);
 
             // Add this file to the report.
@@ -78,6 +84,31 @@ class Linter
     }
 
     /**
+     * @param array   $files
+     * @param Ruleset $ruleset
+     *
+     * @throws Exception
+     */
+    public function fix(array $files, Ruleset $ruleset)
+    {
+        $fixer = new Fixer($ruleset, $this->tokenizer);
+
+        foreach ($ruleset->getSniffs() as $sniff) {
+            $sniff->enableFixer($fixer);
+        }
+
+        foreach ($files as $file) {
+            $success = $fixer->fixFile($file);
+
+            if (!$success) {
+                throw new Exception("Cannot fix the file $file.");
+            }
+
+            file_put_contents($file, $fixer->getContents());
+        }
+    }
+
+    /**
      * Checks one template against the set of rules.
      *
      * @param string  $file    File to check as a string.
@@ -88,7 +119,7 @@ class Linter
      */
     public function processTemplate(string $file, Ruleset $ruleset, Report $report)
     {
-        $twigSource = new Source(file_get_contents($file), $file, $file);
+        $twigSource = new Source(file_get_contents($file), $file);
 
         // Tokenize + Parse.
         try {
@@ -124,9 +155,7 @@ class Linter
         /** @var SniffInterface[] $sniffs */
         $sniffs = $ruleset->getSniffs();
         foreach ($sniffs as $sniff) {
-            foreach ($stream as $index => $token) {
-                $sniff->process($token, $index, $stream);
-            }
+            $sniff->processFile($stream);
         }
 
         return true;
