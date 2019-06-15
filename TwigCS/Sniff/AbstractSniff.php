@@ -27,37 +27,24 @@ abstract class AbstractSniff implements SniffInterface
 
     /**
      * @param Report $report
-     *
-     * @return self
      */
     public function enableReport(Report $report)
     {
         $this->report = $report;
-
-        return $this;
     }
 
     /**
      * @param Fixer $fixer
-     *
-     * @return self
      */
     public function enableFixer(Fixer $fixer)
     {
         $this->fixer = $fixer;
-
-        return $this;
     }
 
-    /**
-     * @return self
-     */
     public function disable()
     {
         $this->report = null;
         $this->fixer = null;
-
-        return $this;
     }
 
     /**

@@ -19,22 +19,6 @@ use TwigCS\Token\Tokenizer;
 abstract class AbstractSniffTest extends TestCase
 {
     /**
-     * @var StubbedEnvironment
-     */
-    private $env;
-
-    /**
-     * @var Linter
-     */
-    private $lint;
-
-    public function setUp()
-    {
-        $this->env = new StubbedEnvironment();
-        $this->lint = new Linter($this->env, new Tokenizer($this->env));
-    }
-
-    /**
      * Should call $this->checkGenericSniff(new Sniff(), [...]);
      */
     abstract public function testSniff();
@@ -45,8 +29,10 @@ abstract class AbstractSniffTest extends TestCase
      */
     protected function checkGenericSniff(SniffInterface $sniff, array $expects)
     {
+        $env = new StubbedEnvironment();
+        $tokenizer = new Tokenizer($env);
+        $linter = new Linter($env, $tokenizer);
         $ruleset = new Ruleset();
-        $fixer = new Fixer($ruleset, new Tokenizer($this->env));
 
         try {
             $class = new ReflectionClass(get_called_class());
@@ -54,7 +40,7 @@ abstract class AbstractSniffTest extends TestCase
             $file = __DIR__.'/Fixtures/'.$className.'.twig';
 
             $ruleset->addSniff($sniff);
-            $report = $this->lint->run([$file], $ruleset);
+            $report = $linter->run([$file], $ruleset);
         } catch (Exception $e) {
             $this->fail($e->getMessage());
 
@@ -75,6 +61,7 @@ abstract class AbstractSniffTest extends TestCase
 
         $fixedFile = __DIR__.'/Fixtures/'.$className.'.fixed.twig';
         if (file_exists($fixedFile)) {
+            $fixer = new Fixer($ruleset, $tokenizer);
             $sniff->enableFixer($fixer);
             $fixer->fixFile($file);
 

@@ -242,18 +242,6 @@ class Fixer
     }
 
     /**
-     * Get a count of fixes that have been performed on the file.
-     *
-     * This value is reset every time a new file is started, or an existing file is restarted.
-     *
-     * @return int
-     */
-    public function getFixCount()
-    {
-        return $this->numFixes;
-    }
-
-    /**
      * Get the current content of the file, as a string.
      *
      * @return string
