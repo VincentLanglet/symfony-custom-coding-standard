@@ -281,7 +281,7 @@ class ArrayDeclarationSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
 
         $indent = $phpcsFile->findFirstOnLine(T_WHITESPACE, $arrayStart);
-        if (false === $indent) {
+        if (false === $indent || $tokens[$indent]['column'] > 1) {
             $currentIndent = 0;
         } else {
             $currentIndent = mb_strlen($tokens[$indent]['content']);

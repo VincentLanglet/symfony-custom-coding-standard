@@ -130,3 +130,8 @@ class TestClass
         );
     }
 }
+
+return [
+    DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class          => ['test' => true],
+    Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle::class => ['all' => true],
+];
