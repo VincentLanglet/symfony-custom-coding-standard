@@ -40,7 +40,7 @@ class Config
     /**
      * Find all files to process, based on a file or directory and exclude patterns.
      *
-     * @return array
+     * @return iterable
      *
      * @throws Exception
      */
@@ -65,7 +65,7 @@ class Config
             $files->exclude($exclude);
         }
 
-        return iterator_to_array($files, false);
+        return $files;
     }
 
     /**
