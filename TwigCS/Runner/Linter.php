@@ -40,15 +40,15 @@ class Linter
     /**
      * Run the linter on the given $files against the given $ruleset.
      *
-     * @param array   $files   List of files to process.
-     * @param Ruleset $ruleset Set of rules to check.
-     * @param bool    $fix     If true, the linter will fix the file
+     * @param iterable $files   List of files to process.
+     * @param Ruleset  $ruleset Set of rules to check.
+     * @param bool     $fix     If true, the linter will fix the file
      *
      * @return Report an object with all violations and stats.
      *
      * @throws Exception
      */
-    public function run(array $files, Ruleset $ruleset, bool $fix = false)
+    public function run(iterable $files, Ruleset $ruleset, bool $fix = false)
     {
         if (empty($files)) {
             throw new Exception('No files to process, provide at least one file to be linted');
@@ -84,12 +84,12 @@ class Linter
     }
 
     /**
-     * @param array   $files
-     * @param Ruleset $ruleset
+     * @param iterable $files
+     * @param Ruleset  $ruleset
      *
      * @throws Exception
      */
-    public function fix(array $files, Ruleset $ruleset)
+    public function fix(iterable $files, Ruleset $ruleset)
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
