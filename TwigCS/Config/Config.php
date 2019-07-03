@@ -59,7 +59,7 @@ class Config
         // Include all matching paths.
         foreach ($paths as $path) {
             // Trim absolute path
-            if (substr($path, 0, strlen($workingDir)) == $workingDir) {
+            if (substr($path, 0, strlen($workingDir)) === $workingDir) {
                 $path = ltrim(substr($path, strlen($workingDir)), '/');
             }
 
