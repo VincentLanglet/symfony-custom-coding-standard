@@ -48,15 +48,21 @@ class Config
     {
         $paths = $this->get('paths');
         $exclude = $this->get('exclude');
+        $workingDir = $this->get('workingDirectory');
 
         // Build the finder.
         $files = Finder::create()
-            ->in($this->get('workingDirectory'))
+            ->in($workingDir)
             ->name($this->config['pattern'])
             ->files();
 
         // Include all matching paths.
         foreach ($paths as $path) {
+            // Trim absolute path
+            if (substr($path, 0, strlen($workingDir)) == $workingDir) {
+                $path = ltrim(substr($path, strlen($workingDir)), '/');
+            }
+
             $files->path($path);
         }
 
