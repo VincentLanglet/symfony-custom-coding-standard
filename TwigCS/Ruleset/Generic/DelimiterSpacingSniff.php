@@ -51,7 +51,8 @@ class DelimiterSpacingSniff extends AbstractSniff
         $token = $tokens[$tokenPosition];
 
         // Ignore new line
-        if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::EOL_TYPE)) {
+        $next = $this->findNext(Token::WHITESPACE_TYPE, $tokens, $tokenPosition + 1, true);
+        if ($this->isTokenMatching($tokens[$next], Token::EOL_TYPE)) {
             return;
         }
 
@@ -89,7 +90,8 @@ class DelimiterSpacingSniff extends AbstractSniff
         $token = $tokens[$tokenPosition];
 
         // Ignore new line
-        if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::EOL_TYPE)) {
+        $previous = $this->findPrevious(Token::WHITESPACE_TYPE, $tokens, $tokenPosition - 1, true);
+        if ($this->isTokenMatching($tokens[$previous], Token::EOL_TYPE)) {
             return;
         }
 

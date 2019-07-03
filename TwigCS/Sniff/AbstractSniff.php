@@ -62,6 +62,44 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
+     * @param int   $type
+     * @param array $tokens
+     * @param int   $start
+     * @param bool  $exclude
+     *
+     * @return int
+     */
+    public function findNext(int $type, array $tokens, int $start, bool $exclude = false)
+    {
+        $i = 0;
+
+        while (isset($tokens[$start + $i]) && $exclude === $this->isTokenMatching($tokens[$start + $i], $type)) {
+            $i++;
+        }
+
+        return $start + $i;
+    }
+
+    /**
+     * @param int   $type
+     * @param array $tokens
+     * @param int   $start
+     * @param bool  $exclude
+     *
+     * @return int
+     */
+    public function findPrevious(int $type, array $tokens, int $start, bool $exclude = false)
+    {
+        $i = 0;
+
+        while (isset($tokens[$start - $i]) && $exclude === $this->isTokenMatching($tokens[$start - $i], $type)) {
+            $i++;
+        }
+
+        return $start - $i;
+    }
+
+    /**
      * Adds a violation to the current report for the given token.
      *
      * @param int    $messageType
