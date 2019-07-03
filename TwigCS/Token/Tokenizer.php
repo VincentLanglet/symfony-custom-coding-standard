@@ -315,7 +315,7 @@ class Tokenizer
             $this->moveCursor($this->code[$this->cursor]);
         } elseif (preg_match(self::REGEX_STRING, $this->code, $match, null, $this->cursor)) {
             // strings
-            $this->pushToken(Token::STRING_TYPE, stripcslashes($match[0]));
+            $this->pushToken(Token::STRING_TYPE, addcslashes(stripcslashes($match[0]), '\\'));
             $this->moveCursor($match[0]);
         } else {
             // unlexable
