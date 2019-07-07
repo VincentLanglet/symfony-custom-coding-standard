@@ -33,8 +33,8 @@ class StubbedEnvironment extends Environment
      * @var TwigTest[]
      */
     protected $stubTests = [
-        'divisible' => false, // Allow 'divisible by' filter
-        'same'      => false, // Allow 'same as' filter
+        'divisible' => false, // Allow 'divisible by'
+        'same'      => false, // Allow 'same as'
     ];
 
     public function __construct()
