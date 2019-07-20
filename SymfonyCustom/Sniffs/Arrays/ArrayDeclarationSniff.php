@@ -329,19 +329,19 @@ class ArrayDeclarationSniff implements Sniff
             switch ($tokens[$nextToken]['code']) {
                 case T_ARRAY:
                     $nextToken = $tokens[$tokens[$nextToken]['parenthesis_opener']]['parenthesis_closer'];
-                    continue;
+                    continue 2;
                 case T_OPEN_SHORT_ARRAY:
                     $nextToken = $tokens[$nextToken]['bracket_closer'];
-                    continue;
+                    continue 2;
                 case T_CLOSURE:
                     $nextToken = $tokens[$nextToken]['scope_closer'];
-                    continue;
+                    continue 2;
                 case T_OPEN_PARENTHESIS:
                     if (false === isset($tokens[$nextToken]['parenthesis_owner'])
                         || $tokens[$nextToken]['parenthesis_owner'] !== $stackPtr
                     ) {
                         $nextToken = $tokens[$nextToken]['parenthesis_closer'];
-                        continue;
+                        continue 2;
                     }
                     break;
             }
