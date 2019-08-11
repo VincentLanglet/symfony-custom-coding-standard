@@ -1,0 +1,10 @@
+<?php
+
+function (): string
+{}
+
+function () : ?string
+{}
+
+function () :string
+{}
