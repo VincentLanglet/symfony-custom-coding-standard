@@ -79,5 +79,20 @@ class Test
             $b = 2;
         }
     }
+
+    public function ok()
+    {
+        if (false) {
+            try {
+                $a = 1;
+            } catch (NumberParseException $e) {
+                $a = 1;
+
+                return;
+            }
+        } else {
+            $a = 1;
+        }
+    }
 }
 
