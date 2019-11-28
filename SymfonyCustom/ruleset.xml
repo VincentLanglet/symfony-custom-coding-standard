@@ -14,6 +14,9 @@
     <rule ref="PSR2">
         <exclude name="Generic.Files.LineLength"/>
     </rule>
+    <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
+        <type>error</type>
+    </rule>
 
     <!-- Override SuperfluousWhitespace to not ignore blank lines -->
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
