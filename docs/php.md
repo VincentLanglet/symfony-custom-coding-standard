@@ -47,104 +47,7 @@ we do not respect this rule:
 
 ## Others
 ### Imported
-- Do not use `<?` to define a PHP file
-
-```
-<rule ref="Generic.PHP.DisallowShortOpenTag"/>
-```
-
-- Add a single space after type casting
-
-```
-<rule ref="Generic.Formatting.SpaceAfterCast"/>
-```
-
-- Do not use space inside type casting
-
-```
-<rule ref="Squiz.WhiteSpace.CastSpacing"/>
-```
-
-- Use lowercase for PHP functions
-
-```
-<rule ref="Squiz.PHP.LowercasePHPFunctions"/>
-```
-
-- Variable have scope modifier
-
-```
-<rule ref="Squiz.Scope.MemberVarScope"/>
-```
-
-- No perl-style comments are used
-
-```
-<rule ref="PEAR.Commenting.InlineComment"/>
-```
-
-- Use single quotes instead of double quotes
-
-```
-<rule ref="Squiz.Strings.DoubleQuoteUsage">
-    <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
-</rule>
-```
-
-- Do not skip blank line after function opening brace
-
-```
-<rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
-```
-
-- Do not use space before semicolon
-
-```
-<rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
-```
-
-- Do not use `error_log`, `print_r`, `var_dump`, `sizeof`, `delete`, `print`, `is_null` and `create_function`
-
-```
-<rule ref="Squiz.PHP.DiscouragedFunctions"/>
-<rule ref="Squiz.PHP.ForbiddenFunctions"/>
-```
-
-- Use short array syntax
-
-```
-<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-```
-
-- Do not use empty PHP statement
-
-```
-<rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
-```
-
-- Add a single space around logical operator (`&&`, `||`, `...`)
-
-```
-<rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
-```
-
-- Do not use space around object operators (`->`)
-
-```
-<rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
-    <properties>
-        <property name="ignoreNewlines" value="true"/>
-    </properties>
-</rule>
-```
-
-- DocComment should be correctly indented
-
-```
-<rule ref="Squiz.Commenting.DocCommentAlignment">
-    <exclude name="Squiz.Commenting.DocCommentAlignment.SpaceAfterStar"/>
-</rule>
-```
+*See `ruleset.xml` for up to date configuration.*
 
 ### Custom
 - Some others checks are made about array (`=>` alignments and indentation)
@@ -153,29 +56,10 @@ we do not respect this rule:
 <rule ref="SymfonyCustom.Array.ArrayDeclaration"/>
 ```
 
-- Do not use spaces after `(`, `{` or `[` and before `)`, `}` or `]`
-
-```
-<rule ref="SymfonyCustom.WhiteSpace.CloseBracketSpacing"/>
-<rule ref="SymfonyCustom.WhiteSpace.OpenBracketSpacing"/>
-```
-
 - Do not use blank lines after class openers `{`
 
 ```
 <rule ref="SymfonyCustom.Classes.ClassDeclaration"/>
-```
-
-- Do not use multiple following blank lines
-
-```
-<rule ref="SymfonyCustom.WhiteSpace.EmptyLines"/>
-```
-
-- Methods have scope modifier
-
-```
-<rule ref="SymfonyCustom.Scope.MethodScope"/>
 ```
 
 - Member var should have phpDoc with one blank line before
@@ -190,10 +74,29 @@ we do not respect this rule:
 <rule ref="SymfonyCustom.Namespaces.AlphabeticallySortedUse"/>
 ```
 
+- Add a single space before `namespace` declaration
+
+```
+<rule ref="SymfonyCustom.Namespaces.NamespaceDeclaration"/>
+```
+
 - Unused `use` statement should be removed
 
 ```
 <rule ref="SymfonyCustom.Namespaces.UnusedUse"/>
+```
+
+- Methods have scope modifier
+
+```
+<rule ref="SymfonyCustom.Scope.MethodScope"/>
+```
+
+- Do not use spaces after `(`, `{` or `[` and before `)`, `}` or `]`
+
+```
+<rule ref="SymfonyCustom.WhiteSpace.CloseBracketSpacing"/>
+<rule ref="SymfonyCustom.WhiteSpace.OpenBracketSpacing"/>
 ```
 
 - Add a single space around comment tag (`@var`, `@return`, `...`)
@@ -202,8 +105,8 @@ we do not respect this rule:
 <rule ref="SymfonyCustom.WhiteSpace.DocCommentTagSpacing"/>
 ```
 
-- Add a single space before `namespace` declaration
+- Do not use multiple following blank lines
 
 ```
-<rule ref="SymfonyCustom.Namespaces.NamespaceDeclaration"/>
+<rule ref="SymfonyCustom.WhiteSpace.EmptyLines"/>
 ```

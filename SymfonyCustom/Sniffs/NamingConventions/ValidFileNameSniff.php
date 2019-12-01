@@ -36,8 +36,8 @@ class ValidFileNameSniff implements Sniff
             return;
         }
 
-        $filenamePhp = str_replace('_', '', basename($filename, '.php'));
-        $filenameInc = str_replace('_', '', basename($filename, '.inc'));
+        $filenamePhp = basename($filename, '.php');
+        $filenameInc = basename($filename, '.inc');
 
         if (strlen($filenameInc) < strlen($filenamePhp)) {
             $filename = $filenameInc;
