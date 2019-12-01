@@ -39,34 +39,19 @@
         </properties>
     </rule>
 
-    <!-- **************** -->
-    <!-- ***  OTHERS  *** -->
-    <!-- **************** -->
+    <!-- ************** -->
+    <!-- ***  MORE  *** -->
+    <!-- ************** -->
 
-    <!-- From djoos repo -->
-    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
-    <rule ref="Squiz.NamingConventions.ValidVariableName">
-        <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
-        <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
-    </rule>
+    <!-- Whitespace -->
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <rule ref="Generic.WhiteSpace.SpreadOperatorSpacingAfter"/>
     <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
-    <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
-    <rule ref="Squiz.Scope.MemberVarScope"/>
-    <rule ref="PEAR.Commenting.InlineComment"/>
-
-    <!-- From endouble repo -->
     <rule ref="Squiz.Strings.ConcatenationSpacing">
         <properties>
             <property name="ignoreNewlines" value="true" />
         </properties>
     </rule>
-    <rule ref="SymfonyCustom.Commenting.FunctionComment">
-        <exclude name="SymfonyCustom.Commenting.FunctionComment.MissingParamComment"/>
-    </rule>
-
-    <!-- Added by VincentLanglet repo -->
-    <!-- Whitespace -->
     <rule ref="Squiz.WhiteSpace.CastSpacing"/>
     <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
@@ -82,15 +67,32 @@
     </rule>
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
 
+    <!-- Disallow -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
+    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+    <rule ref="Generic.PHP.ForbiddenFunctions"/>
+    <rule ref="PEAR.Commenting.InlineComment"/>
+    <rule ref="Squiz.PHP.DiscouragedFunctions"/>
+    <rule ref="Squiz.Operators.ValidLogicalOperators"/>
+
+    <!-- Others -->
+    <rule ref="Squiz.Classes.ClassFileName"/>
     <rule ref="Squiz.Commenting.DocCommentAlignment">
-        <!-- Allow to indent special annotations like @ORM\AttributeOverride -->
         <exclude name="Squiz.Commenting.DocCommentAlignment.SpaceAfterStar"/>
     </rule>
-    <rule ref="Generic.PHP.ForbiddenFunctions"/>
-    <rule ref="Squiz.PHP.DiscouragedFunctions"/>
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Squiz.NamingConventions.ValidVariableName">
+        <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+        <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
+    </rule>
+    <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
+    <rule ref="Squiz.Scope.MemberVarScope"/>
     <rule ref="Squiz.Strings.DoubleQuoteUsage">
         <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
     </rule>
-    <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
+
+    <!-- Custom -->
+    <rule ref="SymfonyCustom.Commenting.FunctionComment">
+        <exclude name="SymfonyCustom.Commenting.FunctionComment.MissingParamComment"/>
+    </rule>
 </ruleset>

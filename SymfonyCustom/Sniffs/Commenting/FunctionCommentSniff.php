@@ -118,12 +118,8 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
      *
      * @return void
      */
-    protected function processReturn(
-        File $phpcsFile,
-        $stackPtr,
-        $commentStart,
-        $hasComment = true
-    ) {
+    protected function processReturn(File $phpcsFile, $stackPtr, $commentStart, $hasComment = true)
+    {
         // Check for inheritDoc if there is comment
         if ($hasComment && $this->isInheritDoc($phpcsFile, $stackPtr)) {
             return;
@@ -168,14 +164,49 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
 
     /**
      * @param File $phpcsFile
+     * @param int  $stackPtr
+     * @param int  $commentStart
+     */
+    protected function processThrows(File $phpcsFile, $stackPtr, $commentStart)
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        $throw = null;
+        foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
+            if ('@throws' === $tokens[$tag]['content']) {
+                if (null !== $throw) {
+                    $error = 'Only 1 @throws tag is allowed in a function comment';
+                    $phpcsFile->addError($error, $tag, 'DuplicateThrow');
+
+                    return;
+                }
+
+                $throw = $tag;
+            }
+        }
+
+        if (null !== $throw) {
+            $exception = null;
+            if (T_DOC_COMMENT_STRING === $tokens[($throw + 2)]['code']) {
+                $matches = [];
+                preg_match('/([^\s]+)(?:\s+(.*))?/', $tokens[($throw + 2)]['content'], $matches);
+                $exception = $matches[1];
+            }
+
+            if (null === $exception) {
+                $error = 'Exception type missing for @throws tag in function comment';
+                $phpcsFile->addError($error, $throw, 'InvalidThrows');
+            }
+        }
+    }
+
+    /**
+     * @param File $phpcsFile
      * @param int  $commentStart
      * @param bool $hasComment
      */
-    protected function processWhitespace(
-        File $phpcsFile,
-        $commentStart,
-        $hasComment = true
-    ) {
+    protected function processWhitespace(File $phpcsFile, $commentStart, $hasComment = true)
+    {
         $tokens = $phpcsFile->getTokens();
         $before = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
 
@@ -249,11 +280,8 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
      *
      * @return void
      */
-    protected function processParams(
-        File $phpcsFile,
-        $stackPtr,
-        $commentStart
-    ) {
+    protected function processParams(File $phpcsFile, $stackPtr, $commentStart)
+    {
         if ($this->isInheritDoc($phpcsFile, $stackPtr)) {
             return;
         }

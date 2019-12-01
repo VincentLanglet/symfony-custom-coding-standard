@@ -44,11 +44,7 @@ class DocCommentForbiddenTagsSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        if (in_array(
-            $tokens[$stackPtr]['content'],
-            $this->tags
-        )
-        ) {
+        if (in_array($tokens[$stackPtr]['content'], $this->tags)) {
             $phpcsFile->addError(
                 'The %s annotation is forbidden to use',
                 $stackPtr,

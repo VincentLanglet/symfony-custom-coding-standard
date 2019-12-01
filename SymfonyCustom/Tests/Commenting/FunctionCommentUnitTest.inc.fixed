@@ -107,3 +107,28 @@ function toIgnore2()
 {
     $test = 42;
 }
+
+/**
+ * @throws Exception
+ */
+function throwTest()
+{
+    throw new Exception();
+}
+
+/**
+ * @throws Exception|RuntimeException
+ */
+function throwTest2()
+{
+    throw new Exception();
+}
+
+/**
+ * @throws Exception
+ * @throws RuntimeException
+ */
+function throwTest3()
+{
+    throw new Exception();
+}
