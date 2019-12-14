@@ -43,8 +43,7 @@ class DisallowCommentedCodeSniff extends AbstractSniff
             }
 
             if ($found) {
-                $this->addMessage(
-                    $this::MESSAGE_TYPE_WARNING,
+                $this->addWarning(
                     'Probable commented code found; keeping commented code is not advised',
                     $token
                 );

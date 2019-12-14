@@ -100,38 +100,28 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * Adds a violation to the current report for the given token.
-     *
-     * @param int    $messageType
      * @param string $message
      * @param Token  $token
      *
      * @throws Exception
      */
-    public function addMessage(int $messageType, string $message, Token $token)
+    public function addWarning(string $message, Token $token)
     {
-        if (null === $this->report) {
-            if (null !== $this->fixer) {
-                // We are fixing the file, ignore this
-                return;
-            }
-
-            throw new Exception('Sniff is disabled!');
-        }
-
-        $sniffViolation = new SniffViolation(
-            $messageType,
-            $message,
-            $token->getFilename(),
-            $token->getLine()
-        );
-        $sniffViolation->setLinePosition($token->getPosition());
-
-        $this->report->addMessage($sniffViolation);
+        $this->addMessage(Report::MESSAGE_TYPE_WARNING, $message, $token);
     }
 
     /**
-     * @param int    $messageType
+     * @param string $message
+     * @param Token  $token
+     *
+     * @throws Exception
+     */
+    public function addError(string $message, Token $token)
+    {
+        $this->addMessage(Report::MESSAGE_TYPE_ERROR, $message, $token);
+    }
+
+    /**
      * @param string $message
      * @param Token  $token
      *
@@ -139,11 +129,22 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    public function addFixableMessage(int $messageType, string $message, Token $token)
+    public function addFixableWarning(string $message, Token $token)
     {
-        $this->addMessage($messageType, $message, $token);
+        return $this->addFixableMessage(Report::MESSAGE_TYPE_WARNING, $message, $token);
+    }
 
-        return null !== $this->fixer;
+    /**
+     * @param string $message
+     * @param Token  $token
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function addFixableError(string $message, Token $token)
+    {
+        return $this->addFixableMessage(Report::MESSAGE_TYPE_ERROR, $message, $token);
     }
 
     /**
@@ -175,4 +176,49 @@ abstract class AbstractSniff implements SniffInterface
      * @param Token[] $stream
      */
     abstract protected function process(int $tokenPosition, array $stream);
+
+    /**
+     * @param int    $messageType
+     * @param string $message
+     * @param Token  $token
+     *
+     * @throws Exception
+     */
+    private function addMessage(int $messageType, string $message, Token $token)
+    {
+        if (null === $this->report) {
+            if (null !== $this->fixer) {
+                // We are fixing the file, ignore this
+                return;
+            }
+
+            throw new Exception('Sniff is disabled!');
+        }
+
+        $sniffViolation = new SniffViolation(
+            $messageType,
+            $message,
+            $token->getFilename(),
+            $token->getLine()
+        );
+        $sniffViolation->setLinePosition($token->getPosition());
+
+        $this->report->addMessage($sniffViolation);
+    }
+
+    /**
+     * @param int    $messageType
+     * @param string $message
+     * @param Token  $token
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    private function addFixableMessage(int $messageType, string $message, Token $token)
+    {
+        $this->addMessage($messageType, $message, $token);
+
+        return null !== $this->fixer;
+    }
 }

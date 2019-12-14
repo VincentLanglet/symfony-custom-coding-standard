@@ -6,7 +6,7 @@ use \Exception;
 use \ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use TwigCS\Environment\StubbedEnvironment;
-use TwigCS\Report\SniffViolation;
+use TwigCS\Report\Report;
 use TwigCS\Ruleset\Ruleset;
 use TwigCS\Runner\Fixer;
 use TwigCS\Runner\Linter;
@@ -47,17 +47,23 @@ abstract class AbstractSniffTest extends TestCase
             return;
         }
 
-        $this->assertEquals(count($expects), $report->getTotalWarnings() + $report->getTotalErrors());
-        if ($expects) {
-            $messagePositions = array_map(function (SniffViolation $message) {
-                return [
-                    $message->getLine(),
-                    $message->getLinePosition(),
-                ];
-            }, $report->getMessages());
+        $messages = $report->getMessages();
+        $messagePositions = [];
 
-            $this->assertEquals($expects, $messagePositions);
+        foreach ($messages as $message) {
+            if (Report::MESSAGE_TYPE_FATAL === $message->getLevel()) {
+                $errorMessage = $message->getMessage();
+                $line = $message->getLine();
+
+                if (null !== $line) {
+                    $errorMessage = sprintf('Line %s: %s', $line, $errorMessage);
+                }
+                $this->fail($errorMessage);
+            }
+
+            $messagePositions[] = [$message->getLine() => $message->getLinePosition()];
         }
+        $this->assertEquals($expects, $messagePositions);
 
         $fixedFile = __DIR__.'/Fixtures/'.$className.'.fixed.twig';
         if (file_exists($fixedFile)) {

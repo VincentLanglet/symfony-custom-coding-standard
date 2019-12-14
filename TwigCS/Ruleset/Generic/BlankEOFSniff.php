@@ -33,8 +33,7 @@ class BlankEOFSniff extends AbstractSniff
 
             if (1 !== $i) {
                 // Either 0 or 2+ blank lines.
-                $fix = $this->addFixableMessage(
-                    $this::MESSAGE_TYPE_ERROR,
+                $fix = $this->addFixableError(
                     sprintf('A file must end with 1 blank line; found %d', $i),
                     $token
                 );

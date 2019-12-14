@@ -13,7 +13,7 @@ class EmptyLinesTest extends AbstractSniffTest
     public function testSniff()
     {
         $this->checkGenericSniff(new EmptyLinesSniff(), [
-            [3, 1],
+            [3 => 1],
         ]);
     }
 }

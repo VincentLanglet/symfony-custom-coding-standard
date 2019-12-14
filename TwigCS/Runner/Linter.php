@@ -126,7 +126,7 @@ class Linter
             $this->env->parse($this->env->tokenize($twigSource));
         } catch (Error $e) {
             $sniffViolation = new SniffViolation(
-                SniffInterface::MESSAGE_TYPE_ERROR,
+                Report::MESSAGE_TYPE_FATAL,
                 $e->getRawMessage(),
                 $e->getSourceContext()->getName(),
                 $e->getTemplateLine()
@@ -142,8 +142,8 @@ class Linter
             $stream = $this->tokenizer->tokenize($twigSource);
         } catch (Exception $e) {
             $sniffViolation = new SniffViolation(
-                SniffInterface::MESSAGE_TYPE_ERROR,
-                sprintf('Unable to tokenize file'),
+                Report::MESSAGE_TYPE_FATAL,
+                sprintf('Unable to tokenize file: %s', $e->getMessage()),
                 $file
             );
 
@@ -170,7 +170,7 @@ class Linter
         set_error_handler(function ($type, $message) use ($report, $file) {
             if (E_USER_DEPRECATED === $type) {
                 $sniffViolation = new SniffViolation(
-                    SniffInterface::MESSAGE_TYPE_NOTICE,
+                    Report::MESSAGE_TYPE_NOTICE,
                     $message,
                     $file
                 );

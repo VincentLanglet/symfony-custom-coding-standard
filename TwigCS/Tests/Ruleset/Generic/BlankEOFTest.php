@@ -13,7 +13,7 @@ class BlankEOFTest extends AbstractSniffTest
     public function testSniff()
     {
         $this->checkGenericSniff(new BlankEOFSniff(), [
-            [4, 1],
+            [4 => 1],
         ]);
     }
 }
