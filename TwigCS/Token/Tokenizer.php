@@ -23,7 +23,7 @@ class Tokenizer
     const REGEX_STRING          = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
     const REGEX_DQ_STRING_DELIM = '/"/A';
     const REGEX_DQ_STRING_PART  = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
-    const PUNCTUATION           = '()[]{}?:.,|';
+    const PUNCTUATION           = '()[]{}:.,|';
 
     /**
      * @var array
@@ -73,7 +73,7 @@ class Tokenizer
     /**
      * @var array
      */
-    protected $brackets;
+    protected $bracketsAndTernary;
 
     /**
      * @var string
@@ -183,7 +183,7 @@ class Tokenizer
      */
     protected function getState()
     {
-        return !empty($this->state) ? $this->state[count($this->state) - 1] : self::STATE_DATA;
+        return count($this->state) > 0 ? $this->state[count($this->state) - 1] : self::STATE_DATA;
     }
 
     /**
@@ -232,7 +232,7 @@ class Tokenizer
      */
     protected function getTokenPosition(int $offset = 0)
     {
-        if (empty($this->tokenPositions)
+        if (count($this->tokenPositions) === 0
             || !isset($this->tokenPositions[$this->currentPosition + $offset])
         ) {
             return null;
@@ -274,6 +274,7 @@ class Tokenizer
     protected function lexExpression()
     {
         $currentToken = $this->code[$this->cursor];
+
         if (preg_match('/\t/', $currentToken)) {
             $this->lexTab();
         } elseif (' ' === $currentToken) {
@@ -281,9 +282,7 @@ class Tokenizer
         } elseif (PHP_EOL === $currentToken) {
             $this->lexEOL();
         } elseif (preg_match($this->regexes['operator'], $this->code, $match, null, $this->cursor)) {
-            // operators
-            $this->pushToken(Token::OPERATOR_TYPE, $match[0]);
-            $this->moveCursor($match[0]);
+            $this->lexOperator($match[0]);
         } elseif (preg_match(self::REGEX_NAME, $this->code, $match, null, $this->cursor)) {
             // names
             $this->pushToken(Token::NAME_TYPE, $match[0]);
@@ -297,22 +296,7 @@ class Tokenizer
             $this->pushToken(Token::NUMBER_TYPE, $number);
             $this->moveCursor($match[0]);
         } elseif (false !== strpos(self::PUNCTUATION, $this->code[$this->cursor])) {
-            // punctuation
-            if (false !== strpos('([{', $this->code[$this->cursor])) {
-                // opening bracket
-                $this->brackets[] = [$this->code[$this->cursor], $this->line];
-            } elseif (false !== strpos(')]}', $this->code[$this->cursor])) {
-                // closing bracket
-                if (empty($this->brackets)) {
-                    throw new Exception(sprintf('Unexpected "%s"', $this->code[$this->cursor]));
-                }
-                $expect = array_pop($this->brackets)[0];
-                if (strtr($expect, '([{', ')]}') !== $this->code[$this->cursor]) {
-                    throw new Exception(sprintf('Unclosed "%s"', $expect));
-                }
-            }
-            $this->pushToken(Token::PUNCTUATION_TYPE, $this->code[$this->cursor]);
-            $this->moveCursor($this->code[$this->cursor]);
+            $this->lexPunctuation();
         } elseif (preg_match(self::REGEX_STRING, $this->code, $match, null, $this->cursor)) {
             // strings
             $this->pushToken(Token::STRING_TYPE, addcslashes(stripcslashes($match[0]), '\\'));
@@ -331,7 +315,7 @@ class Tokenizer
         $endRegex = $this->regexes['lex_block'];
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
 
-        if (!empty($this->brackets) || !isset($match[0])) {
+        if (count($this->bracketsAndTernary) > 0 || !isset($match[0])) {
             $this->lexExpression();
         } else {
             $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
@@ -349,7 +333,7 @@ class Tokenizer
         $endRegex = $this->regexes['lex_variable'];
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
 
-        if (!empty($this->brackets) || !isset($match[0])) {
+        if (count($this->bracketsAndTernary) > 0 || !isset($match[0])) {
             $this->lexExpression();
         } else {
             $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
@@ -470,5 +454,55 @@ class Tokenizer
     {
         $this->pushToken(Token::EOL_TYPE, $this->code[$this->cursor]);
         $this->moveCursor($this->code[$this->cursor]);
+    }
+
+    /**
+     * @param string $operator
+     */
+    protected function lexOperator($operator)
+    {
+        if ('?' === $operator) {
+            $this->bracketsAndTernary[] = [$operator, $this->line];
+        }
+
+        // operators
+        $this->pushToken(Token::OPERATOR_TYPE, $operator);
+        $this->moveCursor($operator);
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function lexPunctuation()
+    {
+        $currentToken = $this->code[$this->cursor];
+
+        $lastBracket = end($this->bracketsAndTernary);
+        if (false !== $lastBracket && '?' === $lastBracket[0] && ':' === $currentToken) {
+            // This is a ternary instead
+            $this->lexOperator($currentToken);
+            array_pop($this->bracketsAndTernary);
+
+            return;
+        }
+
+        if (false !== strpos('([{', $currentToken)) {
+            $this->bracketsAndTernary[] = [$currentToken, $this->line];
+        } elseif (false !== strpos(')]}', $currentToken)) {
+            if (0 === count($this->bracketsAndTernary)) {
+                throw new Exception(sprintf('Unexpected "%s"', $currentToken));
+            }
+
+            $expect = array_pop($this->bracketsAndTernary)[0];
+            if ('?' === $expect) {
+                throw new Exception('Unclosed ternary');
+            }
+            if (strtr($expect, '([{', ')]}') !== $currentToken) {
+                throw new Exception(sprintf('Unclosed "%s"', $expect));
+            }
+        }
+
+        $this->pushToken(Token::PUNCTUATION_TYPE, $currentToken);
+        $this->moveCursor($currentToken);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace TwigCS\Report;
 
+use \LogicException;
 use TwigCS\Sniff\SniffInterface;
 
 /**
@@ -9,6 +10,11 @@ use TwigCS\Sniff\SniffInterface;
  */
 class SniffViolation
 {
+    const LEVEL_NOTICE  = 'NOTICE';
+    const LEVEL_WARNING = 'WARNING';
+    const LEVEL_ERROR   = 'ERROR';
+    const LEVEL_FATAL   = 'FATAL';
+
     /**
      * Level of the message among `notice`, `warning`, `error`
      *
@@ -86,13 +92,16 @@ class SniffViolation
     public function getLevelAsString()
     {
         switch ($this->level) {
-            case SniffInterface::MESSAGE_TYPE_NOTICE:
-                return 'NOTICE';
-            case SniffInterface::MESSAGE_TYPE_WARNING:
-                return 'WARNING';
-            case SniffInterface::MESSAGE_TYPE_ERROR:
+            case Report::MESSAGE_TYPE_NOTICE:
+                return self::LEVEL_NOTICE;
+            case Report::MESSAGE_TYPE_WARNING:
+                return self::LEVEL_WARNING;
+            case Report::MESSAGE_TYPE_ERROR:
+                return self::LEVEL_ERROR;
+            case Report::MESSAGE_TYPE_FATAL:
+                return self::LEVEL_FATAL;
             default:
-                return 'ERROR';
+                throw new LogicException();
         }
     }
 
@@ -106,13 +115,16 @@ class SniffViolation
     public static function getLevelAsInt(string $level)
     {
         switch (strtoupper($level)) {
-            case 'NOTICE':
-                return SniffInterface::MESSAGE_TYPE_NOTICE;
-            case 'WARNING':
-                return SniffInterface::MESSAGE_TYPE_WARNING;
-            case 'ERROR':
+            case self::LEVEL_NOTICE:
+                return Report::MESSAGE_TYPE_NOTICE;
+            case self::LEVEL_WARNING:
+                return Report::MESSAGE_TYPE_WARNING;
+            case self::LEVEL_ERROR:
+                return Report::MESSAGE_TYPE_ERROR;
+            case self::LEVEL_FATAL:
+                return Report::MESSAGE_TYPE_FATAL;
             default:
-                return SniffInterface::MESSAGE_TYPE_ERROR;
+                throw new LogicException();
         }
     }
 

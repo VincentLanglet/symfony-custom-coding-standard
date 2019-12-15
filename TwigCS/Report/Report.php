@@ -10,6 +10,7 @@ class Report
     const MESSAGE_TYPE_NOTICE  = 0;
     const MESSAGE_TYPE_WARNING = 1;
     const MESSAGE_TYPE_ERROR   = 2;
+    const MESSAGE_TYPE_FATAL   = 3;
 
     /**
      * @var SniffViolation[]
@@ -61,6 +62,7 @@ class Report
                 ++$this->totalWarnings;
                 break;
             case self::MESSAGE_TYPE_ERROR:
+            case self::MESSAGE_TYPE_FATAL:
                 ++$this->totalErrors;
                 break;
         }
@@ -77,7 +79,7 @@ class Report
      */
     public function getMessages(array $filters = [])
     {
-        if (empty($filters)) {
+        if (0 === count($filters)) {
             // Return all messages, without filtering.
             return $this->messages;
         }

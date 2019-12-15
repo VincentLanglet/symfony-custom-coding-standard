@@ -11,10 +11,6 @@ use TwigCS\Token\Token;
  */
 interface SniffInterface
 {
-    const MESSAGE_TYPE_NOTICE  = 0;
-    const MESSAGE_TYPE_WARNING = 1;
-    const MESSAGE_TYPE_ERROR   = 2;
-
     /**
      * Enable the sniff report.
      *

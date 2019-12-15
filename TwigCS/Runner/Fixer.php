@@ -327,7 +327,7 @@ class Fixer
         $this->inChangeset = false;
         $this->inConflict = false;
 
-        if (empty($this->changeset) === false) {
+        if (count($this->changeset) > 0) {
             $this->changeset = [];
         }
     }

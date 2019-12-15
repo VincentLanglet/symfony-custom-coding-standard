@@ -32,8 +32,7 @@ class EmptyLinesSniff extends AbstractSniff
             }
 
             if (1 < $i) {
-                $fix = $this->addFixableMessage(
-                    $this::MESSAGE_TYPE_ERROR,
+                $fix = $this->addFixableError(
                     sprintf('More than 1 empty lines are not allowed, found %d', $i),
                     $token
                 );
