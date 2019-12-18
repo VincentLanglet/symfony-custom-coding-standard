@@ -44,9 +44,12 @@ class StubbedEnvironment extends Environment
         $this->addTokenParser(new DumpTokenParser());
         $this->addTokenParser(new FormThemeTokenParser());
         $this->addTokenParser(new StopwatchTokenParser(false));
-        $this->addTokenParser(new TransChoiceTokenParser());
         $this->addTokenParser(new TransDefaultDomainTokenParser());
         $this->addTokenParser(new TransTokenParser());
+
+        if (class_exists(TransChoiceTokenParser::class)) {
+            $this->addTokenParser(new TransChoiceTokenParser());
+        }
     }
 
     /**
@@ -54,7 +57,7 @@ class StubbedEnvironment extends Environment
      *
      * @return TwigFilter
      */
-    public function getFilter($name)
+    public function getFilter($name): ?TwigFilter
     {
         if (!isset($this->stubFilters[$name])) {
             $this->stubFilters[$name] = new TwigFilter('stub');
@@ -68,7 +71,7 @@ class StubbedEnvironment extends Environment
      *
      * @return TwigFunction
      */
-    public function getFunction($name)
+    public function getFunction($name): ?TwigFunction
     {
         if (!isset($this->stubFunctions[$name])) {
             $this->stubFunctions[$name] = new TwigFunction('stub');
@@ -82,7 +85,7 @@ class StubbedEnvironment extends Environment
      *
      * @return TwigTest
      */
-    public function getTest($name)
+    public function getTest($name): ?TwigTest
     {
         if (!isset($this->stubTests[$name])) {
             $this->stubTests[$name] = new TwigTest('stub');

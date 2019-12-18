@@ -135,7 +135,7 @@ class UnusedUseSniff implements Sniff
                 // Handle comment tag as @Route(..) or @ORM\Id
                 if (preg_match('/^@'.$lowerClassName.'(?![a-zA-Z])/i', $token['content']) === 1) {
                     return;
-                };
+                }
             }
 
             // Check for @param Truc or @return Machin
