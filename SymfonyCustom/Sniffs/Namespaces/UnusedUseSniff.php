@@ -88,7 +88,8 @@ class UnusedUseSniff implements Sniff
 
             $skip = Tokens::$emptyTokens + [T_COMMA => T_COMMA];
 
-            while ($classPtr = $phpcsFile->findPrevious($skip, $to - 1, $from + 1, true)) {
+            $classPtr = $phpcsFile->findPrevious($skip, $to - 1, $from + 1, true);
+            while ($classPtr) {
                 $to = $phpcsFile->findPrevious(T_COMMA, $classPtr - 1, $from + 1);
 
                 if (!$this->isClassUsed($phpcsFile, $stackPtr, $classPtr)) {
@@ -120,6 +121,8 @@ class UnusedUseSniff implements Sniff
                 if (false === $to) {
                     break;
                 }
+
+                $classPtr = $phpcsFile->findPrevious($skip, $to - 1, $from + 1, true);
             }
 
             return;
@@ -166,7 +169,9 @@ class UnusedUseSniff implements Sniff
             if (T_SEMICOLON === $tokens[$semiColon]['code']) {
                 break;
             }
-        } while ($semiColon = $phpcsFile->findEndOfStatement($semiColon + 1));
+
+            $semiColon = $phpcsFile->findEndOfStatement($semiColon + 1);
+        } while ($semiColon);
     }
 
     /**

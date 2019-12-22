@@ -84,7 +84,8 @@ class TokenParser extends AbstractTokenParser
     private function hasBody(TokenStream $stream): bool
     {
         $look = 0;
-        while ($token = $stream->look($look)) {
+        $token = $stream->look($look);
+        while ($token) {
             if ($token->getType() === Token::EOF_TYPE) {
                 return false;
             }
@@ -96,6 +97,7 @@ class TokenParser extends AbstractTokenParser
             }
 
             $look++;
+            $token = $stream->look($look);
         }
 
         return false;
