@@ -5,6 +5,7 @@ namespace SymfonyCustom\Sniffs\Namespaces;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
+use SymfonyCustom\Sniffs\SniffHelper;
 
 /**
  * Checks for "use" statements that are not needed in a file.
@@ -28,7 +29,7 @@ class UnusedUseSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr)
     {
         // Only check use statements in the global scope.
-        if (!$this->isGlobalUse($phpcsFile, $stackPtr)) {
+        if (!SniffHelper::isGlobalUse($phpcsFile, $stackPtr)) {
             return;
         }
 
@@ -168,30 +169,6 @@ class UnusedUseSniff implements Sniff
 
     /**
      * @param File $phpcsFile
-     * @param int  $stackPtr
-     *
-     * @return bool
-     */
-    private function isGlobalUse(File $phpcsFile, $stackPtr)
-    {
-        $tokens = $phpcsFile->getTokens();
-
-        // Ignore USE keywords inside closures.
-        $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
-        if (T_OPEN_PARENTHESIS === $tokens[$next]['code']) {
-            return false;
-        }
-
-        // Ignore USE keywords for traits.
-        if ($phpcsFile->hasCondition($stackPtr, [T_CLASS, T_TRAIT, T_ANON_CLASS])) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param File $phpcsFile
      * @param int  $from
      * @param int  $to
      */
@@ -243,7 +220,7 @@ class UnusedUseSniff implements Sniff
         // Check if the referenced class is in the same namespace as the current
         // file. If it is then the use statement is not necessary.
         $namespacePtr = $phpcsFile->findPrevious(T_NAMESPACE, $usePtr);
-        while (false !== $namespacePtr && false === $this->isNamespace($phpcsFile, $namespacePtr)) {
+        while (false !== $namespacePtr && false === SniffHelper::isNamespace($phpcsFile, $namespacePtr)) {
             $phpcsFile->findPrevious(T_NAMESPACE, $namespacePtr - 1);
         }
 
@@ -314,7 +291,7 @@ class UnusedUseSniff implements Sniff
         $emptyTokens = Tokens::$emptyTokens;
         unset($emptyTokens[T_DOC_COMMENT_TAG]);
 
-        while (false !== $classUsed && false === $this->isNamespace($phpcsFile, $classUsed)) {
+        while (false !== $classUsed && false === SniffHelper::isNamespace($phpcsFile, $classUsed)) {
             $isStringToken = T_STRING === $tokens[$classUsed]['code'];
 
             $match = null;
@@ -390,25 +367,6 @@ class UnusedUseSniff implements Sniff
     }
 
     /**
-     * @param File $phpcsFile
-     * @param int  $stackPtr
-     *
-     * @return bool
-     */
-    private function isNamespace(File $phpcsFile, $stackPtr)
-    {
-        $tokens = $phpcsFile->getTokens();
-
-        if (T_NAMESPACE !== $tokens[$stackPtr]['code']) {
-            return false;
-        }
-
-        $nextNonEmpty = $phpcsFile->findNext(Tokens::$emptyTokens, ($stackPtr + 1), null, true);
-
-        return false === $nextNonEmpty || T_NS_SEPARATOR !== $tokens[$nextNonEmpty]['code'];
-    }
-
-    /**
      * @param File  $phpcsFile
      * @param int   $ptr
      * @param array $stop
@@ -462,7 +420,7 @@ class UnusedUseSniff implements Sniff
 
         // Trait usage
         if (T_USE === $beforeCode) {
-            if ($this->isTraitUse($phpcsFile, $beforePtr)) {
+            if (SniffHelper::isTraitUse($phpcsFile, $beforePtr)) {
                 return 'class';
             }
 
@@ -534,29 +492,5 @@ class UnusedUseSniff implements Sniff
         }
 
         return 'const';
-    }
-
-    /**
-     * @param File $phpcsFile
-     * @param int  $stackPtr
-     *
-     * @return bool
-     */
-    private function isTraitUse(File $phpcsFile, $stackPtr)
-    {
-        $tokens = $phpcsFile->getTokens();
-
-        // Ignore USE keywords inside closures.
-        $next = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
-        if (T_OPEN_PARENTHESIS === $tokens[$next]['code']) {
-            return false;
-        }
-
-        // Ignore global USE keywords.
-        if (!$phpcsFile->hasCondition($stackPtr, [T_CLASS, T_TRAIT, T_ANON_CLASS])) {
-            return false;
-        }
-
-        return true;
     }
 }

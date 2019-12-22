@@ -4,150 +4,190 @@ namespace SymfonyCustom\Sniffs\Namespaces;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Util\Tokens;
+use SymfonyCustom\Sniffs\SniffHelper;
 
 /**
- * Ensures USE blocks are alphabetically sorted.
+ * Class AlphabeticallySortedUseSniff
  */
 class AlphabeticallySortedUseSniff implements Sniff
 {
     /**
-     * @var bool
-     */
-    private $caseSensitive = false;
-
-    /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
     public function register()
     {
-        return [T_USE];
+        return [T_OPEN_TAG, T_NAMESPACE];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in
-     *                        the stack passed in $tokens.
-     *
-     * @return void
-     */
-    public function process(File $phpcsFile, $stackPtr)
-    {
-        if (true === $this->shouldIgnoreUse($phpcsFile, $stackPtr)) {
-            return;
-        }
-
-        $previousUse = $phpcsFile->findPrevious(T_USE, $stackPtr - 1);
-
-        if (false === $previousUse) {
-            return;
-        }
-
-        // Look for the real previous USE
-        while (true === $this->shouldIgnoreUse($phpcsFile, $previousUse)) {
-            $previousUse = $phpcsFile->findPrevious(T_USE, $previousUse - 1);
-
-            if (false === $previousUse) {
-                return;
-            }
-        }
-
-        $namespace = $this->getNamespaceUsed($phpcsFile, $stackPtr);
-        $previousNamespace = $this->getNamespaceUsed($phpcsFile, $previousUse);
-
-        if ($this->compareNamespaces($namespace, $previousNamespace) < 0) {
-            $error = 'Namespaces used are not correctly sorted';
-            $phpcsFile->addError($error, $stackPtr, 'AlphabeticallySortedUse');
-        }
-    }
-
-    /**
-     * Check if this USE statement is part of the namespace block.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in
-     *                        the stack passed in $tokens.
-     *
-     * @return bool
-     */
-    private function shouldIgnoreUse(File $phpcsFile, $stackPtr)
-    {
-        $tokens = $phpcsFile->getTokens();
-
-        // Ignore USE keywords inside closures.
-        $next = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
-        if (T_OPEN_PARENTHESIS === $tokens[$next]['code']) {
-            return true;
-        }
-
-        // Ignore USE keywords inside class and trait
-        if ($phpcsFile->hasCondition($stackPtr, [T_CLASS, T_TRAIT]) === true) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Get full namespace imported
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in
-     *                        the stack passed in $tokens.
-     *
-     * @return string
-     */
-    private function getNamespaceUsed(File $phpcsFile, $stackPtr)
-    {
-        $tokens = $phpcsFile->getTokens();
-        $namespace = '';
-
-        $start = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $stackPtr);
-        $end = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $start, null, true);
-
-        for ($i = $start; $i < $end; $i++) {
-            $namespace .= $tokens[$i]['content'];
-        }
-
-        return $namespace;
-    }
-
-    /**
-     * @param string $namespace1
-     * @param string $namespace2
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      *
      * @return int
      */
-    private function compareNamespaces($namespace1, $namespace2)
+    public function process(File $phpcsFile, $stackPtr)
     {
-        $array1  = explode('\\', $namespace1);
-        $length1 = count($array1);
-        $array2  = explode('\\', $namespace2);
-        $length2 = count($array2);
+        $tokens = $phpcsFile->getTokens();
 
-        for ($i = 0; $i < $length1; $i++) {
-            if ($i >= $length2) {
-                // $namespace2 is shorter than $namespace1 and they have the same beginning so $namespace1 > $namespace2
-                return 1;
-            }
+        if (!SniffHelper::isNamespace($phpcsFile, $stackPtr)) {
+            $namespace = $phpcsFile->findNext(T_NAMESPACE, $stackPtr + 1);
 
-            if (true === $this->caseSensitive && strcmp($array1[$i], $array2[$i]) !== 0) {
-                return strcmp($array1[$i], $array2[$i]);
-            }
-
-            if (false === $this->caseSensitive && strcasecmp($array1[$i], $array2[$i]) !== 0) {
-                return strcasecmp($array1[$i], $array2[$i]);
+            if ($namespace) {
+                return $namespace;
             }
         }
 
-        if ($length1 === $length2) {
-            return 0;
+        $uses = $this->getUseStatements($phpcsFile, $stackPtr);
+
+        $lastUse = null;
+        foreach ($uses as $use) {
+            if (!$lastUse) {
+                $lastUse = $use;
+                continue;
+            }
+
+            $order = $this->compareUseStatements($use, $lastUse);
+
+            if ($order < 0) {
+                $error = 'Use statements are incorrectly ordered. The first wrong one is %s';
+                $data = [$use['name']];
+
+                $phpcsFile->addError($error, $use['ptrUse'], 'IncorrectOrder', $data);
+
+                return $stackPtr + 1;
+            }
+
+            // Check empty lines between use statements.
+            // There must be no empty lines between use statements.
+            $lineDiff = $tokens[$use['ptrUse']]['line'] - $tokens[$lastUse['ptrUse']]['line'];
+            if ($lineDiff > 1) {
+                $error = 'There must not be any empty line between use statement of the same type';
+                $fix = $phpcsFile->addFixableError($error, $use['ptrUse'], 'EmptyLine');
+
+                if ($fix) {
+                    $phpcsFile->fixer->beginChangeset();
+                    for ($i = $lastUse['ptrEnd'] + 1; $i < $use['ptrUse']; ++$i) {
+                        if (strpos($tokens[$i]['content'], $phpcsFile->eolChar) !== false) {
+                            $phpcsFile->fixer->replaceToken($i, '');
+                            --$lineDiff;
+
+                            if (1 === $lineDiff) {
+                                break;
+                            }
+                        }
+                    }
+                    $phpcsFile->fixer->endChangeset();
+                }
+            } elseif (0 === $lineDiff) {
+                $error = 'Each use statement must be in new line';
+                $fix = $phpcsFile->addFixableError($error, $use['ptrUse'], 'TheSameLine');
+
+                if ($fix) {
+                    $phpcsFile->fixer->addNewline($lastUse['ptrEnd']);
+                }
+            }
+
+            $lastUse = $use;
         }
 
-        // $namespace1 is shorter than $namespace2 and they have the same beginning so $namespace1 < $namespace2
-        return -1;
+        return T_OPEN_TAG === $tokens[$stackPtr]['code']
+            ? $phpcsFile->numTokens + 1
+            : $stackPtr + 1;
+    }
+
+    /**
+     * @param File $phpcsFile
+     * @param int  $scopePtr
+     *
+     * @return array
+     */
+    private function getUseStatements(File $phpcsFile, $scopePtr)
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        $uses = [];
+
+        if (isset($tokens[$scopePtr]['scope_opener'])) {
+            $start = $tokens[$scopePtr]['scope_opener'];
+            $end = $tokens[$scopePtr]['scope_closer'];
+        } else {
+            $start = $scopePtr;
+            $end = null;
+        }
+
+        $use = $phpcsFile->findNext(T_USE, $start + 1, $end);
+        while (false !== $use && T_USE === $tokens[$use]['code']) {
+            if (!SniffHelper::isGlobalUse($phpcsFile, $use)
+                || (null !== $end
+                    && (!isset($tokens[$use]['conditions'][$scopePtr])
+                        || $tokens[$use]['level'] !== $tokens[$scopePtr]['level'] + 1))
+            ) {
+                $use = $phpcsFile->findNext(Tokens::$emptyTokens, $use + 1, $end, true);
+                continue;
+            }
+
+            // find semicolon as the end of the global use scope
+            $endOfScope = $phpcsFile->findNext([T_SEMICOLON], $use + 1);
+
+            $startOfName = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $use + 1, $endOfScope);
+
+            $type = 'class';
+            if (T_STRING === $tokens[$startOfName]['code']) {
+                $lowerContent = strtolower($tokens[$startOfName]['content']);
+                if ('function' === $lowerContent || 'const' === $lowerContent) {
+                    $type = $lowerContent;
+
+                    $startOfName = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $startOfName + 1, $endOfScope);
+                }
+            }
+
+            $uses[] = [
+                'ptrUse' => $use,
+                'name'   => trim($phpcsFile->getTokensAsString($startOfName, $endOfScope - $startOfName)),
+                'ptrEnd' => $endOfScope,
+                'string' => trim($phpcsFile->getTokensAsString($use, $endOfScope - $use + 1)),
+                'type'   => $type,
+            ];
+
+            $use = $phpcsFile->findNext(Tokens::$emptyTokens, $endOfScope + 1, $end, true);
+        }
+
+        return $uses;
+    }
+
+    /**
+     * @param array $a
+     * @param array $b
+     *
+     * @return int
+     */
+    private function compareUseStatements(array $a, array $b)
+    {
+        if ($a['type'] === $b['type']) {
+            return strcasecmp(
+                $this->clearName($a['name']),
+                $this->clearName($b['name'])
+            );
+        }
+
+        if ('class' === $a['type'] || ('function' === $a['type'] && 'const' === $b['type'])) {
+            return -1;
+        }
+
+        return 1;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    private function clearName($name)
+    {
+        // Handle grouped use
+        $name = explode('{', $name)[0];
+
+        return str_replace('\\', ' ', $name);
     }
 }
