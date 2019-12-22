@@ -15,7 +15,7 @@ class OperatorSpacingSniff extends AbstractSpacingSniff
      *
      * @return bool
      */
-    protected function shouldHaveSpaceBefore(Token $token)
+    protected function shouldHaveSpaceBefore(Token $token): bool
     {
         return $this->isTokenMatching($token, Token::OPERATOR_TYPE);
     }
@@ -25,7 +25,7 @@ class OperatorSpacingSniff extends AbstractSpacingSniff
      *
      * @return bool
      */
-    protected function shouldHaveSpaceAfter(Token $token)
+    protected function shouldHaveSpaceAfter(Token $token): bool
     {
         return $this->isTokenMatching($token, Token::OPERATOR_TYPE);
     }

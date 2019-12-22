@@ -116,7 +116,7 @@ class Fixer
     /**
      * @param array $tokens
      */
-    public function startFile(array $tokens)
+    public function startFile(array $tokens): void
     {
         $this->numFixes = 0;
         $this->fixedTokens = [];
@@ -140,7 +140,7 @@ class Fixer
      *
      * @return bool
      */
-    public function fixFile(string $file)
+    public function fixFile(string $file): bool
     {
         $contents = file_get_contents($file);
 
@@ -187,7 +187,7 @@ class Fixer
      *
      * @return string
      */
-    public function generateDiff($filePath)
+    public function generateDiff(string $filePath): string
     {
         $cwd = getcwd().DIRECTORY_SEPARATOR;
         if (strpos($filePath, $cwd) === 0) {
@@ -246,7 +246,7 @@ class Fixer
      *
      * @return string
      */
-    public function getContents()
+    public function getContents(): string
     {
         $contents = implode($this->tokens);
 
@@ -263,7 +263,7 @@ class Fixer
      *
      * @return string
      */
-    public function getTokenContent($tokenPosition)
+    public function getTokenContent(int $tokenPosition): string
     {
         if ($this->inChangeset && isset($this->changeset[$tokenPosition])) {
             return $this->changeset[$tokenPosition];
@@ -275,7 +275,7 @@ class Fixer
     /**
      * Start recording actions for a changeset.
      */
-    public function beginChangeset()
+    public function beginChangeset(): void
     {
         if ($this->inConflict) {
             return;
@@ -288,7 +288,7 @@ class Fixer
     /**
      * Stop recording actions for a changeset, and apply logged changes.
      */
-    public function endChangeset()
+    public function endChangeset(): void
     {
         if ($this->inConflict) {
             return;
@@ -319,10 +319,8 @@ class Fixer
 
     /**
      * Stop recording actions for a changeset, and discard logged changes.
-     *
-     * @return void
      */
-    public function rollbackChangeset()
+    public function rollbackChangeset(): void
     {
         $this->inChangeset = false;
         $this->inConflict = false;
@@ -340,7 +338,7 @@ class Fixer
      *
      * @return bool If the change was accepted.
      */
-    public function replaceToken($tokenPosition, $content)
+    public function replaceToken(int $tokenPosition, string $content): bool
     {
         if ($this->inConflict) {
             return false;
@@ -392,7 +390,7 @@ class Fixer
      *
      * @return bool If a change was reverted.
      */
-    public function revertToken($tokenPosition)
+    public function revertToken(int $tokenPosition): bool
     {
         if (!isset($this->fixedTokens[$tokenPosition])) {
             return false;
@@ -412,7 +410,7 @@ class Fixer
      *
      * @return bool If the change was accepted.
      */
-    public function addNewline($tokenPosition)
+    public function addNewline(int $tokenPosition): bool
     {
         $current = $this->getTokenContent($tokenPosition);
 
@@ -426,7 +424,7 @@ class Fixer
      *
      * @return bool If the change was accepted.
      */
-    public function addNewlineBefore($tokenPosition)
+    public function addNewlineBefore(int $tokenPosition): bool
     {
         $current = $this->getTokenContent($tokenPosition);
 
@@ -441,7 +439,7 @@ class Fixer
      *
      * @return bool If the change was accepted.
      */
-    public function addContent($tokenPosition, $content)
+    public function addContent(int $tokenPosition, string $content): bool
     {
         $current = $this->getTokenContent($tokenPosition);
 
@@ -456,7 +454,7 @@ class Fixer
      *
      * @return bool If the change was accepted.
      */
-    public function addContentBefore($tokenPosition, $content)
+    public function addContentBefore(int $tokenPosition, string $content): bool
     {
         $current = $this->getTokenContent($tokenPosition);
 

@@ -48,7 +48,7 @@ class Linter
      *
      * @throws Exception
      */
-    public function run(iterable $files, Ruleset $ruleset, bool $fix = false)
+    public function run(iterable $files, Ruleset $ruleset, bool $fix = false): Report
     {
         if (empty($files)) {
             throw new Exception('No files to process, provide at least one file to be linted');
@@ -89,7 +89,7 @@ class Linter
      *
      * @throws Exception
      */
-    public function fix(iterable $files, Ruleset $ruleset)
+    public function fix(iterable $files, Ruleset $ruleset): void
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
@@ -117,7 +117,7 @@ class Linter
      *
      * @return bool
      */
-    public function processTemplate(string $file, Ruleset $ruleset, Report $report)
+    public function processTemplate(string $file, Ruleset $ruleset, Report $report): bool
     {
         $twigSource = new Source(file_get_contents($file), $file);
 
@@ -165,7 +165,7 @@ class Linter
      * @param Report      $report
      * @param string|null $file
      */
-    protected function setErrorHandler(Report $report, string $file = null)
+    protected function setErrorHandler(Report $report, string $file = null): void
     {
         set_error_handler(function ($type, $message) use ($report, $file) {
             if (E_USER_DEPRECATED === $type) {

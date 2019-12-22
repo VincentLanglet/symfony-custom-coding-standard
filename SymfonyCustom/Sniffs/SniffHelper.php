@@ -18,7 +18,7 @@ class SniffHelper
      *
      * @return bool
      */
-    public static function isNamespace(File $phpcsFile, $stackPtr)
+    public static function isNamespace(File $phpcsFile, int $stackPtr): bool
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -37,7 +37,7 @@ class SniffHelper
      *
      * @return bool
      */
-    public static function isTraitUse(File $phpcsFile, $stackPtr)
+    public static function isTraitUse(File $phpcsFile, int $stackPtr): bool
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -61,7 +61,7 @@ class SniffHelper
      *
      * @return bool
      */
-    public static function isGlobalUse(File $phpcsFile, $stackPtr)
+    public static function isGlobalUse(File $phpcsFile, int $stackPtr): bool
     {
         $tokens = $phpcsFile->getTokens();
 

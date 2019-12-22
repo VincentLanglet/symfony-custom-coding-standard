@@ -51,7 +51,7 @@ class Report
      *
      * @return $this
      */
-    public function addMessage(SniffViolation $sniffViolation)
+    public function addMessage(SniffViolation $sniffViolation): Report
     {
         // Update stats
         switch ($sniffViolation->getLevel()) {
@@ -77,7 +77,7 @@ class Report
      *
      * @return SniffViolation[]
      */
-    public function getMessages(array $filters = [])
+    public function getMessages(array $filters = []): array
     {
         if (0 === count($filters)) {
             // Return all messages, without filtering.
@@ -102,7 +102,7 @@ class Report
     /**
      * @param string $file
      */
-    public function addFile(string $file)
+    public function addFile(string $file): void
     {
         $this->files[] = $file;
     }
@@ -110,7 +110,7 @@ class Report
     /**
      * @return string[]
      */
-    public function getFiles()
+    public function getFiles(): array
     {
         return $this->files;
     }
@@ -118,7 +118,7 @@ class Report
     /**
      * @return int
      */
-    public function getTotalFiles()
+    public function getTotalFiles(): int
     {
         return count($this->files);
     }
@@ -126,7 +126,7 @@ class Report
     /**
      * @return int
      */
-    public function getTotalMessages()
+    public function getTotalMessages(): int
     {
         return count($this->messages);
     }
@@ -134,7 +134,7 @@ class Report
     /**
      * @return int
      */
-    public function getTotalNotices()
+    public function getTotalNotices(): int
     {
         return $this->totalNotices;
     }
@@ -142,7 +142,7 @@ class Report
     /**
      * @return int
      */
-    public function getTotalWarnings()
+    public function getTotalWarnings(): int
     {
         return $this->totalWarnings;
     }
@@ -150,7 +150,7 @@ class Report
     /**
      * @return int
      */
-    public function getTotalErrors()
+    public function getTotalErrors(): int
     {
         return $this->totalErrors;
     }

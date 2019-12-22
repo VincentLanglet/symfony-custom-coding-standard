@@ -19,7 +19,7 @@ class ObjectInstantiationUnitTest extends AbstractSniffUnitTest
      *
      * @return array<int, int>
      */
-    public function getErrorList()
+    protected function getErrorList(): array
     {
         return [
             4  => 1,
@@ -40,7 +40,7 @@ class ObjectInstantiationUnitTest extends AbstractSniffUnitTest
      *
      * @return array(int => int)
      */
-    public function getWarningList()
+    protected function getWarningList(): array
     {
         return [];
     }

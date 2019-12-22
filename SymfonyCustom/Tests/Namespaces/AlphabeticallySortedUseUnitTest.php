@@ -19,7 +19,7 @@ class AlphabeticallySortedUseUnitTest extends AbstractSniffUnitTest
      *
      * @return array<int, int>
      */
-    public function getErrorList()
+    protected function getErrorList(): array
     {
         return [
             7  => 1,
@@ -38,7 +38,7 @@ class AlphabeticallySortedUseUnitTest extends AbstractSniffUnitTest
      *
      * @return array(int => int)
      */
-    public function getWarningList()
+    protected function getWarningList(): array
     {
         return [];
     }

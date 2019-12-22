@@ -40,11 +40,11 @@ class Config
     /**
      * Find all files to process, based on a file or directory and exclude patterns.
      *
-     * @return iterable
+     * @return Finder
      *
      * @throws Exception
      */
-    public function findFiles()
+    public function findFiles(): Finder
     {
         $paths = $this->get('paths');
         $exclude = $this->get('exclude');

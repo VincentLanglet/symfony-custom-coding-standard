@@ -16,7 +16,7 @@ class StrictComparisonUnitTest extends AbstractSniffUnitTest
      *
      * @return array <int line number> => <int number of errors>
      */
-    public function getErrorList()
+    protected function getErrorList(): array
     {
         return [];
     }
@@ -26,7 +26,7 @@ class StrictComparisonUnitTest extends AbstractSniffUnitTest
      *
      * @return array <int line number> => <int number of warnings>
      */
-    public function getWarningList()
+    protected function getWarningList(): array
     {
         return [
             3 => 1,

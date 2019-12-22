@@ -53,7 +53,7 @@ class SniffViolation
     /**
      * Sniff that has produce this violation.
      *
-     * @var SniffInterface
+     * @var SniffInterface|null
      */
     protected $sniff;
 
@@ -79,7 +79,7 @@ class SniffViolation
      *
      * @return int
      */
-    public function getLevel()
+    public function getLevel(): int
     {
         return $this->level;
     }
@@ -89,7 +89,7 @@ class SniffViolation
      *
      * @return string
      */
-    public function getLevelAsString()
+    public function getLevelAsString(): string
     {
         switch ($this->level) {
             case Report::MESSAGE_TYPE_NOTICE:
@@ -112,7 +112,7 @@ class SniffViolation
      *
      * @return int
      */
-    public static function getLevelAsInt(string $level)
+    public static function getLevelAsInt(string $level): int
     {
         switch (strtoupper($level)) {
             case self::LEVEL_NOTICE:
@@ -133,7 +133,7 @@ class SniffViolation
      *
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
@@ -143,7 +143,7 @@ class SniffViolation
      *
      * @return int|null
      */
-    public function getLine()
+    public function getLine(): ?int
     {
         return $this->line;
     }
@@ -153,7 +153,7 @@ class SniffViolation
      *
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
@@ -161,11 +161,11 @@ class SniffViolation
     /**
      * Set the position in the line where this violation occured.
      *
-     * @param int $linePosition
+     * @param int|null $linePosition
      *
      * @return self
      */
-    public function setLinePosition(int $linePosition)
+    public function setLinePosition(?int $linePosition): SniffViolation
     {
         $this->linePosition = $linePosition;
 
@@ -175,9 +175,9 @@ class SniffViolation
     /**
      * Get the position in the line, if any.
      *
-     * @return int
+     * @return int|null
      */
-    public function getLinePosition()
+    public function getLinePosition(): ?int
     {
         return $this->linePosition;
     }
@@ -189,7 +189,7 @@ class SniffViolation
      *
      * @return self
      */
-    public function setSniff(SniffInterface $sniff)
+    public function setSniff(SniffInterface $sniff): SniffViolation
     {
         $this->sniff = $sniff;
 
@@ -199,9 +199,9 @@ class SniffViolation
     /**
      * Get the sniff that was not met.
      *
-     * @return SniffInterface
+     * @return SniffInterface|null
      */
-    public function getSniff()
+    public function getSniff(): ?SniffInterface
     {
         return $this->sniff;
     }

@@ -16,7 +16,7 @@ class YodaConditionUnitTest extends AbstractSniffUnitTest
      *
      * @return array <int line number> => <int number of errors>
      */
-    public function getErrorList()
+    protected function getErrorList(): array
     {
         return [
             2  => 2,
@@ -40,7 +40,7 @@ class YodaConditionUnitTest extends AbstractSniffUnitTest
      *
      * @return array <int line number> => <int number of warnings>
      */
-    public function getWarningList()
+    protected function getWarningList(): array
     {
         return [];
     }

@@ -19,7 +19,7 @@ class UnaryOperatorSpacingUnitTest extends AbstractSniffUnitTest
      *
      * @return array<int, int>
      */
-    public function getErrorList()
+    protected function getErrorList(): array
     {
         return [
             4  => 1,
@@ -40,7 +40,7 @@ class UnaryOperatorSpacingUnitTest extends AbstractSniffUnitTest
      *
      * @return array(int => int)
      */
-    protected function getWarningList()
+    protected function getWarningList(): array
     {
         return [];
     }

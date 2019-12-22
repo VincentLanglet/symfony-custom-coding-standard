@@ -21,7 +21,7 @@ class ValidFileNameUnitTest extends AbstractSniffUnitTest
      *
      * @return array<int, int>
      */
-    public function getErrorList($filename = '')
+    protected function getErrorList($filename = '')
     {
         switch ($filename) {
             case 'ValidFileNameUnitTest.inc':
@@ -43,7 +43,7 @@ class ValidFileNameUnitTest extends AbstractSniffUnitTest
      *
      * @return array(int => int)
      */
-    protected function getWarningList()
+    protected function getWarningList(): array
     {
         return [];
     }

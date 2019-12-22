@@ -19,7 +19,7 @@ class ArrayDeclarationUnitTest extends AbstractSniffUnitTest
      *
      * @return array<int, int>
      */
-    public function getErrorList()
+    protected function getErrorList(): array
     {
         return [
             7   => 2,
@@ -65,7 +65,7 @@ class ArrayDeclarationUnitTest extends AbstractSniffUnitTest
      *
      * @return array<int, int>
      */
-    public function getWarningList()
+    protected function getWarningList(): array
     {
         return [];
     }

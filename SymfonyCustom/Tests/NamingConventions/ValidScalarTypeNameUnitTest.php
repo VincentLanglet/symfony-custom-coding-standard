@@ -19,7 +19,7 @@ class ValidScalarTypeNameUnitTest extends AbstractSniffUnitTest
      *
      * @return array<int, int>
      */
-    public function getErrorList()
+    protected function getErrorList(): array
     {
         return [
             26 => 1,
@@ -54,7 +54,7 @@ class ValidScalarTypeNameUnitTest extends AbstractSniffUnitTest
      *
      * @return array(int => int)
      */
-    protected function getWarningList()
+    protected function getWarningList(): array
     {
         return [];
     }

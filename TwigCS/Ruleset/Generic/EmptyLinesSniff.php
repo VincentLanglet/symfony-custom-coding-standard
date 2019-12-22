@@ -15,11 +15,9 @@ class EmptyLinesSniff extends AbstractSniff
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
-     * @return Token
-     *
      * @throws Exception
      */
-    public function process(int $tokenPosition, array $tokens)
+    public function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
 
@@ -47,7 +45,5 @@ class EmptyLinesSniff extends AbstractSniff
                 }
             }
         }
-
-        return $token;
     }
 }

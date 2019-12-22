@@ -15,7 +15,7 @@ class DelimiterSpacingSniff extends AbstractSpacingSniff
      *
      * @return bool
      */
-    protected function shouldHaveSpaceBefore(Token $token)
+    protected function shouldHaveSpaceBefore(Token $token): bool
     {
         return $this->isTokenMatching($token, Token::VAR_END_TYPE)
             || $this->isTokenMatching($token, Token::BLOCK_END_TYPE)
@@ -27,7 +27,7 @@ class DelimiterSpacingSniff extends AbstractSpacingSniff
      *
      * @return bool
      */
-    protected function shouldHaveSpaceAfter(Token $token)
+    protected function shouldHaveSpaceAfter(Token $token): bool
     {
         return $this->isTokenMatching($token, Token::VAR_START_TYPE)
             || $this->isTokenMatching($token, Token::BLOCK_START_TYPE)
