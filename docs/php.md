@@ -86,10 +86,10 @@ we do not respect this rule:
 <rule ref="SymfonyCustom.Namespaces.UnusedUse"/>
 ```
 
-- Methods have scope modifier
+- `use` statement should not start with a `\`
 
 ```
-<rule ref="SymfonyCustom.Scope.MethodScope"/>
+<rule ref="SymfonyCustom.Namespaces.UseWithoutStartingBacklash"/>
 ```
 
 - Do not use spaces after `(`, `{` or `[` and before `)`, `}` or `]`
