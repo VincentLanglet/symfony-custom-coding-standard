@@ -1,24 +1,22 @@
 <?php
 
-namespace SymfonyCustom\Tests\Classes;
+namespace SymfonyCustom\Tests\Objects;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
- * Unit test class for the PropertyDeclaration sniff.
+ * Unit test class for the DiscourageEmpty sniff.
  *
  * @group SymfonyCustom
  */
-class PropertyDeclarationUnitTest extends AbstractSniffUnitTest
+class DiscourageEmptyUnitTest extends AbstractSniffUnitTest
 {
     /**
      * @return array
      */
     protected function getErrorList(): array
     {
-        return [
-            9 => 1,
-        ];
+        return [];
     }
 
     /**
@@ -26,6 +24,8 @@ class PropertyDeclarationUnitTest extends AbstractSniffUnitTest
      */
     protected function getWarningList(): array
     {
-        return [];
+        return [
+            3 => 1,
+        ];
     }
 }

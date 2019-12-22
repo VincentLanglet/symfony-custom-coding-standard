@@ -99,9 +99,7 @@ class AlphabeticallySortedUseSniff implements Sniff
             $lastUse = $use;
         }
 
-        return T_OPEN_TAG === $tokens[$stackPtr]['code']
-            ? $phpcsFile->numTokens + 1
-            : $stackPtr + 1;
+        return T_OPEN_TAG === $tokens[$stackPtr]['code'] ? $phpcsFile->numTokens + 1 : $stackPtr + 1;
     }
 
     /**

@@ -50,10 +50,6 @@ class Linter
      */
     public function run(iterable $files, Ruleset $ruleset, bool $fix = false): Report
     {
-        if (empty($files)) {
-            throw new Exception('No files to process, provide at least one file to be linted');
-        }
-
         $report = new Report();
 
         if ($fix) {

@@ -472,8 +472,8 @@ class ArrayDeclarationSniff implements Sniff
             }
         }
 
-        if (!empty($indices)) {
-            $count = count($indices);
+        $count = count($indices);
+        if ($count > 0) {
             $lastIndex = $indices[($count - 1)]['value'];
 
             $trailingContent = $phpcsFile->findPrevious(
@@ -499,12 +499,12 @@ class ArrayDeclarationSniff implements Sniff
 
             $lastValueLine = $stackPtr;
             foreach ($indices as $value) {
-                if (!empty($value['arrow'])) {
+                if (isset($value['arrow'])) {
                     // Array value with arrow are checked later cause there is more checks.
                     continue;
                 }
 
-                if (empty($value['value'])) {
+                if (!isset($value['value'])) {
                     // Array was malformed, so we have to ignore it.
                     // Other parts of this sniff will correct the error.
                     continue;
