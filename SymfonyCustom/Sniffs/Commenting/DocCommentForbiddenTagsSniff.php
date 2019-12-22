@@ -11,40 +11,26 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class DocCommentForbiddenTagsSniff implements Sniff
 {
     /**
-     * A list of PHPDoc tags that are forbidden.
-     *
      * @var array
      */
-    public $tags = [
-        '@package',
-        '@subpackage',
-    ];
+    public $forbiddenTags = ['@package', '@subpackage'];
 
     /**
-     * A list of tokenizers this sniff supports.
-     *
      * @return array
      */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_DOC_COMMENT_TAG,
-        ];
+        return [T_DOC_COMMENT_TAG];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile All the tokens found in the document.
-     * @param int  $stackPtr  The position of the current token in
-     *                        the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
-        if (in_array($tokens[$stackPtr]['content'], $this->tags)) {
+        if (in_array($tokens[$stackPtr]['content'], $this->forbiddenTags)) {
             $phpcsFile->addError(
                 'The %s annotation is forbidden to use',
                 $stackPtr,

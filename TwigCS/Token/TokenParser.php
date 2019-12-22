@@ -2,7 +2,7 @@
 
 namespace TwigCS\Token;
 
-use \Exception;
+use Exception;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
@@ -31,7 +31,7 @@ class TokenParser extends AbstractTokenParser
      *
      * @return bool
      */
-    public function decideEnd(Token $token)
+    public function decideEnd(Token $token): bool
     {
         return $token->test('end'.$this->name);
     }
@@ -43,7 +43,7 @@ class TokenParser extends AbstractTokenParser
      *
      * @throws Exception
      */
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
 
@@ -69,7 +69,7 @@ class TokenParser extends AbstractTokenParser
     /**
      * @return string
      */
-    public function getTag()
+    public function getTag(): string
     {
         return $this->name;
     }
@@ -81,7 +81,7 @@ class TokenParser extends AbstractTokenParser
      *
      * @throws Exception
      */
-    private function hasBody(TokenStream $stream)
+    private function hasBody(TokenStream $stream): bool
     {
         $look = 0;
         while ($token = $stream->look($look)) {

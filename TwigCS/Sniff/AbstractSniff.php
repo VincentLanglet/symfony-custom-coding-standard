@@ -2,7 +2,7 @@
 
 namespace TwigCS\Sniff;
 
-use \Exception;
+use Exception;
 use TwigCS\Report\Report;
 use TwigCS\Report\SniffViolation;
 use TwigCS\Runner\Fixer;
@@ -14,8 +14,6 @@ use TwigCS\Token\Token;
 abstract class AbstractSniff implements SniffInterface
 {
     /**
-     * When process is called, it will fill this report with the potential violations.
-     *
      * @var Report
      */
     protected $report = null;
@@ -28,7 +26,7 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @param Report $report
      */
-    public function enableReport(Report $report)
+    public function enableReport(Report $report): void
     {
         $this->report = $report;
     }
@@ -36,27 +34,25 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @param Fixer $fixer
      */
-    public function enableFixer(Fixer $fixer)
+    public function enableFixer(Fixer $fixer): void
     {
         $this->fixer = $fixer;
     }
 
-    public function disable()
+    public function disable(): void
     {
         $this->report = null;
         $this->fixer = null;
     }
 
     /**
-     * Helper method to match a token of a given type and value.
-     *
      * @param Token  $token
      * @param int    $type
      * @param string $value
      *
      * @return bool
      */
-    public function isTokenMatching(Token $token, int $type, string $value = null)
+    public function isTokenMatching(Token $token, int $type, string $value = null): bool
     {
         return $token->getType() === $type && (null === $value || $token->getValue() === $value);
     }
@@ -69,7 +65,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @return int
      */
-    public function findNext(int $type, array $tokens, int $start, bool $exclude = false)
+    public function findNext(int $type, array $tokens, int $start, bool $exclude = false): int
     {
         $i = 0;
 
@@ -88,7 +84,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @return int
      */
-    public function findPrevious(int $type, array $tokens, int $start, bool $exclude = false)
+    public function findPrevious(int $type, array $tokens, int $start, bool $exclude = false): int
     {
         $i = 0;
 
@@ -105,7 +101,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    public function addWarning(string $message, Token $token)
+    public function addWarning(string $message, Token $token): void
     {
         $this->addMessage(Report::MESSAGE_TYPE_WARNING, $message, $token);
     }
@@ -116,7 +112,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    public function addError(string $message, Token $token)
+    public function addError(string $message, Token $token): void
     {
         $this->addMessage(Report::MESSAGE_TYPE_ERROR, $message, $token);
     }
@@ -129,7 +125,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    public function addFixableWarning(string $message, Token $token)
+    public function addFixableWarning(string $message, Token $token): bool
     {
         return $this->addFixableMessage(Report::MESSAGE_TYPE_WARNING, $message, $token);
     }
@@ -142,7 +138,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    public function addFixableError(string $message, Token $token)
+    public function addFixableError(string $message, Token $token): bool
     {
         return $this->addFixableMessage(Report::MESSAGE_TYPE_ERROR, $message, $token);
     }
@@ -150,9 +146,9 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @param Token $token
      *
-     * @return string
+     * @return string|null
      */
-    public function stringifyValue(Token $token)
+    public function stringifyValue(Token $token): ?string
     {
         if ($token->getType() === Token::STRING_TYPE) {
             return $token->getValue();
@@ -164,7 +160,7 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @param array $stream
      */
-    public function processFile(array $stream)
+    public function processFile(array $stream): void
     {
         foreach ($stream as $index => $token) {
             $this->process($index, $stream);
@@ -175,7 +171,7 @@ abstract class AbstractSniff implements SniffInterface
      * @param int     $tokenPosition
      * @param Token[] $stream
      */
-    abstract protected function process(int $tokenPosition, array $stream);
+    abstract protected function process(int $tokenPosition, array $stream): void;
 
     /**
      * @param int    $messageType
@@ -184,7 +180,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    private function addMessage(int $messageType, string $message, Token $token)
+    private function addMessage(int $messageType, string $message, Token $token): void
     {
         if (null === $this->report) {
             if (null !== $this->fixer) {
@@ -215,7 +211,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    private function addFixableMessage(int $messageType, string $message, Token $token)
+    private function addFixableMessage(int $messageType, string $message, Token $token): bool
     {
         $this->addMessage($messageType, $message, $token);
 

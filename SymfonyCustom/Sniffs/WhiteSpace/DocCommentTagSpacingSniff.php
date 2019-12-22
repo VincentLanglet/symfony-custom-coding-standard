@@ -4,6 +4,7 @@ namespace SymfonyCustom\Sniffs\WhiteSpace;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use SymfonyCustom\Sniffs\SniffHelper;
 
 /**
  * Checks that there are not 2 empty lines following each other.
@@ -11,64 +12,18 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class DocCommentTagSpacingSniff implements Sniff
 {
     /**
-     * A list of PHPDoc tags that are checked.
-     *
-     * @var array
+     * @return int[]
      */
-    public $tags = [
-        '@api',
-        '@author',
-        '@category',
-        '@copyright',
-        '@covers',
-        '@dataProvider',
-        '@deprecated',
-        '@example',
-        '@filesource',
-        '@global',
-        '@ignore',
-        '@internal',
-        '@license',
-        '@link',
-        '@method',
-        '@package',
-        '@param',
-        '@property',
-        '@property-read',
-        '@property-write',
-        '@return',
-        '@see',
-        '@since',
-        '@source',
-        '@subpackage',
-        '@throws',
-        '@todo',
-        '@uses',
-        '@var',
-        '@version',
-    ];
-
-    /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
-     */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_DOC_COMMENT_TAG,
-        ];
+        return [T_DOC_COMMENT_TAG];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -84,11 +39,11 @@ class DocCommentTagSpacingSniff implements Sniff
                     [$tokens[$stackPtr]['content']]
                 );
 
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->addContentBefore($stackPtr, ' ');
                 }
             } elseif (1 < $tokens[($stackPtr - 1)]['length']) {
-                $isCustomTag = !in_array($tokens[$stackPtr]['content'], $this->tags);
+                $isCustomTag = !in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS);
 
                 // Custom tags are not checked cause there is annotation with array params
                 if (!$isCustomTag) {
@@ -100,7 +55,7 @@ class DocCommentTagSpacingSniff implements Sniff
                         [$tokens[$stackPtr]['content']]
                     );
 
-                    if (true === $fix) {
+                    if ($fix) {
                         $phpcsFile->fixer->replaceToken($stackPtr - 1, ' ');
                     }
                 }
@@ -120,7 +75,7 @@ class DocCommentTagSpacingSniff implements Sniff
                 [$tokens[$stackPtr]['content']]
             );
 
-            if (true === $fix) {
+            if ($fix) {
                 $phpcsFile->fixer->replaceToken($stackPtr + 1, ' ');
             }
         }

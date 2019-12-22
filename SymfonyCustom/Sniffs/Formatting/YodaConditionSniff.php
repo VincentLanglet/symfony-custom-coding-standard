@@ -12,35 +12,25 @@ use PHP_CodeSniffer\Util\Tokens;
 class YodaConditionSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_IS_EQUAL,
-            T_IS_NOT_EQUAL,
-            T_IS_IDENTICAL,
-            T_IS_NOT_IDENTICAL,
-        ];
+        return [T_IS_EQUAL, T_IS_NOT_EQUAL, T_IS_IDENTICAL, T_IS_NOT_IDENTICAL];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
         $beginners   = Tokens::$booleanOperators;
         $beginners[] = T_IF;
         $beginners[] = T_ELSEIF;
+        $beginners[] = T_EQUAL;
 
         $beginning = $phpcsFile->findPrevious($beginners, $stackPtr, null, false, null, true);
 

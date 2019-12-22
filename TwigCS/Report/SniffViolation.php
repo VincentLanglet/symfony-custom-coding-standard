@@ -2,7 +2,7 @@
 
 namespace TwigCS\Report;
 
-use \LogicException;
+use LogicException;
 use TwigCS\Sniff\SniffInterface;
 
 /**
@@ -16,44 +16,32 @@ class SniffViolation
     const LEVEL_FATAL   = 'FATAL';
 
     /**
-     * Level of the message among `notice`, `warning`, `error`
-     *
      * @var int
      */
     protected $level;
 
     /**
-     * Text message associated with the violation.
-     *
      * @var string
      */
     protected $message;
 
     /**
-     * Line number for the violation.
-     *
      * @var int|null
      */
     protected $line;
 
     /**
-     * Position of the violation on the current line.
-     *
      * @var int|null
      */
     protected $linePosition;
 
     /**
-     * File in which the violation has been found.
-     *
      * @var string
      */
     protected $filename;
 
     /**
-     * Sniff that has produce this violation.
-     *
-     * @var SniffInterface
+     * @var SniffInterface|null
      */
     protected $sniff;
 
@@ -75,21 +63,17 @@ class SniffViolation
     }
 
     /**
-     * Get the level of this violation.
-     *
      * @return int
      */
-    public function getLevel()
+    public function getLevel(): int
     {
         return $this->level;
     }
 
     /**
-     * Get a human-readable of the level of this violation.
-     *
      * @return string
      */
-    public function getLevelAsString()
+    public function getLevelAsString(): string
     {
         switch ($this->level) {
             case Report::MESSAGE_TYPE_NOTICE:
@@ -106,13 +90,11 @@ class SniffViolation
     }
 
     /**
-     * Get the integer value for a given string $level.
-     *
      * @param string $level
      *
      * @return int
      */
-    public static function getLevelAsInt(string $level)
+    public static function getLevelAsInt(string $level): int
     {
         switch (strtoupper($level)) {
             case self::LEVEL_NOTICE:
@@ -129,43 +111,35 @@ class SniffViolation
     }
 
     /**
-     * Get the text message of this violation.
-     *
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
     /**
-     * Get the line number where this violation occured.
-     *
      * @return int|null
      */
-    public function getLine()
+    public function getLine(): ?int
     {
         return $this->line;
     }
 
     /**
-     * Get the filename (and path) where this violation occured.
-     *
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
 
     /**
-     * Set the position in the line where this violation occured.
-     *
-     * @param int $linePosition
+     * @param int|null $linePosition
      *
      * @return self
      */
-    public function setLinePosition(int $linePosition)
+    public function setLinePosition(?int $linePosition): SniffViolation
     {
         $this->linePosition = $linePosition;
 
@@ -173,23 +147,19 @@ class SniffViolation
     }
 
     /**
-     * Get the position in the line, if any.
-     *
-     * @return int
+     * @return int|null
      */
-    public function getLinePosition()
+    public function getLinePosition(): ?int
     {
         return $this->linePosition;
     }
 
     /**
-     * Set the sniff that was not met.
-     *
      * @param SniffInterface $sniff
      *
      * @return self
      */
-    public function setSniff(SniffInterface $sniff)
+    public function setSniff(SniffInterface $sniff): SniffViolation
     {
         $this->sniff = $sniff;
 
@@ -197,11 +167,9 @@ class SniffViolation
     }
 
     /**
-     * Get the sniff that was not met.
-     *
-     * @return SniffInterface
+     * @return SniffInterface|null
      */
-    public function getSniff()
+    public function getSniff(): ?SniffInterface
     {
         return $this->sniff;
     }

@@ -10,7 +10,7 @@ use TwigCS\Tests\AbstractSniffTest;
  */
 class EmptyLinesTest extends AbstractSniffTest
 {
-    public function testSniff()
+    public function testSniff(): void
     {
         $this->checkGenericSniff(new EmptyLinesSniff(), [
             [3 => 1],

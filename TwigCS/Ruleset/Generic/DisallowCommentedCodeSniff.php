@@ -2,7 +2,7 @@
 
 namespace TwigCS\Ruleset\Generic;
 
-use \Exception;
+use Exception;
 use TwigCS\Sniff\AbstractSniff;
 use TwigCS\Token\Token;
 
@@ -17,11 +17,9 @@ class DisallowCommentedCodeSniff extends AbstractSniff
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
-     * @return Token
-     *
      * @throws Exception
      */
-    public function process(int $tokenPosition, array $tokens)
+    public function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
 
@@ -49,7 +47,5 @@ class DisallowCommentedCodeSniff extends AbstractSniff
                 );
             }
         }
-
-        return $token;
     }
 }

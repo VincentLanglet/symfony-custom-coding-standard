@@ -1,15 +1,15 @@
 <?php
 
-namespace SymfonyCustom\Tests\WhiteSpace;
+namespace SymfonyCustom\Tests\Namespaces;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
- * Unit test class for the DocCommentTagSpacing sniff.
+ * Unit test class for the UseWithoutStartingBackslash sniff.
  *
  * @group SymfonyCustom
  */
-class DocCommentTagSpacingUnitTest extends AbstractSniffUnitTest
+class UseWithoutStartingBackslashUnitTest extends AbstractSniffUnitTest
 {
     /**
      * @return array
@@ -17,13 +17,9 @@ class DocCommentTagSpacingUnitTest extends AbstractSniffUnitTest
     protected function getErrorList(): array
     {
         return [
-            11 => 1,
-            13 => 1,
-            14 => 1,
-            39 => 1,
-            40 => 1,
-            42 => 1,
-            46 => 1,
+            5 => 1,
+            6 => 1,
+            7 => 1,
         ];
     }
 

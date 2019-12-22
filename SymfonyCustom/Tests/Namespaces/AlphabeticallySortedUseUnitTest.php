@@ -12,30 +12,23 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 class AlphabeticallySortedUseUnitTest extends AbstractSniffUnitTest
 {
     /**
-     * Returns the lines where errors should occur.
-     *
-     * The key of the array should represent the line number and the value
-     * should represent the number of errors that should occur on that line.
-     *
-     * @return array<int, int>
+     * @return array
      */
-    public function getErrorList()
+    protected function getErrorList(): array
     {
         return [
-            8  => 1,
+            7  => 1,
             22 => 1,
+            34 => 1,
+            39 => 2,
+            58 => 1,
         ];
     }
 
     /**
-     * Returns the lines where warnings should occur.
-     *
-     * The key of the array should represent the line number and the value
-     * should represent the number of errors that should occur on that line.
-     *
-     * @return array(int => int)
+     * @return array
      */
-    public function getWarningList()
+    protected function getWarningList(): array
     {
         return [];
     }

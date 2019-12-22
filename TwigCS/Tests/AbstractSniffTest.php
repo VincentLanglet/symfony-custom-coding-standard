@@ -2,9 +2,9 @@
 
 namespace TwigCS\Tests;
 
-use \Exception;
-use \ReflectionClass;
+use Exception;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use TwigCS\Environment\StubbedEnvironment;
 use TwigCS\Report\Report;
 use TwigCS\Ruleset\Ruleset;
@@ -21,13 +21,13 @@ abstract class AbstractSniffTest extends TestCase
     /**
      * Should call $this->checkGenericSniff(new Sniff(), [...]);
      */
-    abstract public function testSniff();
+    abstract public function testSniff(): void;
 
     /**
      * @param SniffInterface $sniff
      * @param array          $expects
      */
-    protected function checkGenericSniff(SniffInterface $sniff, array $expects)
+    protected function checkGenericSniff(SniffInterface $sniff, array $expects): void
     {
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);

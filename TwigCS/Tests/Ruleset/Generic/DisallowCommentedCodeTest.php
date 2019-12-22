@@ -10,7 +10,7 @@ use TwigCS\Tests\AbstractSniffTest;
  */
 class DisallowCommentedCodeTest extends AbstractSniffTest
 {
-    public function testSniff()
+    public function testSniff(): void
     {
         $this->checkGenericSniff(new DisallowCommentedCodeSniff(), [
             [2 => 5],

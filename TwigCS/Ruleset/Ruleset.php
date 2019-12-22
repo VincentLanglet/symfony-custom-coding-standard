@@ -2,8 +2,8 @@
 
 namespace TwigCS\Ruleset;
 
-use \Exception;
-use \SplFileInfo;
+use Exception;
+use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 use TwigCS\Sniff\SniffInterface;
 
@@ -20,7 +20,7 @@ class Ruleset
     /**
      * @return SniffInterface[]
      */
-    public function getSniffs()
+    public function getSniffs(): array
     {
         return $this->sniffs;
     }
@@ -30,7 +30,7 @@ class Ruleset
      *
      * @return $this
      */
-    public function addSniff(SniffInterface $sniff)
+    public function addSniff(SniffInterface $sniff): Ruleset
     {
         $this->sniffs[get_class($sniff)] = $sniff;
 
@@ -38,15 +38,13 @@ class Ruleset
     }
 
     /**
-     * Create a new set of rule.
-     *
      * @param string $standardName
      *
      * @return Ruleset
      *
      * @throws Exception
      */
-    public function addStandard(string $standardName = 'Generic')
+    public function addStandard(string $standardName = 'Generic'): Ruleset
     {
         try {
             $finder = Finder::create()->in(__DIR__.'/'.$standardName)->files();

@@ -12,21 +12,17 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 class StrictComparisonUnitTest extends AbstractSniffUnitTest
 {
     /**
-     * Returns the lines where errors should occur.
-     *
-     * @return array <int line number> => <int number of errors>
+     * @return array
      */
-    public function getErrorList()
+    protected function getErrorList(): array
     {
         return [];
     }
 
     /**
-     * Returns the lines where warnings should occur.
-     *
-     * @return array <int line number> => <int number of warnings>
+     * @return array
      */
-    public function getWarningList()
+    protected function getWarningList(): array
     {
         return [
             3 => 1,

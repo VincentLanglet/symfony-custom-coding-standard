@@ -2,7 +2,7 @@
 
 namespace TwigCS\Runner;
 
-use \Exception;
+use Exception;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;
@@ -38,22 +38,16 @@ class Linter
     }
 
     /**
-     * Run the linter on the given $files against the given $ruleset.
+     * @param iterable $files
+     * @param Ruleset  $ruleset
+     * @param bool     $fix
      *
-     * @param iterable $files   List of files to process.
-     * @param Ruleset  $ruleset Set of rules to check.
-     * @param bool     $fix     If true, the linter will fix the file
-     *
-     * @return Report an object with all violations and stats.
+     * @return Report
      *
      * @throws Exception
      */
-    public function run(iterable $files, Ruleset $ruleset, bool $fix = false)
+    public function run(iterable $files, Ruleset $ruleset, bool $fix = false): Report
     {
-        if (empty($files)) {
-            throw new Exception('No files to process, provide at least one file to be linted');
-        }
-
         $report = new Report();
 
         if ($fix) {
@@ -89,7 +83,7 @@ class Linter
      *
      * @throws Exception
      */
-    public function fix(iterable $files, Ruleset $ruleset)
+    public function fix(iterable $files, Ruleset $ruleset): void
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
@@ -109,15 +103,13 @@ class Linter
     }
 
     /**
-     * Checks one template against the set of rules.
-     *
-     * @param string  $file    File to check as a string.
-     * @param Ruleset $ruleset Set of rules to check.
-     * @param Report  $report  Current report to fill.
+     * @param string  $file
+     * @param Ruleset $ruleset
+     * @param Report  $report
      *
      * @return bool
      */
-    public function processTemplate(string $file, Ruleset $ruleset, Report $report)
+    public function processTemplate(string $file, Ruleset $ruleset, Report $report): bool
     {
         $twigSource = new Source(file_get_contents($file), $file);
 
@@ -165,7 +157,7 @@ class Linter
      * @param Report      $report
      * @param string|null $file
      */
-    protected function setErrorHandler(Report $report, string $file = null)
+    protected function setErrorHandler(Report $report, string $file = null): void
     {
         set_error_handler(function ($type, $message) use ($report, $file) {
             if (E_USER_DEPRECATED === $type) {

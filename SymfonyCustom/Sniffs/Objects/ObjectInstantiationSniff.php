@@ -6,31 +6,23 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Throws a warning if an object isn't instantiated using parenthesis.
+ * Throws an error if an object isn't instantiated using parenthesis.
  */
 class ObjectInstantiationSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_NEW,
-        ];
+        return [T_NEW];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
         $allowed = [
@@ -44,20 +36,14 @@ class ObjectInstantiationSniff implements Sniff
         ];
 
         $object = $stackPtr;
-        $line   = $tokens[$object]['line'];
+        $line = $tokens[$object]['line'];
 
         while ($object && $tokens[$object]['line'] === $line) {
             $object = $phpcsFile->findNext($allowed, $object + 1);
 
-            if ($tokens[$object]['line'] === $line
-                && !in_array($tokens[$object + 1]['code'], $allowed)
-            ) {
+            if ($tokens[$object]['line'] === $line && !in_array($tokens[$object + 1]['code'], $allowed)) {
                 if (T_OPEN_PARENTHESIS !== $tokens[$object + 1]['code']) {
-                    $phpcsFile->addError(
-                        'Use parentheses when instantiating classes',
-                        $stackPtr,
-                        'Invalid'
-                    );
+                    $phpcsFile->addError('Use parentheses when instantiating classes', $stackPtr, 'Invalid');
                 }
 
                 break;

@@ -8,43 +8,29 @@ use PHP_CodeSniffer\Util\Tokens;
 
 /**
  * Checks that there is no white space before a closing bracket, for ")", "}", and array bracket.
- * Square Brackets are handled by Squiz_Sniffs_Arrays_ArrayBracketSpacingSniff.
+ * Square Brackets are handled by Squiz\Sniffs\Arrays\ArrayBracketSpacingSniff.
  */
 class CloseBracketSpacingSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_CLOSE_CURLY_BRACKET,
-            T_CLOSE_PARENTHESIS,
-            T_CLOSE_SHORT_ARRAY,
-        ];
+        return [T_CLOSE_CURLY_BRACKET, T_CLOSE_PARENTHESIS, T_CLOSE_SHORT_ARRAY];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (isset($tokens[($stackPtr - 1)]) === true
-            && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']
-        ) {
+        if (isset($tokens[($stackPtr - 1)]) && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']) {
             $before = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($stackPtr - 1), null, true);
-            if (false !== $before
-                && $tokens[$stackPtr]['line'] === $tokens[$before]['line']
-            ) {
+            if (false !== $before && $tokens[$stackPtr]['line'] === $tokens[$before]['line']) {
                 $error = 'There should be no space before a closing "%s"';
                 $fix = $phpcsFile->addFixableError(
                     $error,
@@ -53,7 +39,7 @@ class CloseBracketSpacingSniff implements Sniff
                     [$tokens[$stackPtr]['content']]
                 );
 
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr - 1, '');
                 }
             }

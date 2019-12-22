@@ -12,14 +12,9 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 class UserDeprecatedUnitTest extends AbstractSniffUnitTest
 {
     /**
-     * Returns the lines where errors should occur.
-     *
-     * The key of the array should represent the line number and the value
-     * should represent the number of errors that should occur on that line.
-     *
-     * @return array<int, int>
+     * @return array
      */
-    public function getErrorList()
+    protected function getErrorList(): array
     {
         return [
             30 => 1,
@@ -27,14 +22,9 @@ class UserDeprecatedUnitTest extends AbstractSniffUnitTest
     }
 
     /**
-     * Returns the lines where warnings should occur.
-     *
-     * The key of the array should represent the line number and the value
-     * should represent the number of errors that should occur on that line.
-     *
-     * @return array(int => int)
+     * @return array
      */
-    public function getWarningList()
+    protected function getWarningList(): array
     {
         return [];
     }

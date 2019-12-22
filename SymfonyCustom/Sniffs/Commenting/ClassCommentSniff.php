@@ -8,12 +8,10 @@ use PHP_CodeSniffer\Standards\PEAR\Sniffs\Commenting\ClassCommentSniff as PEARCl
  * Parses and verifies the doc comments for classes.
  *
  * Verifies that :
- * <ul>
- *  <li>A doc comment exists.</li>
- *  <li>Check the order of the tags.</li>
- *  <li>Check the indentation of each tag.</li>
- *  <li>Check required and optional tags and the format of their content.</li>
- * </ul>
+ *  - A doc comment exists.
+ *  - Check the order of the tags.
+ *  - Check the indentation of each tag.
+ *  - Check required and optional tags and the format of their content.
  */
 class ClassCommentSniff extends PEARClassCommentSniff
 {

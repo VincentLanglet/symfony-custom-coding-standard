@@ -11,9 +11,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class ValidClassNameSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
     public function register()
     {
@@ -26,23 +24,17 @@ class ValidClassNameSniff implements Sniff
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile All the tokens found in the document.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
         $line = $tokens[$stackPtr]['line'];
 
         while ($tokens[$stackPtr]['line'] === $line) {
-            /*
-             * Suffix interfaces with Interface;
-             */
-            if ('T_INTERFACE' === $tokens[$stackPtr]['type']) {
+            // Suffix interfaces with Interface
+            if (T_INTERFACE === $tokens[$stackPtr]['code']) {
                 $name = $phpcsFile->findNext(T_STRING, $stackPtr);
 
                 if ($name && substr($tokens[$name]['content'], -9) !== 'Interface') {
@@ -55,10 +47,8 @@ class ValidClassNameSniff implements Sniff
                 break;
             }
 
-            /*
-             * Suffix traits with Trait;
-             */
-            if ('T_TRAIT' === $tokens[$stackPtr]['type']) {
+            // Suffix traits with Trait
+            if (T_TRAIT === $tokens[$stackPtr]['code']) {
                 $name = $phpcsFile->findNext(T_STRING, $stackPtr);
 
                 if ($name && substr($tokens[$name]['content'], -5) !== 'Trait') {
@@ -71,10 +61,8 @@ class ValidClassNameSniff implements Sniff
                 break;
             }
 
-            /*
-             * Suffix exceptions with Exception;
-             */
-            if ('T_EXTENDS' === $tokens[$stackPtr]['type']) {
+            // Suffix exceptions with Exception;
+            if (T_EXTENDS === $tokens[$stackPtr]['code']) {
                 $extend = $phpcsFile->findNext(T_STRING, $stackPtr);
 
                 if ($extend
@@ -96,10 +84,8 @@ class ValidClassNameSniff implements Sniff
                 break;
             }
 
-            /*
-             * Prefix abstract classes with Abstract.
-             */
-            if ('T_ABSTRACT' === $tokens[$stackPtr]['type']) {
+            // Prefix abstract classes with Abstract.
+            if (T_ABSTRACT === $tokens[$stackPtr]['code']) {
                 $name = $phpcsFile->findNext(T_STRING, $stackPtr);
                 $function = $phpcsFile->findNext(T_FUNCTION, $stackPtr);
 
@@ -118,7 +104,5 @@ class ValidClassNameSniff implements Sniff
 
             $stackPtr++;
         }
-
-        return;
     }
 }

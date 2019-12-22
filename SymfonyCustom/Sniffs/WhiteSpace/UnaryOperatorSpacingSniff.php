@@ -6,36 +6,23 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Ensures there are no spaces on increment / decrement statements or on +/- sign
- * operators or "!" boolean negators.
+ * Ensures there are no spaces on ++/-- or on +/- sign operators or "!" boolean negators.
  */
 class UnaryOperatorSpacingSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_DEC,
-            T_INC,
-            T_MINUS,
-            T_PLUS,
-            T_BOOLEAN_NOT,
-        ];
+        return [T_DEC, T_INC, T_MINUS, T_PLUS, T_BOOLEAN_NOT];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -44,22 +31,28 @@ class UnaryOperatorSpacingSniff implements Sniff
             $modifyLeft = substr($tokens[($stackPtr - 1)]['content'], 0, 1) === '$'
                 || ';' === $tokens[($stackPtr + 1)]['content'];
 
-            if (true === $modifyLeft && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']) {
-                $error = 'There must not be a single space before a unary operator statement';
-                $fix = $phpcsFile->addFixableError($error, $stackPtr, 'IncDecLeft');
+            if ($modifyLeft && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']) {
+                $fix = $phpcsFile->addFixableError(
+                    'There must not be a single space before a unary operator statement',
+                    $stackPtr,
+                    'IncDecLeft'
+                );
 
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr - 1, '');
                 }
 
                 return;
             }
 
-            if (false === $modifyLeft && substr($tokens[($stackPtr + 1)]['content'], 0, 1) !== '$') {
-                $error = 'A unary operator statement must not be followed by a single space';
-                $fix = $phpcsFile->addFixableError($error, $stackPtr, 'IncDecRight');
+            if (!$modifyLeft && substr($tokens[($stackPtr + 1)]['content'], 0, 1) !== '$') {
+                $fix = $phpcsFile->addFixableError(
+                    'A unary operator statement must not be followed by a single space',
+                    $stackPtr,
+                    'IncDecRight'
+                );
 
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
                 }
 
@@ -69,10 +62,13 @@ class UnaryOperatorSpacingSniff implements Sniff
 
         // Check "!" operator.
         if (T_BOOLEAN_NOT === $tokens[$stackPtr]['code'] && T_WHITESPACE === $tokens[$stackPtr + 1]['code']) {
-            $error = 'A unary operator statement must not be followed by a space';
-            $fix = $phpcsFile->addFixableError($error, $stackPtr, 'BooleanNot');
+            $fix = $phpcsFile->addFixableError(
+                'A unary operator statement must not be followed by a space',
+                $stackPtr,
+                'BooleanNot'
+            );
 
-            if (true === $fix) {
+            if ($fix) {
                 $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
             }
 
@@ -81,7 +77,7 @@ class UnaryOperatorSpacingSniff implements Sniff
 
         // Find the last syntax item to determine if this is an unary operator.
         $lastSyntaxItem = $phpcsFile->findPrevious(
-            [T_WHITESPACE],
+            T_WHITESPACE,
             $stackPtr - 1,
             ($tokens[$stackPtr]['column']) * -1,
             true,
@@ -103,13 +99,14 @@ class UnaryOperatorSpacingSniff implements Sniff
 
         // Check plus / minus value assignments or comparisons.
         if (T_MINUS === $tokens[$stackPtr]['code'] || T_PLUS === $tokens[$stackPtr]['code']) {
-            if (false === $operatorSuffixAllowed
-                && T_WHITESPACE === $tokens[($stackPtr + 1)]['code']
-            ) {
-                $error = 'A unary operator statement must not be followed by a space';
-                $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Invalid');
+            if (!$operatorSuffixAllowed && T_WHITESPACE === $tokens[($stackPtr + 1)]['code']) {
+                $fix = $phpcsFile->addFixableError(
+                    'A unary operator statement must not be followed by a space',
+                    $stackPtr,
+                    'Invalid'
+                );
 
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
                 }
             }

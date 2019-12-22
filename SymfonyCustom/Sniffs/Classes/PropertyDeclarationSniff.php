@@ -6,32 +6,23 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Throws warnings if properties are declared after methods
+ * Throws error if properties are declared after methods
  */
 class PropertyDeclarationSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_CLASS,
-        ];
+        return [T_CLASS];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token
-     *                        in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -40,31 +31,15 @@ class PropertyDeclarationSniff implements Sniff
             $end = $tokens[$stackPtr]['scope_closer'];
         }
 
-        $scope = $phpcsFile->findNext(
-            T_FUNCTION,
-            $stackPtr,
-            $end
-        );
+        $scope = $phpcsFile->findNext(T_FUNCTION, $stackPtr, $end);
 
-        $wantedTokens = [
-            T_PUBLIC,
-            T_PROTECTED,
-            T_PRIVATE,
-        ];
+        $wantedTokens = [T_PUBLIC, T_PROTECTED, T_PRIVATE];
 
         while ($scope) {
-            $scope = $phpcsFile->findNext(
-                $wantedTokens,
-                $scope + 1,
-                $end
-            );
+            $scope = $phpcsFile->findNext($wantedTokens, $scope + 1, $end);
 
             if ($scope && T_VARIABLE === $tokens[$scope + 2]['code']) {
-                $phpcsFile->addError(
-                    'Declare class properties before methods',
-                    $scope,
-                    'Invalid'
-                );
+                $phpcsFile->addError('Declare class properties before methods', $scope, 'Invalid');
             }
         }
     }

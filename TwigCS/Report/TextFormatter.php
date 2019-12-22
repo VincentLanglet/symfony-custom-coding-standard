@@ -19,8 +19,6 @@ class TextFormatter
     const ERROR_LINE_WIDTH    = 120;
 
     /**
-     * Input-output helper object.
-     *
      * @var SymfonyStyle
      */
     protected $io;
@@ -38,7 +36,7 @@ class TextFormatter
      * @param Report      $report
      * @param string|null $level
      */
-    public function display(Report $report, string $level = null)
+    public function display(Report $report, string $level = null): void
     {
         foreach ($report->getFiles() as $file) {
             $fileMessages = $report->getMessages([
@@ -106,7 +104,7 @@ class TextFormatter
      *
      * @return array
      */
-    protected function getContext(string $template, int $line, int $context)
+    protected function getContext(string $template, int $line, int $context): array
     {
         $lines = explode("\n", $template);
 
@@ -144,7 +142,7 @@ class TextFormatter
      *
      * @return string
      */
-    protected function formatErrorMessage(SniffViolation $message)
+    protected function formatErrorMessage(SniffViolation $message): string
     {
         return sprintf(
             '<fg=red>'.$this::ERROR_LINE_FORMAT.'</fg=red>',

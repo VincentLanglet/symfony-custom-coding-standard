@@ -8,32 +8,22 @@ use PHP_CodeSniffer\Util\Tokens;
 
 /**
  * Throws errors if there's no blank line before return statements.
- * Symfony coding standard specifies: "Add a blank line before return statements,
- * unless the return is alone inside a statement-group (like an if statement);"
  */
 class BlankLineBeforeReturnSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_RETURN,
-        ];
+        return [T_RETURN];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile All the tokens found in the document.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
         $current = $stackPtr - 1;
@@ -41,7 +31,7 @@ class BlankLineBeforeReturnSniff implements Sniff
         $returnOrCommentLine = $tokens[$stackPtr]['line'];
 
         while ($current >= 0 && null === $prevToken) {
-            if ('T_WHITESPACE' !== $tokens[$current]['type']) {
+            if (T_WHITESPACE !== $tokens[$current]['code']) {
                 if ($this->isComment($tokens[$current])) {
                     if ($returnOrCommentLine > $tokens[$current]['line'] + 1) {
                         $prevToken = $tokens[$current];
@@ -59,7 +49,7 @@ class BlankLineBeforeReturnSniff implements Sniff
             return;
         }
 
-        if ('T_OPEN_CURLY_BRACKET' === $prevToken['type'] || 'T_COLON' === $prevToken['type']) {
+        if (T_OPEN_CURLY_BRACKET === $prevToken['code'] || T_COLON === $prevToken['code']) {
             return;
         }
 
@@ -70,10 +60,10 @@ class BlankLineBeforeReturnSniff implements Sniff
                 'MissedBlankLineBeforeReturn'
             );
 
-            if (true === $fix) {
+            if ($fix) {
                 $phpcsFile->fixer->beginChangeset();
                 $i = 1;
-                while ('T_WHITESPACE' === $tokens[$stackPtr - $i]['type']
+                while (T_WHITESPACE === $tokens[$stackPtr - $i]['code']
                     || $this->isComment($tokens[$stackPtr - $i])
                 ) {
                     $i++;
@@ -91,7 +81,7 @@ class BlankLineBeforeReturnSniff implements Sniff
      *
      * @return bool
      */
-    private function isComment(array $token)
+    private function isComment(array $token): bool
     {
         return in_array($token['code'], Tokens::$commentTokens);
     }

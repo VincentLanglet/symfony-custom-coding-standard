@@ -2,7 +2,7 @@
 
 namespace TwigCS\Sniff;
 
-use \Exception;
+use Exception;
 use TwigCS\Token\Token;
 
 /**
@@ -14,11 +14,9 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
-     * @return Token
-     *
      * @throws Exception
      */
-    public function process(int $tokenPosition, array $tokens)
+    public function process(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
 
@@ -29,8 +27,6 @@ abstract class AbstractSpacingSniff extends AbstractSniff
         if ($this->shouldHaveSpaceBefore($token)) {
             $this->checkSpaceBefore($tokenPosition, $tokens);
         }
-
-        return $token;
     }
 
     /**
@@ -38,14 +34,14 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      *
      * @return bool
      */
-    abstract protected function shouldHaveSpaceAfter(Token $token);
+    abstract protected function shouldHaveSpaceAfter(Token $token): bool;
 
     /**
      * @param Token $token
      *
      * @return bool
      */
-    abstract protected function shouldHaveSpaceBefore(Token $token);
+    abstract protected function shouldHaveSpaceBefore(Token $token): bool;
 
     /**
      * @param int     $tokenPosition
@@ -53,7 +49,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    protected function checkSpaceAfter(int $tokenPosition, array $tokens)
+    protected function checkSpaceAfter(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
 
@@ -91,7 +87,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    protected function checkSpaceBefore(int $tokenPosition, array $tokens)
+    protected function checkSpaceBefore(int $tokenPosition, array $tokens): void
     {
         $token = $tokens[$tokenPosition];
 

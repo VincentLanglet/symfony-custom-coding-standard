@@ -32,7 +32,7 @@ class TokenizerHelper
     /**
      * @return string
      */
-    public function getBlockRegex()
+    public function getBlockRegex(): string
     {
         return '/'
             .'('.preg_quote($this->options['whitespace_trim']).')?'
@@ -43,7 +43,7 @@ class TokenizerHelper
     /**
      * @return string
      */
-    public function getCommentRegex()
+    public function getCommentRegex(): string
     {
         return '/'
             .'('.preg_quote($this->options['whitespace_trim']).')?'
@@ -54,7 +54,7 @@ class TokenizerHelper
     /**
      * @return string
      */
-    public function getVariableRegex()
+    public function getVariableRegex(): string
     {
         return '/'
             .'('.preg_quote($this->options['whitespace_trim']).')?'
@@ -65,7 +65,7 @@ class TokenizerHelper
     /**
      * @return string
      */
-    public function getTokensStartRegex()
+    public function getTokensStartRegex(): string
     {
         return '/'
             .'('
@@ -80,7 +80,7 @@ class TokenizerHelper
     /**
      * @return string
      */
-    public function getOperatorRegex()
+    public function getOperatorRegex(): string
     {
         $operators = array_merge(
             ['=', '?'],

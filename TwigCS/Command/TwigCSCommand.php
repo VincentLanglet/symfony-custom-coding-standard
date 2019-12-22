@@ -2,7 +2,7 @@
 
 namespace TwigCS\Command;
 
-use \Exception;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,7 +23,7 @@ use TwigCS\Token\Tokenizer;
  */
 class TwigCSCommand extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('lint')
@@ -73,7 +73,7 @@ class TwigCSCommand extends Command
      *
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $paths = $input->getArgument('paths');
         $exclude = $input->getOption('exclude');

@@ -4,6 +4,7 @@ namespace SymfonyCustom\Sniffs\Commenting;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use SymfonyCustom\Sniffs\SniffHelper;
 
 /**
  * Throws errors if comments are not grouped by type with one blank line between them.
@@ -11,65 +12,18 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class DocCommentGroupSameTypeSniff implements Sniff
 {
     /**
-     * A list of PHPDoc tags that are checked.
-     *
-     * @var array
-     */
-    public $tags = [
-        '@api',
-        '@author',
-        '@category',
-        '@copyright',
-        '@covers',
-        '@dataProvider',
-        '@deprecated',
-        '@example',
-        '@filesource',
-        '@global',
-        '@ignore',
-        '@internal',
-        '@license',
-        '@link',
-        '@method',
-        '@package',
-        '@param',
-        '@property',
-        '@property-read',
-        '@property-write',
-        '@required',
-        '@return',
-        '@see',
-        '@since',
-        '@source',
-        '@subpackage',
-        '@throws',
-        '@todo',
-        '@uses',
-        '@var',
-        '@version',
-    ];
-
-    /**
-     * A list of tokenizers this sniff supports.
-     *
      * @return array
      */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_DOC_COMMENT_OPEN_TAG,
-        ];
+        return [T_DOC_COMMENT_OPEN_TAG];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile All the tokens found in the document.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -106,8 +60,9 @@ class DocCommentGroupSameTypeSniff implements Sniff
             }
 
             if (isset($previousElement) && $previousLine >= 0) {
-                $currentIsCustom = !in_array($currentType, $this->tags);
-                $previousIsCustom = ('' !== $previousType) && !in_array($previousType, $this->tags);
+                $currentIsCustom = !in_array($currentType, SniffHelper::TAGS);
+                $previousIsCustom = '' !== $previousType
+                    && !in_array($previousType, SniffHelper::TAGS);
 
                 if (($previousType === $currentType) || ($currentIsCustom && $previousIsCustom)) {
                     if ($previousLine !== $commentTagLine - 1) {
@@ -125,7 +80,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
                             );
                         }
 
-                        if (true === $fix) {
+                        if ($fix) {
                             $phpcsFile->fixer->beginChangeset();
                             $this->removeLines(
                                 $phpcsFile,
@@ -144,7 +99,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
                             'DifferentType'
                         );
 
-                        if (true === $fix) {
+                        if ($fix) {
                             $phpcsFile->fixer->beginChangeset();
 
                             if ($previousLine === $commentTagLine - 1) {
@@ -184,18 +139,12 @@ class DocCommentGroupSameTypeSniff implements Sniff
     }
 
     /**
-     * Remove all tokens on lines (inclusively).
-     *
-     * Note: this method does not start or end changeset.
-     *
-     * @param File $phpcsFile File to make changes in
-     * @param int  $fromPtr   Start searching tokens from here
-     * @param int  $fromLine  First line to delete tokens from
-     * @param int  $toLine    Last line to delete tokens from
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $fromPtr
+     * @param int  $fromLine
+     * @param int  $toLine
      */
-    protected function removeLines(File $phpcsFile, $fromPtr, $fromLine, $toLine)
+    private function removeLines(File $phpcsFile, int $fromPtr, int $fromLine, int $toLine): void
     {
         $tokens = $phpcsFile->getTokens();
 
