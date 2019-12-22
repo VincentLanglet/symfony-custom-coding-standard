@@ -2,7 +2,7 @@
 
 namespace TwigCS\Sniff;
 
-use \Exception;
+use Exception;
 use TwigCS\Token\Token;
 
 /**

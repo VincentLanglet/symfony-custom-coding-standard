@@ -2,8 +2,8 @@
 
 namespace TwigCS\Ruleset;
 
-use \Exception;
-use \SplFileInfo;
+use Exception;
+use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 use TwigCS\Sniff\SniffInterface;
 

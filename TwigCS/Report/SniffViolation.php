@@ -2,7 +2,7 @@
 
 namespace TwigCS\Report;
 
-use \LogicException;
+use LogicException;
 use TwigCS\Sniff\SniffInterface;
 
 /**

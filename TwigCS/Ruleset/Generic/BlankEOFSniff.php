@@ -2,7 +2,7 @@
 
 namespace TwigCS\Ruleset\Generic;
 
-use \Exception;
+use Exception;
 use TwigCS\Sniff\AbstractSniff;
 use TwigCS\Token\Token;
 

@@ -2,7 +2,7 @@
 
 namespace TwigCS\Config;
 
-use \Exception;
+use Exception;
 use Symfony\Component\Finder\Finder;
 
 /**

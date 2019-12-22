@@ -2,7 +2,7 @@
 
 namespace TwigCS\Runner;
 
-use \Exception;
+use Exception;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Source;

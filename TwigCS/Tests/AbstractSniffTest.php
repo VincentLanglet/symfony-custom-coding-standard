@@ -2,8 +2,8 @@
 
 namespace TwigCS\Tests;
 
-use \Exception;
-use \ReflectionClass;
+use Exception;
+use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use TwigCS\Environment\StubbedEnvironment;
 use TwigCS\Report\Report;

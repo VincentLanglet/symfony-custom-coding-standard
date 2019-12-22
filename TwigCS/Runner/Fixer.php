@@ -2,7 +2,7 @@
 
 namespace TwigCS\Runner;
 
-use \Exception;
+use Exception;
 use Twig\Source;
 use TwigCS\Ruleset\Ruleset;
 use TwigCS\Token\Token;

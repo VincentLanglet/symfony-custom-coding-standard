@@ -2,7 +2,7 @@
 
 namespace TwigCS\Token;
 
-use \Exception;
+use Exception;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;

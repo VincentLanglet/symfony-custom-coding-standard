@@ -2,7 +2,7 @@
 
 namespace TwigCS\Token;
 
-use \Exception;
+use Exception;
 use Twig\Environment;
 use Twig\Source;
 

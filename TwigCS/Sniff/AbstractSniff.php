@@ -2,7 +2,7 @@
 
 namespace TwigCS\Sniff;
 
-use \Exception;
+use Exception;
 use TwigCS\Report\Report;
 use TwigCS\Report\SniffViolation;
 use TwigCS\Runner\Fixer;
