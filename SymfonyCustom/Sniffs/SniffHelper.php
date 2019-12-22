@@ -12,6 +12,39 @@ use PHP_CodeSniffer\Util\Tokens;
  */
 class SniffHelper
 {
+    public const TAGS = [
+        '@api',
+        '@author',
+        '@category',
+        '@copyright',
+        '@covers',
+        '@dataProvider',
+        '@deprecated',
+        '@example',
+        '@filesource',
+        '@global',
+        '@ignore',
+        '@internal',
+        '@license',
+        '@link',
+        '@method',
+        '@package',
+        '@param',
+        '@property',
+        '@property-read',
+        '@property-write',
+        '@return',
+        '@see',
+        '@since',
+        '@source',
+        '@subpackage',
+        '@throws',
+        '@todo',
+        '@uses',
+        '@var',
+        '@version',
+    ];
+
     public const TAGS_WITH_TYPE = [
         '@method',
         '@param',

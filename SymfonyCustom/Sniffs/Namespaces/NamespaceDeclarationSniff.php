@@ -51,8 +51,11 @@ class NamespaceDeclarationSniff implements Sniff
             $diff = 0;
         }
 
-        $error = 'There must be one blank line before the namespace declaration';
-        $fix = $phpcsFile->addFixableError($error, $stackPtr, 'BlankLineBefore');
+        $fix = $phpcsFile->addFixableError(
+            'There must be one blank line before the namespace declaration',
+            $stackPtr,
+            'BlankLineBefore'
+        );
 
         if ($fix) {
             if (0 === $diff) {

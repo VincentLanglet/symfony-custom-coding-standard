@@ -47,8 +47,11 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
             }
 
             if (($tokens[$stackPtr]['line'] - 1) !== $tokens[$commentEnd]['line']) {
-                $error = 'There must be no blank lines after the function comment';
-                $phpcsFile->addError($error, $commentEnd, 'SpacingAfter');
+                $phpcsFile->addError(
+                    'There must be no blank lines after the function comment',
+                    $commentEnd,
+                    'SpacingAfter'
+                );
             }
 
             $commentStart = $tokens[$commentEnd]['comment_opener'];
@@ -57,8 +60,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                     // Make sure the tag isn't empty.
                     $string = $phpcsFile->findNext(T_DOC_COMMENT_STRING, $tag, $commentEnd);
                     if (false === $string || $tokens[$string]['line'] !== $tokens[$tag]['line']) {
-                        $error = 'Content missing for @see tag in function comment';
-                        $phpcsFile->addError($error, $tag, 'EmptySees');
+                        $phpcsFile->addError('Content missing for @see tag in function comment', $tag, 'EmptySees');
                     }
                 }
             }
@@ -87,9 +89,12 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
         } else {
             if (count($realParams) > 0) {
                 foreach ($realParams as $neededParam) {
-                    $error = 'Doc comment for parameter "%s" missing';
-                    $data  = [$neededParam['name']];
-                    $phpcsFile->addError($error, $stackPtr, 'MissingParamTag', $data);
+                    $phpcsFile->addError(
+                        'Doc comment for parameter "%s" missing',
+                        $stackPtr,
+                        'MissingParamTag',
+                        [$neededParam['name']]
+                    );
                 }
             }
         }
@@ -137,8 +142,11 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                         parent::processReturn($phpcsFile, $stackPtr, $commentStart);
                     } else {
                         // There is no doc and we need one with @return
-                        $error = 'Missing @return tag in function comment';
-                        $phpcsFile->addError($error, $stackPtr, 'MissingReturn');
+                        $phpcsFile->addError(
+                            'Missing @return tag in function comment',
+                            $stackPtr,
+                            'MissingReturn'
+                        );
                     }
 
                     break;
@@ -160,8 +168,11 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
         foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
             if ('@throws' === $tokens[$tag]['content']) {
                 if (null !== $throw) {
-                    $error = 'Only 1 @throws tag is allowed in a function comment';
-                    $phpcsFile->addError($error, $tag, 'DuplicateThrow');
+                    $phpcsFile->addError(
+                        'Only 1 @throws tag is allowed in a function comment',
+                        $tag,
+                        'DuplicateThrow'
+                    );
 
                     return;
                 }
@@ -179,8 +190,11 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
             }
 
             if (null === $exception) {
-                $error = 'Exception type missing for @throws tag in function comment';
-                $phpcsFile->addError($error, $throw, 'InvalidThrows');
+                $phpcsFile->addError(
+                    'Exception type missing for @throws tag in function comment',
+                    $throw,
+                    'InvalidThrows'
+                );
             }
         }
     }
@@ -215,7 +229,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
         $found = $startLine - $prevLine - 1;
 
         // Skip for class opening
-        if ($found < 1 && 'T_OPEN_CURLY_BRACKET' !== $tokens[$before]['type']) {
+        if ($found < 1 && T_OPEN_CURLY_BRACKET !== $tokens[$before]['code']) {
             if ($found < 0) {
                 $found = 0;
             }
@@ -228,8 +242,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                 $rule = 'SpacingBeforeFunction';
             }
 
-            $data = [$found];
-            $fix = $phpcsFile->addFixableError($error, $commentStart, $rule, $data);
+            $fix = $phpcsFile->addFixableError($error, $commentStart, $rule, [$found]);
 
             if ($fix) {
                 if ($found > 1) {

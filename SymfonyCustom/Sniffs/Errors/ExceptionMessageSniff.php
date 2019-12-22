@@ -33,8 +33,11 @@ class ExceptionMessageSniff implements Sniff
         );
 
         if ($concat) {
-            $error = 'Exception and error message strings must be concatenated using sprintf';
-            $phpcsFile->addError($error, $stackPtr, 'Invalid');
+            $phpcsFile->addError(
+                'Exception and error message strings must be concatenated using sprintf',
+                $stackPtr,
+                'Invalid'
+            );
         }
     }
 }

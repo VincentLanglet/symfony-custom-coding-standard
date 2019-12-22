@@ -23,8 +23,6 @@ class UseWithoutStartingBackslashSniff implements Sniff
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
-     *
-     * @return void
      */
     public function process(File $phpcsFile, $stackPtr): void
     {
@@ -54,8 +52,11 @@ class UseWithoutStartingBackslashSniff implements Sniff
             || (T_STRING === $tokens[$classPtr]['code']
                 && '\\' === $tokens[$classPtr]['content'])
         ) {
-            $error = 'Use statement cannot start with a backslash';
-            $fix = $phpcsFile->addFixableError($error, $classPtr, 'BackslashAtStart');
+            $fix = $phpcsFile->addFixableError(
+                'Use statement cannot start with a backslash',
+                $classPtr,
+                'BackslashAtStart'
+            );
 
             if ($fix) {
                 if (T_WHITESPACE !== $tokens[$classPtr - 1]['code']) {

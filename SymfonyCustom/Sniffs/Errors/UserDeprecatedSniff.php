@@ -42,8 +42,11 @@ class UserDeprecatedSniff implements Sniff
             }
 
             if ('E_USER_DEPRECATED' === $tokens[$string]['content'] && '@' !== $tokens[$stackPtr - 1]['content']) {
-                $error = 'Calls to trigger_error with type E_USER_DEPRECATED must be switched to opt-in via @ operator';
-                $phpcsFile->addError($error, $stackPtr, 'Invalid');
+                $phpcsFile->addError(
+                    'Calls to trigger_error with type E_USER_DEPRECATED must be switched to opt-in via @ operator',
+                    $stackPtr,
+                    'Invalid'
+                );
 
                 break;
             } else {

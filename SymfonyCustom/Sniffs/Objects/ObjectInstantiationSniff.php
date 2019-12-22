@@ -6,7 +6,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Throws a warning if an object isn't instantiated using parenthesis.
+ * Throws an error if an object isn't instantiated using parenthesis.
  */
 class ObjectInstantiationSniff implements Sniff
 {
@@ -36,20 +36,14 @@ class ObjectInstantiationSniff implements Sniff
         ];
 
         $object = $stackPtr;
-        $line   = $tokens[$object]['line'];
+        $line = $tokens[$object]['line'];
 
         while ($object && $tokens[$object]['line'] === $line) {
             $object = $phpcsFile->findNext($allowed, $object + 1);
 
-            if ($tokens[$object]['line'] === $line
-                && !in_array($tokens[$object + 1]['code'], $allowed)
-            ) {
+            if ($tokens[$object]['line'] === $line && !in_array($tokens[$object + 1]['code'], $allowed)) {
                 if (T_OPEN_PARENTHESIS !== $tokens[$object + 1]['code']) {
-                    $phpcsFile->addError(
-                        'Use parentheses when instantiating classes',
-                        $stackPtr,
-                        'Invalid'
-                    );
+                    $phpcsFile->addError('Use parentheses when instantiating classes', $stackPtr, 'Invalid');
                 }
 
                 break;

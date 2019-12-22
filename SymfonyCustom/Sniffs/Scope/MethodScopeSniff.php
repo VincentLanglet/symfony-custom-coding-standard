@@ -11,9 +11,6 @@ use PHP_CodeSniffer\Util\Tokens;
  */
 class MethodScopeSniff extends AbstractScopeSniff
 {
-    /**
-     * MethodScopeSniff constructor
-     */
     public function __construct()
     {
         parent::__construct([T_CLASS], [T_FUNCTION]);
@@ -34,17 +31,10 @@ class MethodScopeSniff extends AbstractScopeSniff
             return;
         }
 
-        $modifier = $phpcsFile->findPrevious(
-            Tokens::$scopeModifiers,
-            $stackPtr
-        );
+        $modifier = $phpcsFile->findPrevious(Tokens::$scopeModifiers, $stackPtr);
 
-        if ((false === $modifier)
-            || ($tokens[$modifier]['line'] !== $tokens[$stackPtr]['line'])
-        ) {
-            $error = 'No scope modifier specified for function "%s"';
-            $data  = [$methodName];
-            $phpcsFile->addError($error, $stackPtr, 'Missing', $data);
+        if (false === $modifier || $tokens[$modifier]['line'] !== $tokens[$stackPtr]['line']) {
+            $phpcsFile->addError('No scope modifier specified for function "%s"', $stackPtr, 'Missing', [$methodName]);
         }
     }
 

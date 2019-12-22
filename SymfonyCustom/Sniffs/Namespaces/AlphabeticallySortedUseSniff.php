@@ -50,10 +50,12 @@ class AlphabeticallySortedUseSniff implements Sniff
             $order = $this->compareUseStatements($use, $lastUse);
 
             if ($order < 0) {
-                $error = 'Use statements are incorrectly ordered. The first wrong one is %s';
-                $data = [$use['name']];
-
-                $phpcsFile->addError($error, $use['ptrUse'], 'IncorrectOrder', $data);
+                $phpcsFile->addError(
+                    'Use statements are incorrectly ordered. The first wrong one is %s',
+                    $use['ptrUse'],
+                    'IncorrectOrder',
+                    [$use['name']]
+                );
 
                 return $stackPtr + 1;
             }
@@ -62,8 +64,11 @@ class AlphabeticallySortedUseSniff implements Sniff
             // There must be no empty lines between use statements.
             $lineDiff = $tokens[$use['ptrUse']]['line'] - $tokens[$lastUse['ptrUse']]['line'];
             if ($lineDiff > 1) {
-                $error = 'There must not be any empty line between use statement of the same type';
-                $fix = $phpcsFile->addFixableError($error, $use['ptrUse'], 'EmptyLine');
+                $fix = $phpcsFile->addFixableError(
+                    'There must not be any empty line between use statement',
+                    $use['ptrUse'],
+                    'EmptyLine'
+                );
 
                 if ($fix) {
                     $phpcsFile->fixer->beginChangeset();
@@ -80,8 +85,11 @@ class AlphabeticallySortedUseSniff implements Sniff
                     $phpcsFile->fixer->endChangeset();
                 }
             } elseif (0 === $lineDiff) {
-                $error = 'Each use statement must be in new line';
-                $fix = $phpcsFile->addFixableError($error, $use['ptrUse'], 'TheSameLine');
+                $fix = $phpcsFile->addFixableError(
+                    'Each use statement must be in new line',
+                    $use['ptrUse'],
+                    'TheSameLine'
+                );
 
                 if ($fix) {
                     $phpcsFile->fixer->addNewline($lastUse['ptrEnd']);

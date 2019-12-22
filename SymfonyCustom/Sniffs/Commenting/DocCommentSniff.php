@@ -44,14 +44,10 @@ class DocCommentSniff implements Sniff
         $short = $phpcsFile->findNext($empty, ($stackPtr + 1), $commentEnd, true);
         if (false === $short) {
             // No content at all.
-            $error = 'Doc comment is empty';
-
             $next = $phpcsFile->findNext(T_WHITESPACE, $commentEnd + 1, null, true);
             $hasSameLineNext = $next && $tokens[$next]['line'] === $tokens[$commentEnd]['line'];
-            $previous = $phpcsFile->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);
-            $hasSameLinePrevious = $tokens[$previous]['line'] === $tokens[$stackPtr]['line'];
 
-            $fix = $phpcsFile->addFixableError($error, $stackPtr, 'Empty');
+            $fix = $phpcsFile->addFixableError('Doc comment is empty', $stackPtr, 'Empty');
 
             if ($fix) {
                 $phpcsFile->fixer->beginChangeset();
@@ -83,8 +79,12 @@ class DocCommentSniff implements Sniff
 
         // The first line of the comment should just be the /** code.
         if (!$isSingleLine && $tokens[$short]['line'] === $tokens[$stackPtr]['line']) {
-            $error = 'The open comment tag must be the only content on the line';
-            $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'ContentAfterOpen');
+            $fix = $phpcsFile->addFixableError(
+                'The open comment tag must be the only content on the line',
+                $stackPtr,
+                'ContentAfterOpen'
+            );
+
             if ($fix) {
                 $phpcsFile->fixer->beginChangeset();
                 for ($i = ($stackPtr + 1); $i < $short; $i++) {
@@ -105,8 +105,12 @@ class DocCommentSniff implements Sniff
 
         // Check for additional blank lines at the beginning of the comment.
         if ($tokens[$stackPtr]['line'] < ($tokens[$short]['line'] - 1)) {
-            $error = 'Additional blank lines found at beginning of doc comment';
-            $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SpacingBefore');
+            $fix = $phpcsFile->addFixableError(
+                'Additional blank lines found at beginning of doc comment',
+                $stackPtr,
+                'SpacingBefore'
+            );
+
             if ($fix) {
                 $phpcsFile->fixer->beginChangeset();
                 for ($i = ($stackPtr + 1); $i < $short; $i++) {
@@ -124,8 +128,12 @@ class DocCommentSniff implements Sniff
         // The last line of the comment should just be the */ code.
         $prev = $phpcsFile->findPrevious($empty, ($commentEnd - 1), $stackPtr, true);
         if (!$isSingleLine && $tokens[$prev]['line'] === $tokens[$commentEnd]['line']) {
-            $error = 'The close comment tag must be the only content on the line';
-            $fix   = $phpcsFile->addFixableError($error, $commentEnd, 'ContentBeforeClose');
+            $fix = $phpcsFile->addFixableError(
+                'The close comment tag must be the only content on the line',
+                $commentEnd,
+                'ContentBeforeClose'
+            );
+
             if ($fix) {
                 $phpcsFile->fixer->beginChangeset();
                 for ($i = ($prev + 1); $i < $commentEnd; $i++) {
@@ -146,8 +154,12 @@ class DocCommentSniff implements Sniff
 
         // Check for additional blank lines at the end of the comment.
         if ($tokens[$prev]['line'] < ($tokens[$commentEnd]['line'] - 1)) {
-            $error = 'Additional blank lines found at end of doc comment';
-            $fix   = $phpcsFile->addFixableError($error, $commentEnd, 'SpacingAfter');
+            $fix = $phpcsFile->addFixableError(
+                'Additional blank lines found at end of doc comment',
+                $commentEnd,
+                'SpacingAfter'
+            );
+
             if ($fix) {
                 $phpcsFile->fixer->beginChangeset();
                 for ($i = ($prev + 1); $i < $commentEnd; $i++) {

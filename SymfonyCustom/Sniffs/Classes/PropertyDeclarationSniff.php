@@ -6,7 +6,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Throws warnings if properties are declared after methods
+ * Throws error if properties are declared after methods
  */
 class PropertyDeclarationSniff implements Sniff
 {
@@ -31,31 +31,15 @@ class PropertyDeclarationSniff implements Sniff
             $end = $tokens[$stackPtr]['scope_closer'];
         }
 
-        $scope = $phpcsFile->findNext(
-            T_FUNCTION,
-            $stackPtr,
-            $end
-        );
+        $scope = $phpcsFile->findNext(T_FUNCTION, $stackPtr, $end);
 
-        $wantedTokens = [
-            T_PUBLIC,
-            T_PROTECTED,
-            T_PRIVATE,
-        ];
+        $wantedTokens = [T_PUBLIC, T_PROTECTED, T_PRIVATE];
 
         while ($scope) {
-            $scope = $phpcsFile->findNext(
-                $wantedTokens,
-                $scope + 1,
-                $end
-            );
+            $scope = $phpcsFile->findNext($wantedTokens, $scope + 1, $end);
 
             if ($scope && T_VARIABLE === $tokens[$scope + 2]['code']) {
-                $phpcsFile->addError(
-                    'Declare class properties before methods',
-                    $scope,
-                    'Invalid'
-                );
+                $phpcsFile->addError('Declare class properties before methods', $scope, 'Invalid');
             }
         }
     }

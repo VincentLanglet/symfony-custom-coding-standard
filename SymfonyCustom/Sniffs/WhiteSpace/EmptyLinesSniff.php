@@ -28,13 +28,16 @@ class EmptyLinesSniff implements Sniff
 
         // Special case for the first line
         if (isset($tokens[$stackPtr - 1])
-            && 'T_OPEN_TAG' === $tokens[$stackPtr - 1]['type']
+            && T_OPEN_TAG === $tokens[$stackPtr - 1]['code']
             && $tokens[$stackPtr]['content'] === $phpcsFile->eolChar
             && isset($tokens[$stackPtr + 1])
             && $tokens[$stackPtr + 1]['content'] === $phpcsFile->eolChar
         ) {
-            $error = 'More than 1 empty lines are not allowed';
-            $fix = $phpcsFile->addFixableError($error, $stackPtr + 1, 'EmptyLines');
+            $fix = $phpcsFile->addFixableError(
+                'More than 1 empty lines are not allowed',
+                $stackPtr + 1,
+                'EmptyLines'
+            );
 
             if ($fix) {
                 $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
@@ -48,8 +51,11 @@ class EmptyLinesSniff implements Sniff
             && isset($tokens[$stackPtr + 2])
             && $tokens[$stackPtr + 2]['content'] === $phpcsFile->eolChar
         ) {
-            $error = 'More than 1 empty lines are not allowed';
-            $fix = $phpcsFile->addFixableError($error, $stackPtr + 2, 'EmptyLines');
+            $fix = $phpcsFile->addFixableError(
+                'More than 1 empty lines are not allowed',
+                $stackPtr + 2,
+                'EmptyLines'
+            );
 
             if ($fix) {
                 $phpcsFile->fixer->replaceToken($stackPtr + 2, '');

@@ -8,7 +8,7 @@ use PHP_CodeSniffer\Util\Tokens;
 
 /**
  * Checks that there is no white space before a closing bracket, for ")", "}", and array bracket.
- * Square Brackets are handled by Squiz_Sniffs_Arrays_ArrayBracketSpacingSniff.
+ * Square Brackets are handled by Squiz\Sniffs\Arrays\ArrayBracketSpacingSniff.
  */
 class CloseBracketSpacingSniff implements Sniff
 {
@@ -28,9 +28,7 @@ class CloseBracketSpacingSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (isset($tokens[($stackPtr - 1)])
-            && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']
-        ) {
+        if (isset($tokens[($stackPtr - 1)]) && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']) {
             $before = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($stackPtr - 1), null, true);
             if (false !== $before && $tokens[$stackPtr]['line'] === $tokens[$before]['line']) {
                 $error = 'There should be no space before a closing "%s"';

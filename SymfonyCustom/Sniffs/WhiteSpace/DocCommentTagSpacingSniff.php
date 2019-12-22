@@ -4,50 +4,13 @@ namespace SymfonyCustom\Sniffs\WhiteSpace;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use SymfonyCustom\Sniffs\SniffHelper;
 
 /**
  * Checks that there are not 2 empty lines following each other.
  */
 class DocCommentTagSpacingSniff implements Sniff
 {
-    /**
-     * A list of PHPDoc tags that are checked.
-     *
-     * @var array
-     */
-    public $tags = [
-        '@api',
-        '@author',
-        '@category',
-        '@copyright',
-        '@covers',
-        '@dataProvider',
-        '@deprecated',
-        '@example',
-        '@filesource',
-        '@global',
-        '@ignore',
-        '@internal',
-        '@license',
-        '@link',
-        '@method',
-        '@package',
-        '@param',
-        '@property',
-        '@property-read',
-        '@property-write',
-        '@return',
-        '@see',
-        '@since',
-        '@source',
-        '@subpackage',
-        '@throws',
-        '@todo',
-        '@uses',
-        '@var',
-        '@version',
-    ];
-
     /**
      * @return int[]
      */
@@ -80,7 +43,7 @@ class DocCommentTagSpacingSniff implements Sniff
                     $phpcsFile->fixer->addContentBefore($stackPtr, ' ');
                 }
             } elseif (1 < $tokens[($stackPtr - 1)]['length']) {
-                $isCustomTag = !in_array($tokens[$stackPtr]['content'], $this->tags);
+                $isCustomTag = !in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS);
 
                 // Custom tags are not checked cause there is annotation with array params
                 if (!$isCustomTag) {

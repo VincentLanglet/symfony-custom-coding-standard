@@ -52,8 +52,11 @@ class VariableCommentSniff extends AbstractVariableSniff
         foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
             if ('@var' === $tokens[$tag]['content']) {
                 if (null !== $foundVar) {
-                    $error = 'Only one @var tag is allowed in a member variable comment';
-                    $phpcsFile->addError($error, $tag, 'DuplicateVar');
+                    $phpcsFile->addError(
+                        'Only one @var tag is allowed in a member variable comment',
+                        $tag,
+                        'DuplicateVar'
+                    );
                 } else {
                     $foundVar = $tag;
                 }
@@ -61,31 +64,31 @@ class VariableCommentSniff extends AbstractVariableSniff
                 // Make sure the tag isn't empty.
                 $string = $phpcsFile->findNext(T_DOC_COMMENT_STRING, $tag, $commentEnd);
                 if (false === $string || $tokens[$string]['line'] !== $tokens[$tag]['line']) {
-                    $error = 'Content missing for @see tag in member variable comment';
-                    $phpcsFile->addError($error, $tag, 'EmptySees');
+                    $phpcsFile->addError('Content missing for @see tag in member variable comment', $tag, 'EmptySees');
                 }
             }
         }
 
         // The @var tag is the only one we require.
         if (null === $foundVar) {
-            $error = 'Missing @var tag in member variable comment';
-            $phpcsFile->addError($error, $commentEnd, 'MissingVar');
+            $phpcsFile->addError('Missing @var tag in member variable comment', $commentEnd, 'MissingVar');
 
             return;
         }
 
         $firstTag = $tokens[$commentStart]['comment_tags'][0];
         if (null !== $foundVar && '@var' !== $tokens[$firstTag]['content']) {
-            $error = 'The @var tag must be the first tag in a member variable comment';
-            $phpcsFile->addError($error, $foundVar, 'VarOrder');
+            $phpcsFile->addError(
+                'The @var tag must be the first tag in a member variable comment',
+                $foundVar,
+                'VarOrder'
+            );
         }
 
         // Make sure the tag isn't empty and has the correct padding.
         $string = $phpcsFile->findNext(T_DOC_COMMENT_STRING, $foundVar, $commentEnd);
         if (false === $string || $tokens[$string]['line'] !== $tokens[$foundVar]['line']) {
-            $error = 'Content missing for @var tag in member variable comment';
-            $phpcsFile->addError($error, $foundVar, 'EmptyVar');
+            $phpcsFile->addError('Content missing for @var tag in member variable comment', $foundVar, 'EmptyVar');
 
             return;
         }
@@ -95,8 +98,11 @@ class VariableCommentSniff extends AbstractVariableSniff
             return 0 === preg_match('/^\$/', $value);
         });
         if (count($newContent) < count($content)) {
-            $error = '@var annotations should not contain variable name';
-            $fix = $phpcsFile->addFixableError($error, $foundVar, 'NamedVar');
+            $fix = $phpcsFile->addFixableError(
+                '@var annotations should not contain variable name',
+                $foundVar,
+                'NamedVar'
+            );
 
             if ($fix) {
                 $phpcsFile->fixer->replaceToken($string, implode(' ', $newContent));
@@ -137,16 +143,17 @@ class VariableCommentSniff extends AbstractVariableSniff
         $found = $startLine - $prevLine - 1;
 
         // Skip for class opening
-        if ($found < 1 && 'T_OPEN_CURLY_BRACKET' !== $tokens[$before]['type']) {
+        if ($found < 1 && T_OPEN_CURLY_BRACKET !== $tokens[$before]['code']) {
             if ($found < 0) {
                 $found = 0;
             }
 
-            $error = 'Expected 1 blank line before docblock; %s found';
-            $rule = 'SpacingBeforeDocblock';
-
-            $data = [$found];
-            $fix = $phpcsFile->addFixableError($error, $commentStart, $rule, $data);
+            $fix = $phpcsFile->addFixableError(
+                'Expected 1 blank line before docblock; %s found',
+                $commentStart,
+                'SpacingBeforeDocblock',
+                [$found]
+            );
 
             if ($fix) {
                 if ($found > 1) {

@@ -12,47 +12,6 @@ use SymfonyCustom\Sniffs\SniffHelper;
 class DocCommentGroupSameTypeSniff implements Sniff
 {
     /**
-     * A list of PHPDoc tags that are checked.
-     *
-     * @var array
-     */
-    public $tags = [
-        '@api',
-        '@author',
-        '@category',
-        '@copyright',
-        '@covers',
-        '@dataProvider',
-        '@deprecated',
-        '@example',
-        '@filesource',
-        '@global',
-        '@ignore',
-        '@internal',
-        '@license',
-        '@link',
-        '@method',
-        '@package',
-        '@param',
-        '@property',
-        '@property-read',
-        '@property-write',
-        '@required',
-        '@return',
-        '@see',
-        '@since',
-        '@source',
-        '@subpackage',
-        '@throws',
-        '@todo',
-        '@uses',
-        '@var',
-        '@version',
-    ];
-
-    /**
-     * A list of tokenizers this sniff supports.
-     *
      * @return array
      */
     public function register(): array
@@ -101,8 +60,9 @@ class DocCommentGroupSameTypeSniff implements Sniff
             }
 
             if (isset($previousElement) && $previousLine >= 0) {
-                $currentIsCustom = !in_array($currentType, $this->tags);
-                $previousIsCustom = ('' !== $previousType) && !in_array($previousType, $this->tags);
+                $currentIsCustom = !in_array($currentType, SniffHelper::TAGS);
+                $previousIsCustom = '' !== $previousType
+                    && !in_array($previousType, SniffHelper::TAGS);
 
                 if (($previousType === $currentType) || ($currentIsCustom && $previousIsCustom)) {
                     if ($previousLine !== $commentTagLine - 1) {
@@ -179,9 +139,6 @@ class DocCommentGroupSameTypeSniff implements Sniff
     }
 
     /**
-     * Remove all tokens on lines (inclusively).
-     * This method does not start or end changeset.
-     *
      * @param File $phpcsFile
      * @param int  $fromPtr
      * @param int  $fromLine

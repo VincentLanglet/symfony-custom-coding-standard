@@ -19,8 +19,6 @@ class ValidFileNameSniff implements Sniff
     }
 
     /**
-     * Process.
-     *
      * @param File $phpcsFile
      * @param int  $stackPtr
      */
@@ -42,8 +40,12 @@ class ValidFileNameSniff implements Sniff
         }
 
         if (!ctype_alnum($filename)) {
-            $error = sprintf('Filename "%s" contains non alphanumeric characters', $filename);
-            $phpcsFile->addError($error, $stackPtr, 'Invalid');
+            $phpcsFile->addError(
+                'Filename "%s" contains non alphanumeric characters',
+                $stackPtr,
+                'Invalid',
+                [$filename]
+            );
             $phpcsFile->recordMetric($stackPtr, 'Alphanumeric filename', 'no');
         } else {
             $phpcsFile->recordMetric($stackPtr, 'Alphanumeric filename', 'yes');

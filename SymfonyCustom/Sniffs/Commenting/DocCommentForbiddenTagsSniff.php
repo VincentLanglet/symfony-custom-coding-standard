@@ -11,15 +11,11 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class DocCommentForbiddenTagsSniff implements Sniff
 {
     /**
-     * A list of PHPDoc tags that are forbidden.
-     *
      * @var array
      */
     public $forbiddenTags = ['@package', '@subpackage'];
 
     /**
-     * A list of tokenizers this sniff supports.
-     *
      * @return array
      */
     public function register(): array

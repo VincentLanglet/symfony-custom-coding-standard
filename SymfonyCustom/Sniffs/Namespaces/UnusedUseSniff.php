@@ -42,9 +42,7 @@ class UnusedUseSniff implements Sniff
 
             // Empty group is invalid syntax
             if ($phpcsFile->findNext(Tokens::$emptyTokens, $from + 1, null, true) === $to) {
-                $error = 'Empty use group';
-
-                $fix = $phpcsFile->addFixableError($error, $stackPtr, 'EmptyUseGroup');
+                $fix = $phpcsFile->addFixableError('Empty use group', $stackPtr, 'EmptyUseGroup');
                 if ($fix) {
                     $this->removeUse($phpcsFile, $stackPtr, $semiColon);
                 }
@@ -56,9 +54,12 @@ class UnusedUseSniff implements Sniff
             if (false === $comma
                 || !$phpcsFile->findNext(Tokens::$emptyTokens, $comma + 1, $to, true)
             ) {
-                $error = 'Redundant use group for one declaration';
+                $fix = $phpcsFile->addFixableError(
+                    'Redundant use group for one declaration',
+                    $stackPtr,
+                    'RedundantUseGroup'
+                );
 
-                $fix = $phpcsFile->addFixableError($error, $stackPtr, 'RedundantUseGroup');
                 if ($fix) {
                     $phpcsFile->fixer->beginChangeset();
                     $phpcsFile->fixer->replaceToken($from, '');
@@ -91,10 +92,13 @@ class UnusedUseSniff implements Sniff
                 $to = $phpcsFile->findPrevious(T_COMMA, $classPtr - 1, $from + 1);
 
                 if (!$this->isClassUsed($phpcsFile, $stackPtr, $classPtr)) {
-                    $error = 'Unused use statement "%s"';
-                    $data = [$tokens[$classPtr]['content']];
+                    $fix = $phpcsFile->addFixableError(
+                        'Unused use statement "%s"',
+                        $classPtr,
+                        'UnusedUseInGroup',
+                        [$tokens[$classPtr]['content']]
+                    );
 
-                    $fix = $phpcsFile->addFixableError($error, $classPtr, 'UnusedUseInGroup', $data);
                     if ($fix) {
                         $first = false === $to ? $from + 1 : $to;
                         $last = $classPtr;
