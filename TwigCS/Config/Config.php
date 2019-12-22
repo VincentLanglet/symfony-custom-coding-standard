@@ -11,8 +11,6 @@ use Symfony\Component\Finder\Finder;
 class Config
 {
     /**
-     * Default configuration.
-     *
      * @var array
      */
     public static $defaultConfig = [
@@ -23,8 +21,6 @@ class Config
     ];
 
     /**
-     * Current configuration.
-     *
      * @var array
      */
     protected $config;
@@ -38,8 +34,6 @@ class Config
     }
 
     /**
-     * Find all files to process, based on a file or directory and exclude patterns.
-     *
      * @return Finder
      *
      * @throws Exception
@@ -75,8 +69,6 @@ class Config
     }
 
     /**
-     * Get a configuration value for the given $key.
-     *
      * @param string $key
      *
      * @return mixed

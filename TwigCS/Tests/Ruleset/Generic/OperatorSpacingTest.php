@@ -10,7 +10,7 @@ use TwigCS\Tests\AbstractSniffTest;
  */
 class OperatorSpacingTest extends AbstractSniffTest
 {
-    public function testSniff()
+    public function testSniff(): void
     {
         $this->checkGenericSniff(new OperatorSpacingSniff(), [
             [1 => 4],

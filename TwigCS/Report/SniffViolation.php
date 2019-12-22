@@ -16,43 +16,31 @@ class SniffViolation
     const LEVEL_FATAL   = 'FATAL';
 
     /**
-     * Level of the message among `notice`, `warning`, `error`
-     *
      * @var int
      */
     protected $level;
 
     /**
-     * Text message associated with the violation.
-     *
      * @var string
      */
     protected $message;
 
     /**
-     * Line number for the violation.
-     *
      * @var int|null
      */
     protected $line;
 
     /**
-     * Position of the violation on the current line.
-     *
      * @var int|null
      */
     protected $linePosition;
 
     /**
-     * File in which the violation has been found.
-     *
      * @var string
      */
     protected $filename;
 
     /**
-     * Sniff that has produce this violation.
-     *
      * @var SniffInterface|null
      */
     protected $sniff;
@@ -75,8 +63,6 @@ class SniffViolation
     }
 
     /**
-     * Get the level of this violation.
-     *
      * @return int
      */
     public function getLevel(): int
@@ -85,8 +71,6 @@ class SniffViolation
     }
 
     /**
-     * Get a human-readable of the level of this violation.
-     *
      * @return string
      */
     public function getLevelAsString(): string
@@ -106,8 +90,6 @@ class SniffViolation
     }
 
     /**
-     * Get the integer value for a given string $level.
-     *
      * @param string $level
      *
      * @return int
@@ -129,8 +111,6 @@ class SniffViolation
     }
 
     /**
-     * Get the text message of this violation.
-     *
      * @return string
      */
     public function getMessage(): string
@@ -139,8 +119,6 @@ class SniffViolation
     }
 
     /**
-     * Get the line number where this violation occured.
-     *
      * @return int|null
      */
     public function getLine(): ?int
@@ -149,8 +127,6 @@ class SniffViolation
     }
 
     /**
-     * Get the filename (and path) where this violation occured.
-     *
      * @return string
      */
     public function getFilename(): string
@@ -159,8 +135,6 @@ class SniffViolation
     }
 
     /**
-     * Set the position in the line where this violation occured.
-     *
      * @param int|null $linePosition
      *
      * @return self
@@ -173,8 +147,6 @@ class SniffViolation
     }
 
     /**
-     * Get the position in the line, if any.
-     *
      * @return int|null
      */
     public function getLinePosition(): ?int
@@ -183,8 +155,6 @@ class SniffViolation
     }
 
     /**
-     * Set the sniff that was not met.
-     *
      * @param SniffInterface $sniff
      *
      * @return self
@@ -197,8 +167,6 @@ class SniffViolation
     }
 
     /**
-     * Get the sniff that was not met.
-     *
      * @return SniffInterface|null
      */
     public function getSniff(): ?SniffInterface

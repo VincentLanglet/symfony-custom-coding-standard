@@ -12,37 +12,25 @@ use TwigCS\Token\Token;
 interface SniffInterface
 {
     /**
-     * Enable the sniff report.
-     *
      * Once the sniff is enabled, it will be registered and executed when a template is tokenized or parsed.
      * Messages will be added to the given `$report` object.
      *
      * @param Report $report
-     *
-     * @return self
      */
-    public function enableReport(Report $report);
+    public function enableReport(Report $report): void;
 
     /**
-     * Enable the sniff fixer.
-     *
      * @param Fixer $fixer
-     *
-     * @return self
      */
-    public function enableFixer(Fixer $fixer);
+    public function enableFixer(Fixer $fixer): void;
 
     /**
-     * Disable the sniff.
-     *
      * It usually is disabled when the processing is over, it will reset the sniff internal values for next check.
-     *
-     * @return self
      */
-    public function disable();
+    public function disable(): void;
 
     /**
      * @param Token[] $stream
      */
-    public function processFile(array $stream);
+    public function processFile(array $stream): void;
 }

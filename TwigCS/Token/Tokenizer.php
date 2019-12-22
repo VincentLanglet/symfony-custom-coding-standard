@@ -116,7 +116,7 @@ class Tokenizer
      *
      * @throws Exception
      */
-    public function tokenize(Source $source)
+    public function tokenize(Source $source): array
     {
         $this->resetState($source);
         $this->preflightSource($this->code);
@@ -165,7 +165,7 @@ class Tokenizer
     /**
      * @param Source $source
      */
-    protected function resetState(Source $source)
+    protected function resetState(Source $source): void
     {
         $this->cursor = 0;
         $this->line = 1;
@@ -181,7 +181,7 @@ class Tokenizer
     /**
      * @return int
      */
-    protected function getState()
+    protected function getState(): int
     {
         return count($this->state) > 0 ? $this->state[count($this->state) - 1] : self::STATE_DATA;
     }
@@ -189,7 +189,7 @@ class Tokenizer
     /**
      * @param int $state
      */
-    protected function pushState(int $state)
+    protected function pushState(int $state): void
     {
         $this->state[] = $state;
     }
@@ -197,7 +197,7 @@ class Tokenizer
     /**
      * @throws Exception
      */
-    protected function popState()
+    protected function popState(): void
     {
         if (0 === count($this->state)) {
             throw new Exception('Cannot pop state without a previous state');
@@ -208,7 +208,7 @@ class Tokenizer
     /**
      * @param string $code
      */
-    protected function preflightSource(string $code)
+    protected function preflightSource(string $code): void
     {
         $tokenPositions = [];
         preg_match_all($this->regexes['lex_tokens_start'], $code, $tokenPositions, PREG_OFFSET_CAPTURE);
@@ -230,7 +230,7 @@ class Tokenizer
      *
      * @return array|null
      */
-    protected function getTokenPosition(int $offset = 0)
+    protected function getTokenPosition(int $offset = 0): ?array
     {
         if (count($this->tokenPositions) === 0
             || !isset($this->tokenPositions[$this->currentPosition + $offset])
@@ -244,7 +244,7 @@ class Tokenizer
     /**
      * @param int $value
      */
-    protected function moveCurrentPosition(int $value = 1)
+    protected function moveCurrentPosition(int $value = 1): void
     {
         $this->currentPosition += $value;
     }
@@ -252,7 +252,7 @@ class Tokenizer
     /**
      * @param string $value
      */
-    protected function moveCursor(string $value)
+    protected function moveCursor(string $value): void
     {
         $this->cursor += strlen($value);
         $this->line += substr_count($value, "\n");
@@ -262,7 +262,7 @@ class Tokenizer
      * @param int         $type
      * @param string|null $value
      */
-    protected function pushToken(int $type, string $value = null)
+    protected function pushToken(int $type, string $value = null): void
     {
         $tokenPositionInLine = $this->cursor - strrpos(substr($this->code, 0, $this->cursor), PHP_EOL);
         $this->tokens[] = new Token($type, $this->line, $tokenPositionInLine, $this->filename, $value);
@@ -271,7 +271,7 @@ class Tokenizer
     /**
      * @throws Exception
      */
-    protected function lexExpression()
+    protected function lexExpression(): void
     {
         $currentToken = $this->code[$this->cursor];
 
@@ -310,7 +310,7 @@ class Tokenizer
     /**
      * @throws Exception
      */
-    protected function lexBlock()
+    protected function lexBlock(): void
     {
         $endRegex = $this->regexes['lex_block'];
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
@@ -328,7 +328,7 @@ class Tokenizer
     /**
      * @throws Exception
      */
-    protected function lexVariable()
+    protected function lexVariable(): void
     {
         $endRegex = $this->regexes['lex_variable'];
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
@@ -346,7 +346,7 @@ class Tokenizer
     /**
      * @throws Exception
      */
-    protected function lexComment()
+    protected function lexComment(): void
     {
         $endRegex = $this->regexes['lex_comment'];
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
@@ -368,7 +368,7 @@ class Tokenizer
     /**
      * @param int $limit
      */
-    protected function lexData(int $limit = 0)
+    protected function lexData(int $limit = 0): void
     {
         $nextToken = $this->getTokenPosition();
         if (0 === $limit && null !== $nextToken) {
@@ -401,7 +401,7 @@ class Tokenizer
     /**
      * @throws Exception
      */
-    protected function lexStart()
+    protected function lexStart(): void
     {
         $tokenStart = $this->getTokenPosition();
         if ($tokenStart['match'] === $this->options['tag_comment'][0]) {
@@ -422,7 +422,7 @@ class Tokenizer
         $this->moveCursor($tokenStart['fullMatch']);
     }
 
-    protected function lexTab()
+    protected function lexTab(): void
     {
         $currentToken = $this->code[$this->cursor];
         $whitespace = '';
@@ -436,7 +436,7 @@ class Tokenizer
         $this->pushToken(Token::TAB_TYPE, $whitespace);
     }
 
-    protected function lexWhitespace()
+    protected function lexWhitespace(): void
     {
         $currentToken = $this->code[$this->cursor];
         $whitespace = '';
@@ -450,7 +450,7 @@ class Tokenizer
         $this->pushToken(Token::WHITESPACE_TYPE, $whitespace);
     }
 
-    protected function lexEOL()
+    protected function lexEOL(): void
     {
         $this->pushToken(Token::EOL_TYPE, $this->code[$this->cursor]);
         $this->moveCursor($this->code[$this->cursor]);
@@ -459,7 +459,7 @@ class Tokenizer
     /**
      * @param string $operator
      */
-    protected function lexOperator($operator)
+    protected function lexOperator($operator): void
     {
         if ('?' === $operator) {
             $this->bracketsAndTernary[] = [$operator, $this->line];
@@ -473,7 +473,7 @@ class Tokenizer
     /**
      * @throws Exception
      */
-    protected function lexPunctuation()
+    protected function lexPunctuation(): void
     {
         $currentToken = $this->code[$this->cursor];
 

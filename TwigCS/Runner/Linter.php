@@ -38,13 +38,11 @@ class Linter
     }
 
     /**
-     * Run the linter on the given $files against the given $ruleset.
+     * @param iterable $files
+     * @param Ruleset  $ruleset
+     * @param bool     $fix
      *
-     * @param iterable $files   List of files to process.
-     * @param Ruleset  $ruleset Set of rules to check.
-     * @param bool     $fix     If true, the linter will fix the file
-     *
-     * @return Report an object with all violations and stats.
+     * @return Report
      *
      * @throws Exception
      */
@@ -105,11 +103,9 @@ class Linter
     }
 
     /**
-     * Checks one template against the set of rules.
-     *
-     * @param string  $file    File to check as a string.
-     * @param Ruleset $ruleset Set of rules to check.
-     * @param Report  $report  Current report to fill.
+     * @param string  $file
+     * @param Ruleset $ruleset
+     * @param Report  $report
      *
      * @return bool
      */

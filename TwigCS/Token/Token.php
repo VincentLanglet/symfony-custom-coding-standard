@@ -78,7 +78,7 @@ class Token
     /**
      * @return int
      */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
@@ -86,7 +86,7 @@ class Token
     /**
      * @return int
      */
-    public function getLine()
+    public function getLine(): int
     {
         return $this->line;
     }
@@ -94,7 +94,7 @@ class Token
     /**
      * @return int
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -102,7 +102,7 @@ class Token
     /**
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
@@ -110,7 +110,7 @@ class Token
     /**
      * @return string|null
      */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }

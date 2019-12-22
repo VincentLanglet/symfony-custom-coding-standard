@@ -10,7 +10,7 @@ use TwigCS\Tests\AbstractSniffTest;
  */
 class DelimiterSpacingTest extends AbstractSniffTest
 {
-    public function testSniff()
+    public function testSniff(): void
     {
         $this->checkGenericSniff(new DelimiterSpacingSniff(), [
             [12 => 1],

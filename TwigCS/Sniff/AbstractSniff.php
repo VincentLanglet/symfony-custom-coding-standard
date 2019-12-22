@@ -14,8 +14,6 @@ use TwigCS\Token\Token;
 abstract class AbstractSniff implements SniffInterface
 {
     /**
-     * When process is called, it will fill this report with the potential violations.
-     *
      * @var Report
      */
     protected $report = null;
@@ -48,8 +46,6 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * Helper method to match a token of a given type and value.
-     *
      * @param Token  $token
      * @param int    $type
      * @param string $value

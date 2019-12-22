@@ -19,8 +19,6 @@ class TextFormatter
     const ERROR_LINE_WIDTH    = 120;
 
     /**
-     * Input-output helper object.
-     *
      * @var SymfonyStyle
      */
     protected $io;

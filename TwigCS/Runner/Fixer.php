@@ -14,15 +14,11 @@ use TwigCS\Token\Tokenizer;
 class Fixer
 {
     /**
-     * The number of times we have looped over a file.
-     *
      * @var int
      */
     protected $loops = 0;
 
     /**
-     * The character used when we are adding new lines.
-     *
      * @var string
      */
     protected $eolChar = "\n";
@@ -40,19 +36,19 @@ class Fixer
     /**
      * The list of tokens that make up the file contents.
      *
-     * This is a simplified list which just contains the token content and nothing
-     * else. This is the array that is updated as fixes are made, not the file's
-     * token array. Imploding this array will give you the file content back.
+     * This is a simplified list which just contains the token content and nothing else.
+     * This is the array that is updated as fixes are made, not the file's token array.
+     * Imploding this array will give you the file content back.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $tokens = [];
 
     /**
      * A list of tokens that have already been fixed.
      *
-     * We don't allow the same token to be fixed more than once each time
-     * through a file as this can easily cause conflicts between sniffs.
+     * We don't allow the same token to be fixed more than once each time through a file
+     * as this can easily cause conflicts between sniffs.
      *
      * @var int[]
      */
@@ -61,18 +57,16 @@ class Fixer
     /**
      * The last value of each fixed token.
      *
-     * If a token is being "fixed" back to its last value, the fix is
-     * probably conflicting with another.
+     * If a token is being "fixed" back to its last value, the fix is probably conflicting with another.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $oldTokenValues = [];
 
     /**
      * A list of tokens that have been fixed during a changeset.
      *
-     * All changes in changeset must be able to be applied, or else
-     * the entire changeset is rejected.
+     * All changes in changeset must be able to be applied, or else the entire changeset is rejected.
      *
      * @var array
      */
@@ -100,8 +94,6 @@ class Fixer
     protected $numFixes = 0;
 
     /**
-     * Starts fixing a new file.
-     *
      * @param Ruleset   $ruleset
      * @param Tokenizer $tokenizer
      *
@@ -134,8 +126,6 @@ class Fixer
     }
 
     /**
-     * Attempt to fix the file by processing it until no fixes are made.
-     *
      * @param string $file
      *
      * @return bool
@@ -181,8 +171,6 @@ class Fixer
     }
 
     /**
-     * Generates a text diff of the original file and the new content.
-     *
      * @param string $filePath File path to diff the file against.
      *
      * @return string
@@ -242,8 +230,6 @@ class Fixer
     }
 
     /**
-     * Get the current content of the file, as a string.
-     *
      * @return string
      */
     public function getContents(): string
@@ -254,12 +240,10 @@ class Fixer
     }
 
     /**
-     * Get the current fixed content of a token.
-     *
      * This function takes changesets into account so should be used
      * instead of directly accessing the token array.
      *
-     * @param int $tokenPosition The position of the token in the token stack.
+     * @param int $tokenPosition
      *
      * @return string
      */
@@ -331,12 +315,10 @@ class Fixer
     }
 
     /**
-     * Replace the entire contents of a token.
+     * @param int    $tokenPosition
+     * @param string $content
      *
-     * @param int    $tokenPosition The position of the token in the token stack.
-     * @param string $content       The new content of the token.
-     *
-     * @return bool If the change was accepted.
+     * @return bool
      */
     public function replaceToken(int $tokenPosition, string $content): bool
     {
@@ -384,11 +366,9 @@ class Fixer
     }
 
     /**
-     * Reverts the previous fix made to a token.
+     * @param int $tokenPosition
      *
-     * @param int $tokenPosition The position of the token in the token stack.
-     *
-     * @return bool If a change was reverted.
+     * @return bool
      */
     public function revertToken(int $tokenPosition): bool
     {
@@ -404,11 +384,9 @@ class Fixer
     }
 
     /**
-     * Adds a newline to end of a token's content.
+     * @param int $tokenPosition
      *
-     * @param int $tokenPosition The position of the token in the token stack.
-     *
-     * @return bool If the change was accepted.
+     * @return bool
      */
     public function addNewline(int $tokenPosition): bool
     {
@@ -418,11 +396,9 @@ class Fixer
     }
 
     /**
-     * Adds a newline to the start of a token's content.
+     * @param int $tokenPosition
      *
-     * @param int $tokenPosition The position of the token in the token stack.
-     *
-     * @return bool If the change was accepted.
+     * @return bool
      */
     public function addNewlineBefore(int $tokenPosition): bool
     {
@@ -432,12 +408,10 @@ class Fixer
     }
 
     /**
-     * Adds content to the end of a token's current content.
+     * @param int    $tokenPosition
+     * @param string $content
      *
-     * @param int    $tokenPosition The position of the token in the token stack.
-     * @param string $content       The content to add.
-     *
-     * @return bool If the change was accepted.
+     * @return bool
      */
     public function addContent(int $tokenPosition, string $content): bool
     {
@@ -447,12 +421,10 @@ class Fixer
     }
 
     /**
-     * Adds content to the start of a token's current content.
+     * @param int    $tokenPosition
+     * @param string $content
      *
-     * @param int    $tokenPosition The position of the token in the token stack.
-     * @param string $content       The content to add.
-     *
-     * @return bool If the change was accepted.
+     * @return bool
      */
     public function addContentBefore(int $tokenPosition, string $content): bool
     {

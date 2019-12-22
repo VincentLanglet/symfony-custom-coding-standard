@@ -38,8 +38,6 @@ class Ruleset
     }
 
     /**
-     * Create a new set of rule.
-     *
      * @param string $standardName
      *
      * @return Ruleset
