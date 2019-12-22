@@ -69,19 +69,23 @@
 
     <!-- Disallow -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-    <rule ref="Generic.CodeAnalysis.AssignmentInCondition"/>
-    <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
+    <rule ref="Generic.CodeAnalysis.AssignmentInCondition">
+        <type>error</type>
+    </rule>
+    <rule ref="Generic.CodeAnalysis.EmptyPHPStatement">
+        <type>error</type>
+    </rule>
     <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
-    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
     <rule ref="Generic.PHP.BacktickOperator"/>
     <rule ref="Generic.PHP.DisallowShortOpenTag"/>
     <rule ref="Generic.PHP.ForbiddenFunctions"/>
     <rule ref="PEAR.Commenting.InlineComment"/>
-    <rule ref="Squiz.PHP.CommentedOutCode"/>
     <rule ref="Squiz.PHP.DisallowMultipleAssignments"/>
     <rule ref="Squiz.PHP.DiscouragedFunctions"/>
     <rule ref="Squiz.PHP.Eval"/>
-    <rule ref="Squiz.PHP.NonExecutableCode"/>
+    <rule ref="Squiz.PHP.NonExecutableCode">
+        <type>error</type>
+    </rule>
     <rule ref="Squiz.Operators.ValidLogicalOperators"/>
 
     <!-- Others -->

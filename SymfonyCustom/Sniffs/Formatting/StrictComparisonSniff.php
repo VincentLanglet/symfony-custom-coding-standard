@@ -6,7 +6,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Throws warning if == or != are use
+ * Throws error if == or != are use
  */
 class StrictComparisonSniff implements Sniff
 {
@@ -36,9 +36,9 @@ class StrictComparisonSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        // This warning is fixable, but it's too dangerous to add automatically fixer
-        $phpcsFile->addWarning(
-            'The %s comparator is not recommended, use %s instead',
+        // This error is fixable, but it's too dangerous to add automatically fixer
+        $phpcsFile->addError(
+            'The %s comparator is forbidden, use %s instead',
             $stackPtr,
             'NotStrict',
             [
