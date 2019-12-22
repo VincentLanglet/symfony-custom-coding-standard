@@ -96,3 +96,5 @@ if ($true == strtolower($check)) {
 } // Bad.
 
 $update = 'yes' === strtolower($this->from_post('update')); // Ok.
+
+$currentIsCustom = false === in_array($currentType, $this->tags); // Ok.

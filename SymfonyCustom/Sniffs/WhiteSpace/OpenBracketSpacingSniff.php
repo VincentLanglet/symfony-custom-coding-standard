@@ -12,34 +12,24 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class OpenBracketSpacingSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_OPEN_CURLY_BRACKET,
-            T_OPEN_PARENTHESIS,
-            T_OPEN_SHORT_ARRAY,
-        ];
+        return [T_OPEN_CURLY_BRACKET, T_OPEN_PARENTHESIS, T_OPEN_SHORT_ARRAY];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (isset($tokens[($stackPtr + 1)]) === true
+        if (isset($tokens[($stackPtr + 1)])
             && T_WHITESPACE === $tokens[($stackPtr + 1)]['code']
-            && strpos($tokens[($stackPtr + 1)]['content'], $phpcsFile->eolChar) === false
+            && false === strpos($tokens[($stackPtr + 1)]['content'], $phpcsFile->eolChar)
         ) {
             $error = 'There should be no space after an opening "%s"';
             $fix = $phpcsFile->addFixableError(
@@ -49,7 +39,7 @@ class OpenBracketSpacingSniff implements Sniff
                 [$tokens[$stackPtr]['content']]
             );
 
-            if (true === $fix) {
+            if ($fix) {
                 $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
             }
         }

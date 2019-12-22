@@ -12,6 +12,17 @@ use PHP_CodeSniffer\Util\Tokens;
  */
 class SniffHelper
 {
+    public const TAGS_WITH_TYPE = [
+        '@method',
+        '@param',
+        '@property',
+        '@property-read',
+        '@property-write',
+        '@return',
+        '@throws',
+        '@var',
+    ];
+
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
@@ -28,7 +39,7 @@ class SniffHelper
 
         $nextNonEmpty = $phpcsFile->findNext(Tokens::$emptyTokens, ($stackPtr + 1), null, true);
 
-        return false === $nextNonEmpty || T_NS_SEPARATOR !== $tokens[$nextNonEmpty]['code'];
+        return !$nextNonEmpty || T_NS_SEPARATOR !== $tokens[$nextNonEmpty]['code'];
     }
 
     /**

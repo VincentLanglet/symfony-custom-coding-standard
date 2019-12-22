@@ -11,49 +11,21 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class ConditionalReturnOrThrowSniff implements Sniff
 {
     /**
-     * @var array
+     * @return int[]
      */
-    private $openers = [
-        T_IF,
-        T_CASE,
-    ];
-
-    /**
-     * @var array
-     */
-    private $conditions = [
-        T_ELSEIF,
-        T_ELSE,
-        T_BREAK,
-    ];
-
-    /**
-     * Registers the tokens that this sniff wants to listen for.
-     *
-     * @return array
-     */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_THROW,
-            T_RETURN,
-        ];
+        return [T_THROW, T_RETURN];
     }
 
     /**
-     * Called when one of the token types that this sniff is listening for is found.
-     *
-     * @param File $phpcsFile The PHP_CodeSniffer file where the token was found.
-     * @param int  $stackPtr  The position in the PHP_CodeSniffer file's token stack where the token was found.
-     *
-     * @return void|int       Optionally returns a stack pointer. The sniff will not be called again on
-     *                        the current file until the returned stack pointer is reached.
-     *                        Return (count($tokens) + 1) to skip the rest of the file.
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
-        $opener = $phpcsFile->findPrevious($this->openers, $stackPtr);
+        $opener = $phpcsFile->findPrevious([T_IF, T_CASE], $stackPtr);
 
         if ($opener
             && isset($tokens[$opener]['scope_closer'])
@@ -68,13 +40,12 @@ class ConditionalReturnOrThrowSniff implements Sniff
                 return;
             }
 
-            $condition = $phpcsFile->findNext($this->conditions, $stackPtr + 1);
-
+            $condition = $phpcsFile->findNext([T_ELSEIF, T_ELSE, T_BREAK], $stackPtr + 1);
             if (false !== $condition) {
                 $start = $stackPtr;
                 $end = $condition;
 
-                $next = $phpcsFile->findNext($this->openers, $start + 1, $end);
+                $next = $phpcsFile->findNext([T_IF, T_CASE], $start + 1, $end);
                 while (false !== $next) {
                     if ($tokens[$condition]['level'] >= $tokens[$next]['level']) {
                         $err = false;
@@ -82,14 +53,14 @@ class ConditionalReturnOrThrowSniff implements Sniff
                     }
 
                     $start = $next;
-                    $next = $phpcsFile->findNext($this->openers, $start + 1, $end);
+                    $next = $phpcsFile->findNext([T_IF, T_CASE], $start + 1, $end);
                 }
 
                 if (!isset($err)) {
                     $err = $tokens[$condition]['level'] === $tokens[$opener]['level'];
                 }
 
-                if (true === $err) {
+                if ($err) {
                     $phpcsFile->addError(
                         'Do not use else, elseif, break after if and case conditions which return or throw something',
                         $condition,

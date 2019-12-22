@@ -20,19 +20,12 @@ class MethodScopeSniff extends AbstractScopeSniff
     }
 
     /**
-     * Processes the function tokens within the class.
-     *
-     * @param File $phpcsFile The file where this token was found.
-     * @param int  $stackPtr  The position where the token was found.
-     * @param int  $currScope The current scope opener token.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
+     * @param int  $currScope
      */
-    protected function processTokenWithinScope(
-        File $phpcsFile,
-        $stackPtr,
-        $currScope
-    ) {
+    protected function processTokenWithinScope(File $phpcsFile, $stackPtr, $currScope): void
+    {
         $tokens = $phpcsFile->getTokens();
 
         $methodName = $phpcsFile->getDeclarationName($stackPtr);
@@ -56,12 +49,10 @@ class MethodScopeSniff extends AbstractScopeSniff
     }
 
     /**
-     * Process tokens outside scope.
-     *
      * @param File $phpcsFile
      * @param int  $stackPtr
      */
-    protected function processTokenOutsideScope(File $phpcsFile, $stackPtr)
+    protected function processTokenOutsideScope(File $phpcsFile, $stackPtr): void
     {
     }
 }

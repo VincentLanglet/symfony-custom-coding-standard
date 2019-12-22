@@ -11,14 +11,10 @@ use PHP_CodeSniffer\Sniffs\AbstractVariableSniff;
 class VariableCommentSniff extends AbstractVariableSniff
 {
     /**
-     * Called to process class member vars.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function processMemberVar(File $phpcsFile, $stackPtr)
+    public function processMemberVar(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
         $ignore = [
@@ -102,7 +98,7 @@ class VariableCommentSniff extends AbstractVariableSniff
             $error = '@var annotations should not contain variable name';
             $fix = $phpcsFile->addFixableError($error, $foundVar, 'NamedVar');
 
-            if (true === $fix) {
+            if ($fix) {
                 $phpcsFile->fixer->replaceToken($string, implode(' ', $newContent));
             }
         }
@@ -112,12 +108,26 @@ class VariableCommentSniff extends AbstractVariableSniff
 
     /**
      * @param File $phpcsFile
+     * @param int  $stackPtr
+     */
+    protected function processVariable(File $phpcsFile, $stackPtr): void
+    {
+    }
+
+    /**
+     * @param File $phpcsFile
+     * @param int  $stackPtr
+     */
+    protected function processVariableInString(File $phpcsFile, $stackPtr): void
+    {
+    }
+
+    /**
+     * @param File $phpcsFile
      * @param int  $commentStart
      */
-    protected function processWhitespace(
-        File $phpcsFile,
-        $commentStart
-    ) {
+    private function processWhitespace(File $phpcsFile, int $commentStart): void
+    {
         $tokens = $phpcsFile->getTokens();
         $before = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
 
@@ -127,10 +137,7 @@ class VariableCommentSniff extends AbstractVariableSniff
         $found = $startLine - $prevLine - 1;
 
         // Skip for class opening
-        if ($found < 1
-            && !(0 === $found
-            && 'T_OPEN_CURLY_BRACKET' === $tokens[$before]['type'])
-        ) {
+        if ($found < 1 && 'T_OPEN_CURLY_BRACKET' !== $tokens[$before]['type']) {
             if ($found < 0) {
                 $found = 0;
             }
@@ -141,7 +148,7 @@ class VariableCommentSniff extends AbstractVariableSniff
             $data = [$found];
             $fix = $phpcsFile->addFixableError($error, $commentStart, $rule, $data);
 
-            if (true === $fix) {
+            if ($fix) {
                 if ($found > 1) {
                     $phpcsFile->fixer->beginChangeset();
 
@@ -160,33 +167,5 @@ class VariableCommentSniff extends AbstractVariableSniff
                 }
             }
         }
-    }
-
-    /**
-     * Called to process a normal variable.
-     *
-     * Not required for this sniff.
-     *
-     * @param File $phpcsFile The PHP_CodeSniffer file where this token was found.
-     * @param int  $stackPtr  The position where the double quoted string was found.
-     *
-     * @return void
-     */
-    protected function processVariable(File $phpcsFile, $stackPtr)
-    {
-    }
-
-    /**
-     * Called to process variables found in double quoted strings.
-     *
-     * Not required for this sniff.
-     *
-     * @param File $phpcsFile The PHP_CodeSniffer file where this token was found.
-     * @param int  $stackPtr  The position where the double quoted string was found.
-     *
-     * @return void
-     */
-    protected function processVariableInString(File $phpcsFile, $stackPtr)
-    {
     }
 }

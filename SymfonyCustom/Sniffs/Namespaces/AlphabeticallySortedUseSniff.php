@@ -15,7 +15,7 @@ class AlphabeticallySortedUseSniff implements Sniff
     /**
      * @return int[]
      */
-    public function register()
+    public function register(): array
     {
         return [T_OPEN_TAG, T_NAMESPACE];
     }
@@ -26,7 +26,7 @@ class AlphabeticallySortedUseSniff implements Sniff
      *
      * @return int
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): int
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -68,7 +68,7 @@ class AlphabeticallySortedUseSniff implements Sniff
                 if ($fix) {
                     $phpcsFile->fixer->beginChangeset();
                     for ($i = $lastUse['ptrEnd'] + 1; $i < $use['ptrUse']; ++$i) {
-                        if (strpos($tokens[$i]['content'], $phpcsFile->eolChar) !== false) {
+                        if (false !== strpos($tokens[$i]['content'], $phpcsFile->eolChar)) {
                             $phpcsFile->fixer->replaceToken($i, '');
                             --$lineDiff;
 
@@ -102,7 +102,7 @@ class AlphabeticallySortedUseSniff implements Sniff
      *
      * @return array
      */
-    private function getUseStatements(File $phpcsFile, $scopePtr)
+    private function getUseStatements(File $phpcsFile, int $scopePtr): array
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -128,7 +128,7 @@ class AlphabeticallySortedUseSniff implements Sniff
             }
 
             // find semicolon as the end of the global use scope
-            $endOfScope = $phpcsFile->findNext([T_SEMICOLON], $use + 1);
+            $endOfScope = $phpcsFile->findNext(T_SEMICOLON, $use + 1);
 
             $startOfName = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $use + 1, $endOfScope);
 
@@ -162,7 +162,7 @@ class AlphabeticallySortedUseSniff implements Sniff
      *
      * @return int
      */
-    private function compareUseStatements(array $a, array $b)
+    private function compareUseStatements(array $a, array $b): int
     {
         if ($a['type'] === $b['type']) {
             return strcasecmp(
@@ -183,7 +183,7 @@ class AlphabeticallySortedUseSniff implements Sniff
      *
      * @return string
      */
-    private function clearName($name)
+    private function clearName(string $name): string
     {
         // Handle grouped use
         $name = explode('{', $name)[0];

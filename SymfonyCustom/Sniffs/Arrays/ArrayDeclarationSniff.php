@@ -19,40 +19,18 @@ class ArrayDeclarationSniff implements Sniff
     public $indent = 4;
 
     /**
-     * Allow or disallow a multiline assignment
-     * By default, it is allowed to avoid conflict with a maximum line length rule
-     *
-     * [
-     *     'key' =>
-     *         'value'
-     * ]
-     *
-     * @var bool
+     * @return int[]
      */
-    public $ignoreNewLines = true;
-
-    /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
-     */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_ARRAY,
-            T_OPEN_SHORT_ARRAY,
-        ];
+        return [T_ARRAY, T_OPEN_SHORT_ARRAY];
     }
 
     /**
-     * Processes this sniff, when one of its tokens is encountered.
-     *
      * @param File $phpcsFile The current file being checked.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -71,7 +49,7 @@ class ArrayDeclarationSniff implements Sniff
                 $data  = [$tokens[$stackPtr]['content']];
                 $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'NotLowerCase', $data);
 
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr, 'array');
                 }
             } else {
@@ -79,7 +57,7 @@ class ArrayDeclarationSniff implements Sniff
             }
 
             $arrayStart = $tokens[$stackPtr]['parenthesis_opener'];
-            if (isset($tokens[$arrayStart]['parenthesis_closer']) === false) {
+            if (!isset($tokens[$arrayStart]['parenthesis_closer'])) {
                 return;
             }
 
@@ -89,7 +67,7 @@ class ArrayDeclarationSniff implements Sniff
                 $error = 'There must be no space between the "array" keyword and the opening parenthesis';
                 $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SpaceAfterKeyword');
 
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->beginChangeset();
                     for ($i = ($stackPtr + 1); $i < $arrayStart; $i++) {
                         $phpcsFile->fixer->replaceToken($i, '');
@@ -112,7 +90,7 @@ class ArrayDeclarationSniff implements Sniff
                 $error = 'Empty array declaration must have no space between the parentheses';
                 $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SpaceInEmptyArray');
 
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->beginChangeset();
                     for ($i = ($arrayStart + 1); $i < $arrayEnd; $i++) {
                         $phpcsFile->fixer->replaceToken($i, '');
@@ -135,16 +113,12 @@ class ArrayDeclarationSniff implements Sniff
     }
 
     /**
-     * Processes a single-line array definition.
-     *
-     * @param File $phpcsFile  The current file being checked.
-     * @param int  $stackPtr   The position of the current token in the stack passed in $tokens.
-     * @param int  $arrayStart The token that starts the array definition.
-     * @param int  $arrayEnd   The token that ends the array definition.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
+     * @param int  $start
+     * @param int  $end
      */
-    public function processSingleLineArray(File $phpcsFile, $stackPtr, $arrayStart, $arrayEnd)
+    public function processSingleLineArray(File $phpcsFile, int $stackPtr, int $start, int $end): void
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -152,7 +126,7 @@ class ArrayDeclarationSniff implements Sniff
         // unless it is contained inside a function call or condition.
         $valueCount = 0;
         $commas     = [];
-        for ($i = ($arrayStart + 1); $i < $arrayEnd; $i++) {
+        for ($i = ($start + 1); $i < $end; $i++) {
             // Skip bracketed statements, like function calls.
             if (T_OPEN_PARENTHESIS === $tokens[$i]['code']) {
                 $i = $tokens[$i]['parenthesis_closer'];
@@ -161,7 +135,7 @@ class ArrayDeclarationSniff implements Sniff
 
             if (T_COMMA === $tokens[$i]['code']) {
                 // Before counting this comma, make sure we are not at the end of the array.
-                $next = $phpcsFile->findNext(T_WHITESPACE, ($i + 1), $arrayEnd, true);
+                $next = $phpcsFile->findNext(T_WHITESPACE, ($i + 1), $end, true);
                 if (false !== $next) {
                     $valueCount++;
                     $commas[] = $i;
@@ -169,7 +143,7 @@ class ArrayDeclarationSniff implements Sniff
                     // There is a comma at the end of a single line array.
                     $error = 'Comma not allowed after last value in single-line array declaration';
                     $fix   = $phpcsFile->addFixableError($error, $i, 'CommaAfterLast');
-                    if (true === $fix) {
+                    if ($fix) {
                         $phpcsFile->fixer->replaceToken($i, '');
                     }
                 }
@@ -177,14 +151,14 @@ class ArrayDeclarationSniff implements Sniff
         }
 
         // Now check each of the double arrows (if any).
-        $nextArrow = $arrayStart;
-        while (($nextArrow = $phpcsFile->findNext(T_DOUBLE_ARROW, ($nextArrow + 1), $arrayEnd)) !== false) {
+        $nextArrow = $phpcsFile->findNext(T_DOUBLE_ARROW, ($start + 1), $end);
+        while (false !== $nextArrow) {
             if (T_WHITESPACE !== $tokens[($nextArrow - 1)]['code']) {
                 $content = $tokens[($nextArrow - 1)]['content'];
                 $error   = 'Expected 1 space between "%s" and double arrow; 0 found';
                 $data    = [$content];
                 $fix     = $phpcsFile->addFixableError($error, $nextArrow, 'NoSpaceBeforeDoubleArrow', $data);
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->addContentBefore($nextArrow, ' ');
                 }
             } else {
@@ -195,7 +169,7 @@ class ArrayDeclarationSniff implements Sniff
                     $data    = [$content, $spaceLength];
 
                     $fix = $phpcsFile->addFixableError($error, $nextArrow, 'SpaceBeforeDoubleArrow', $data);
-                    if (true === $fix) {
+                    if ($fix) {
                         $phpcsFile->fixer->replaceToken(($nextArrow - 1), ' ');
                     }
                 }
@@ -207,7 +181,7 @@ class ArrayDeclarationSniff implements Sniff
                 $data    = [$content];
 
                 $fix     = $phpcsFile->addFixableError($error, $nextArrow, 'NoSpaceAfterDoubleArrow', $data);
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->addContent($nextArrow, ' ');
                 }
             } else {
@@ -218,11 +192,13 @@ class ArrayDeclarationSniff implements Sniff
                     $data    = [$content, $spaceLength];
 
                     $fix = $phpcsFile->addFixableError($error, $nextArrow, 'SpaceAfterDoubleArrow', $data);
-                    if (true === $fix) {
+                    if ($fix) {
                         $phpcsFile->fixer->replaceToken(($nextArrow + 1), ' ');
                     }
                 }
             }
+
+            $nextArrow = $phpcsFile->findNext(T_DOUBLE_ARROW, ($nextArrow + 1), $end);
         }
 
         if ($valueCount > 0) {
@@ -234,7 +210,7 @@ class ArrayDeclarationSniff implements Sniff
                     $data = [$content];
 
                     $fix = $phpcsFile->addFixableError($error, $comma, 'NoSpaceAfterComma', $data);
-                    if (true === $fix) {
+                    if ($fix) {
                         $phpcsFile->fixer->addContent($comma, ' ');
                     }
                 } else {
@@ -245,7 +221,7 @@ class ArrayDeclarationSniff implements Sniff
                         $data = [$content, $spaceLength];
 
                         $fix = $phpcsFile->addFixableError($error, $comma, 'SpaceAfterComma', $data);
-                        if (true === $fix) {
+                        if ($fix) {
                             $phpcsFile->fixer->replaceToken(($comma + 1), ' ');
                         }
                     }
@@ -258,7 +234,7 @@ class ArrayDeclarationSniff implements Sniff
                     $data = [$content, $spaceLength];
 
                     $fix = $phpcsFile->addFixableError($error, $comma, 'SpaceBeforeComma', $data);
-                    if (true === $fix) {
+                    if ($fix) {
                         $phpcsFile->fixer->replaceToken(($comma - 1), '');
                     }
                 }
@@ -267,20 +243,16 @@ class ArrayDeclarationSniff implements Sniff
     }
 
     /**
-     * Processes a multi-line array definition.
-     *
-     * @param File $phpcsFile  The current file being checked.
-     * @param int  $stackPtr   The position of the current token in the stack passed in $tokens.
-     * @param int  $arrayStart The token that starts the array definition.
-     * @param int  $arrayEnd   The token that ends the array definition.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
+     * @param int  $start
+     * @param int  $end
      */
-    public function processMultiLineArray(File $phpcsFile, $stackPtr, $arrayStart, $arrayEnd)
+    public function processMultiLineArray(File $phpcsFile, int $stackPtr, int $start, int $end): void
     {
         $tokens = $phpcsFile->getTokens();
 
-        $indent = $phpcsFile->findFirstOnLine(T_WHITESPACE, $arrayStart);
+        $indent = $phpcsFile->findFirstOnLine(T_WHITESPACE, $start);
         if (false === $indent || $tokens[$indent]['column'] > 1) {
             $currentIndent = 0;
         } else {
@@ -288,26 +260,26 @@ class ArrayDeclarationSniff implements Sniff
         }
 
         // Check the closing bracket is on a new line.
-        $lastContent = $phpcsFile->findPrevious(T_WHITESPACE, ($arrayEnd - 1), $arrayStart, true);
-        if ($tokens[$lastContent]['line'] === $tokens[$arrayEnd]['line']) {
+        $lastContent = $phpcsFile->findPrevious(T_WHITESPACE, ($end - 1), $start, true);
+        if ($tokens[$lastContent]['line'] === $tokens[$end]['line']) {
             $error = 'Closing parenthesis of array declaration must be on a new line';
-            $fix   = $phpcsFile->addFixableError($error, $arrayEnd, 'CloseBraceNewLine');
-            if (true === $fix) {
-                $phpcsFile->fixer->addNewlineBefore($arrayEnd);
+            $fix   = $phpcsFile->addFixableError($error, $end, 'CloseBraceNewLine');
+            if ($fix) {
+                $phpcsFile->fixer->addNewlineBefore($end);
             }
-        } elseif ($tokens[$arrayEnd]['column'] !== $currentIndent + 1) {
+        } elseif ($tokens[$end]['column'] !== $currentIndent + 1) {
             // Check the closing bracket is lined up under the "a" in array.
             $expected = ($currentIndent);
-            $found    = ($tokens[$arrayEnd]['column'] - 1);
+            $found    = ($tokens[$end]['column'] - 1);
             $error    = 'Closing parenthesis not aligned correctly; expected %s space(s) but found %s';
             $data     = [$expected, $found];
 
-            $fix = $phpcsFile->addFixableError($error, $arrayEnd, 'CloseBraceNotAligned', $data);
-            if (true === $fix) {
+            $fix = $phpcsFile->addFixableError($error, $end, 'CloseBraceNotAligned', $data);
+            if ($fix) {
                 if (0 === $found) {
-                    $phpcsFile->fixer->addContent(($arrayEnd - 1), str_repeat(' ', $expected));
+                    $phpcsFile->fixer->addContent(($end - 1), str_repeat(' ', $expected));
                 } else {
-                    $phpcsFile->fixer->replaceToken(($arrayEnd - 1), str_repeat(' ', $expected));
+                    $phpcsFile->fixer->replaceToken(($end - 1), str_repeat(' ', $expected));
                 }
             }
         }
@@ -324,7 +296,7 @@ class ArrayDeclarationSniff implements Sniff
         }
 
         // Find all the double arrows that reside in this scope.
-        for ($nextToken = ($stackPtr + 1); $nextToken < $arrayEnd; $nextToken++) {
+        for ($nextToken = ($stackPtr + 1); $nextToken < $end; $nextToken++) {
             // Skip array or function calls
             switch ($tokens[$nextToken]['code']) {
                 case T_ARRAY:
@@ -337,7 +309,7 @@ class ArrayDeclarationSniff implements Sniff
                     $nextToken = $tokens[$nextToken]['scope_closer'];
                     continue 2;
                 case T_OPEN_PARENTHESIS:
-                    if (false === isset($tokens[$nextToken]['parenthesis_owner'])
+                    if (!isset($tokens[$nextToken]['parenthesis_owner'])
                         || $tokens[$nextToken]['parenthesis_owner'] !== $stackPtr
                     ) {
                         $nextToken = $tokens[$nextToken]['parenthesis_closer'];
@@ -347,21 +319,21 @@ class ArrayDeclarationSniff implements Sniff
             }
 
             if (!in_array($tokens[$nextToken]['code'], [T_DOUBLE_ARROW, T_COMMA])
-                && $nextToken !== $arrayEnd - 1
+                && $nextToken !== $end - 1
             ) {
                 continue;
             }
 
             $currentEntry = [];
 
-            if (T_COMMA === $tokens[$nextToken]['code'] || $nextToken === $arrayEnd - 1) {
+            if (T_COMMA === $tokens[$nextToken]['code'] || $nextToken === $end - 1) {
                 $stackPtrCount = 0;
-                if (true === isset($tokens[$stackPtr]['nested_parenthesis'])) {
+                if (isset($tokens[$stackPtr]['nested_parenthesis'])) {
                     $stackPtrCount = count($tokens[$stackPtr]['nested_parenthesis']);
                 }
 
                 $commaCount = 0;
-                if (true === isset($tokens[$nextToken]['nested_parenthesis'])) {
+                if (isset($tokens[$nextToken]['nested_parenthesis'])) {
                     $commaCount = count($tokens[$nextToken]['nested_parenthesis']);
                     if (T_ARRAY === $tokens[$stackPtr]['code']) {
                         // Remove parenthesis that are used to define the array.
@@ -384,7 +356,7 @@ class ArrayDeclarationSniff implements Sniff
                 );
 
                 if (false !== $valueContent && T_DOUBLE_ARROW !== $tokens[$lastToken]['code']) {
-                    if (true === $keyUsed) {
+                    if ($keyUsed) {
                         $error = 'No key specified for array entry; first entry specifies key';
                         $phpcsFile->addError($error, $nextToken, 'NoKeySpecified');
                     } else {
@@ -408,7 +380,7 @@ class ArrayDeclarationSniff implements Sniff
                     $data  = [$content, $spaceLength];
 
                     $fix = $phpcsFile->addFixableError($error, $nextToken, 'SpaceBeforeComma', $data);
-                    if (true === $fix) {
+                    if ($fix) {
                         $phpcsFile->fixer->replaceToken(($nextToken - 1), '');
                     }
                 }
@@ -418,7 +390,7 @@ class ArrayDeclarationSniff implements Sniff
             }
 
             if (T_DOUBLE_ARROW === $tokens[$nextToken]['code']) {
-                if (true === $singleUsed) {
+                if ($singleUsed) {
                     $error = 'Key specified for array entry; first entry has no key';
                     $phpcsFile->addError($error, $nextToken, 'KeySpecified');
                 } else {
@@ -428,7 +400,7 @@ class ArrayDeclarationSniff implements Sniff
                 $currentEntry['arrow'] = $nextToken;
 
                 // Find the start of index that uses this double arrow.
-                $indexEnd   = $phpcsFile->findPrevious(T_WHITESPACE, ($nextToken - 1), $arrayStart, true);
+                $indexEnd   = $phpcsFile->findPrevious(T_WHITESPACE, ($nextToken - 1), $start, true);
                 $indexStart = $phpcsFile->findStartOfStatement($indexEnd);
 
                 if ($indexStart === $indexEnd) {
@@ -451,7 +423,7 @@ class ArrayDeclarationSniff implements Sniff
                 $nextContent = $phpcsFile->findNext(
                     Tokens::$emptyTokens,
                     ($nextToken + 1),
-                    $arrayEnd,
+                    $end,
                     true
                 );
 
@@ -461,13 +433,13 @@ class ArrayDeclarationSniff implements Sniff
             }
         }
 
-        if (false === empty($indices)) {
+        if (!empty($indices)) {
             $count     = count($indices);
             $lastIndex = $indices[($count - 1)]['value'];
 
             $trailingContent = $phpcsFile->findPrevious(
                 Tokens::$emptyTokens,
-                ($arrayEnd - 1),
+                ($end - 1),
                 $lastIndex,
                 true
             );
@@ -476,7 +448,7 @@ class ArrayDeclarationSniff implements Sniff
                 $phpcsFile->recordMetric($stackPtr, 'Array end comma', 'no');
                 $error = 'Comma required after last value in array declaration';
                 $fix   = $phpcsFile->addFixableError($error, $trailingContent, 'NoCommaAfterLast');
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->addContent($trailingContent, ',');
                 }
             } else {
@@ -485,12 +457,12 @@ class ArrayDeclarationSniff implements Sniff
 
             $lastValueLine = $stackPtr;
             foreach ($indices as $value) {
-                if (false === empty($value['arrow'])) {
+                if (!empty($value['arrow'])) {
                     // Array value with arrow are checked later cause there is more checks.
                     continue;
                 }
 
-                if (true === empty($value['value'])) {
+                if (empty($value['value'])) {
                     // Array was malformed, so we have to ignore it.
                     // Other parts of this sniff will correct the error.
                     continue;
@@ -502,7 +474,7 @@ class ArrayDeclarationSniff implements Sniff
                 if (false !== $lastValueLine && $tokens[$value['value']]['line'] === $lastValueLine) {
                     $error = 'Each value in a multi-line array must be on a new line';
                     $fix   = $phpcsFile->addFixableError($error, $value['value'], 'ValueNoNewline');
-                    if (true === $fix) {
+                    if ($fix) {
                         if (T_WHITESPACE === $tokens[($value['value'] - 1)]['code']) {
                             $phpcsFile->fixer->replaceToken(($value['value'] - 1), '');
                         }
@@ -519,7 +491,7 @@ class ArrayDeclarationSniff implements Sniff
                         $data  = [$expected, $found];
 
                         $fix = $phpcsFile->addFixableError($error, $value['value'], 'ValueNotAligned', $data);
-                        if (true === $fix) {
+                        if ($fix) {
                             if (0 === $found) {
                                 $phpcsFile->fixer->addContent(($value['value'] - 1), str_repeat(' ', $expected));
                             } else {
@@ -564,12 +536,12 @@ class ArrayDeclarationSniff implements Sniff
         $valueStart    = ($arrowStart + 3);
         $lastIndexLine = $tokens[$stackPtr]['line'];
         foreach ($indices as $index) {
-            if (isset($index['index']) === false) {
+            if (!isset($index['index'])) {
                 // Array value only.
                 if ($tokens[$index['value']]['line'] === $tokens[$stackPtr]['line'] && $numValues > 1) {
                     $error = 'The first value in a multi-value array must be on a new line';
                     $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'FirstValueNoNewline');
-                    if (true === $fix) {
+                    if ($fix) {
                         $phpcsFile->fixer->addNewlineBefore($index['value']);
                     }
                 }
@@ -584,7 +556,7 @@ class ArrayDeclarationSniff implements Sniff
             if ($indexLine === $tokens[$stackPtr]['line']) {
                 $error = 'The first index in a multi-value array must be on a new line';
                 $fix   = $phpcsFile->addFixableError($error, $index['index'], 'FirstIndexNoNewline');
-                if (true === $fix) {
+                if ($fix) {
                     $phpcsFile->fixer->addNewlineBefore($index['index']);
                 }
 
@@ -594,7 +566,7 @@ class ArrayDeclarationSniff implements Sniff
             if ($indexLine === $lastIndexLine) {
                 $error = 'Each index in a multi-line array must be on a new line';
                 $fix   = $phpcsFile->addFixableError($error, $index['index'], 'IndexNoNewline');
-                if (true === $fix) {
+                if ($fix) {
                     if (T_WHITESPACE === $tokens[($index['index'] - 1)]['code']) {
                         $phpcsFile->fixer->replaceToken(($index['index'] - 1), '');
                     }
@@ -613,7 +585,7 @@ class ArrayDeclarationSniff implements Sniff
 
                 $fix = $phpcsFile->addFixableError($error, $index['index'], 'KeyNotAligned', $data);
 
-                if (true === $fix) {
+                if ($fix) {
                     if (0 === $found) {
                         $phpcsFile->fixer->addContent(($index['index'] - 1), str_repeat(' ', $expected));
                     } else {
@@ -637,23 +609,21 @@ class ArrayDeclarationSniff implements Sniff
                 $error = 'Array double arrow not aligned correctly; expected %s space(s) but found %s';
                 $data  = [$expected, $found];
 
-                if ('newline' !== $found || false === $this->ignoreNewLines) {
-                    $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'DoubleArrowNotAligned', $data);
-                    if (true === $fix) {
-                        if ('newline' === $found) {
-                            $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($index['value'] - 1), null, true);
-                            $phpcsFile->fixer->beginChangeset();
-                            for ($i = ($prev + 1); $i < $index['value']; $i++) {
-                                $phpcsFile->fixer->replaceToken($i, '');
-                            }
-
-                            $phpcsFile->fixer->replaceToken(($index['value'] - 1), str_repeat(' ', $expected));
-                            $phpcsFile->fixer->endChangeset();
-                        } elseif (0 === $found) {
-                            $phpcsFile->fixer->addContent(($index['arrow'] - 1), str_repeat(' ', $expected));
-                        } else {
-                            $phpcsFile->fixer->replaceToken(($index['arrow'] - 1), str_repeat(' ', $expected));
+                $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'DoubleArrowNotAligned', $data);
+                if ($fix) {
+                    if ('newline' === $found) {
+                        $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($index['value'] - 1), null, true);
+                        $phpcsFile->fixer->beginChangeset();
+                        for ($i = ($prev + 1); $i < $index['value']; $i++) {
+                            $phpcsFile->fixer->replaceToken($i, '');
                         }
+
+                        $phpcsFile->fixer->replaceToken(($index['value'] - 1), str_repeat(' ', $expected));
+                        $phpcsFile->fixer->endChangeset();
+                    } elseif (0 === $found) {
+                        $phpcsFile->fixer->addContent(($index['arrow'] - 1), str_repeat(' ', $expected));
+                    } else {
+                        $phpcsFile->fixer->replaceToken(($index['arrow'] - 1), str_repeat(' ', $expected));
                     }
                 }
 
@@ -669,26 +639,24 @@ class ArrayDeclarationSniff implements Sniff
                     $found = 'newline';
                 }
 
-                if ('newline' !== $found || false === $this->ignoreNewLines) {
-                    $error = 'Array value not aligned correctly; expected %s space(s) but found %s';
-                    $data  = [$expected, $found];
+                $error = 'Array value not aligned correctly; expected %s space(s) but found %s';
+                $data  = [$expected, $found];
 
-                    $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'ValueNotAligned', $data);
-                    if (true === $fix) {
-                        if ('newline' === $found) {
-                            $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($index['value'] - 1), null, true);
-                            $phpcsFile->fixer->beginChangeset();
-                            for ($i = ($prev + 1); $i < $index['value']; $i++) {
-                                $phpcsFile->fixer->replaceToken($i, '');
-                            }
-
-                            $phpcsFile->fixer->replaceToken(($index['value'] - 1), str_repeat(' ', $expected));
-                            $phpcsFile->fixer->endChangeset();
-                        } elseif (0 === $found) {
-                            $phpcsFile->fixer->addContent(($index['value'] - 1), str_repeat(' ', $expected));
-                        } else {
-                            $phpcsFile->fixer->replaceToken(($index['value'] - 1), str_repeat(' ', $expected));
+                $fix = $phpcsFile->addFixableError($error, $index['arrow'], 'ValueNotAligned', $data);
+                if ($fix) {
+                    if ('newline' === $found) {
+                        $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($index['value'] - 1), null, true);
+                        $phpcsFile->fixer->beginChangeset();
+                        for ($i = ($prev + 1); $i < $index['value']; $i++) {
+                            $phpcsFile->fixer->replaceToken($i, '');
                         }
+
+                        $phpcsFile->fixer->replaceToken(($index['value'] - 1), str_repeat(' ', $expected));
+                        $phpcsFile->fixer->endChangeset();
+                    } elseif (0 === $found) {
+                        $phpcsFile->fixer->addContent(($index['value'] - 1), str_repeat(' ', $expected));
+                    } else {
+                        $phpcsFile->fixer->replaceToken(($index['value'] - 1), str_repeat(' ', $expected));
                     }
                 }
             }

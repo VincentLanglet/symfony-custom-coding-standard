@@ -11,9 +11,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class ValidFileNameSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
     public function register()
     {
@@ -25,10 +23,8 @@ class ValidFileNameSniff implements Sniff
      *
      * @param File $phpcsFile
      * @param int  $stackPtr
-     *
-     * @return void
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $filename = $phpcsFile->getFilename();
 
@@ -45,14 +41,12 @@ class ValidFileNameSniff implements Sniff
             $filename = $filenamePhp;
         }
 
-        if (false === ctype_alnum($filename)) {
+        if (!ctype_alnum($filename)) {
             $error = sprintf('Filename "%s" contains non alphanumeric characters', $filename);
             $phpcsFile->addError($error, $stackPtr, 'Invalid');
             $phpcsFile->recordMetric($stackPtr, 'Alphanumeric filename', 'no');
         } else {
             $phpcsFile->recordMetric($stackPtr, 'Alphanumeric filename', 'yes');
         }
-
-        return;
     }
 }

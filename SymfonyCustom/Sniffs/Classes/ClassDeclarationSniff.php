@@ -10,36 +10,28 @@ use PHP_CodeSniffer\Files\File;
 class ClassDeclarationSniff
 {
     /**
-     * @return array
+     * @return int[]
      */
-    public function register()
+    public function register(): array
     {
-        return [
-            T_CLASS,
-            T_INTERFACE,
-            T_TRAIT,
-        ];
+        return [T_CLASS, T_INTERFACE, T_TRAIT];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         // Just in case.
         $tokens = $phpcsFile->getTokens();
         $openingBrace = $tokens[$stackPtr]['scope_opener'];
 
-        if (isset($openingBrace) === false) {
+        if (!isset($openingBrace)) {
             return;
         }
 
-        $nextElement = $phpcsFile->findNext([T_WHITESPACE], $openingBrace + 1, null, true);
+        $nextElement = $phpcsFile->findNext(T_WHITESPACE, $openingBrace + 1, null, true);
 
         if ($tokens[$openingBrace]['line'] + 1 < $tokens[$nextElement]['line']) {
             $fix = $phpcsFile->addFixableError(
@@ -48,7 +40,7 @@ class ClassDeclarationSniff
                 'Invalid'
             );
 
-            if (true === $fix) {
+            if ($fix) {
                 $phpcsFile->fixer->replaceToken($openingBrace + 1, '');
             }
         }

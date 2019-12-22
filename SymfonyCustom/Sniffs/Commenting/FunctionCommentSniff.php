@@ -8,25 +8,14 @@ use PHP_CodeSniffer\Util\Tokens;
 
 /**
  * SymfonyCustom standard customization to PEARs FunctionCommentSniff.
- *
- * Verifies that :
- * <ul>
- *   <li>
- *     There is a &#64;return tag if a return statement exists inside the method
- *   </li>
- * </ul>
  */
 class FunctionCommentSniff extends PEARFunctionCommentSniff
 {
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
         $find   = Tokens::$methodPrefixes;
@@ -109,16 +98,12 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
     }
 
     /**
-     * Process the return comment of this function comment.
-     *
-     * @param File     $phpcsFile    The file being scanned.
-     * @param int      $stackPtr     The position of the current token in the stack passed in $tokens.
-     * @param int|null $commentStart The position in the stack where the comment started.
-     * @param bool     $hasComment   Use to specify if the function has comments to check
-     *
-     * @return void
+     * @param File     $phpcsFile
+     * @param int      $stackPtr
+     * @param int|null $commentStart
+     * @param bool     $hasComment
      */
-    protected function processReturn(File $phpcsFile, $stackPtr, $commentStart, $hasComment = true)
+    protected function processReturn(File $phpcsFile, $stackPtr, $commentStart, $hasComment = true): void
     {
         // Check for inheritDoc if there is comment
         if ($hasComment && $this->isInheritDoc($phpcsFile, $stackPtr)) {
@@ -167,7 +152,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
      * @param int  $stackPtr
      * @param int  $commentStart
      */
-    protected function processThrows(File $phpcsFile, $stackPtr, $commentStart)
+    protected function processThrows(File $phpcsFile, $stackPtr, $commentStart): void
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -202,10 +187,24 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
 
     /**
      * @param File $phpcsFile
+     * @param int  $stackPtr
+     * @param int  $commentStart
+     */
+    protected function processParams(File $phpcsFile, $stackPtr, $commentStart): void
+    {
+        if ($this->isInheritDoc($phpcsFile, $stackPtr)) {
+            return;
+        }
+
+        parent::processParams($phpcsFile, $stackPtr, $commentStart);
+    }
+
+    /**
+     * @param File $phpcsFile
      * @param int  $commentStart
      * @param bool $hasComment
      */
-    protected function processWhitespace(File $phpcsFile, $commentStart, $hasComment = true)
+    private function processWhitespace(File $phpcsFile, int $commentStart, bool $hasComment = true): void
     {
         $tokens = $phpcsFile->getTokens();
         $before = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
@@ -216,7 +215,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
         $found = $startLine - $prevLine - 1;
 
         // Skip for class opening
-        if ($found < 1 && !(0 === $found && 'T_OPEN_CURLY_BRACKET' === $tokens[$before]['type'])) {
+        if ($found < 1 && 'T_OPEN_CURLY_BRACKET' !== $tokens[$before]['type']) {
             if ($found < 0) {
                 $found = 0;
             }
@@ -232,7 +231,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
             $data = [$found];
             $fix = $phpcsFile->addFixableError($error, $commentStart, $rule, $data);
 
-            if (true === $fix) {
+            if ($fix) {
                 if ($found > 1) {
                     $phpcsFile->fixer->beginChangeset();
 
@@ -254,14 +253,12 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
     }
 
     /**
-     * Is the comment an inheritdoc?
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return bool True if the comment is an inheritdoc
+     * @return bool
      */
-    protected function isInheritDoc(File $phpcsFile, $stackPtr)
+    private function isInheritDoc(File $phpcsFile, int $stackPtr): bool
     {
         $start = $phpcsFile->findPrevious(T_DOC_COMMENT_OPEN_TAG, $stackPtr - 1);
         $end = $phpcsFile->findNext(T_DOC_COMMENT_CLOSE_TAG, $start);
@@ -272,32 +269,12 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
     }
 
     /**
-     * Process the function parameter comments.
+     * @param array $tokens
+     * @param int   $returnPos
      *
-     * @param File $phpcsFile    The file being scanned.
-     * @param int  $stackPtr     The position of the current token in the stack passed in $tokens.
-     * @param int  $commentStart The position in the stack where the comment started.
-     *
-     * @return void
+     * @return bool
      */
-    protected function processParams(File $phpcsFile, $stackPtr, $commentStart)
-    {
-        if ($this->isInheritDoc($phpcsFile, $stackPtr)) {
-            return;
-        }
-
-        parent::processParams($phpcsFile, $stackPtr, $commentStart);
-    }
-
-    /**
-     * Is the return statement matching?
-     *
-     * @param array $tokens    Array of tokens
-     * @param int   $returnPos Stack position of the T_RETURN token to process
-     *
-     * @return bool True if the return does not return anything
-     */
-    protected function isMatchingReturn(array $tokens, $returnPos)
+    private function isMatchingReturn(array $tokens, int $returnPos): bool
     {
         do {
             $returnPos++;

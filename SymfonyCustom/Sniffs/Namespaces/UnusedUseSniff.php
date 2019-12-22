@@ -15,7 +15,7 @@ class UnusedUseSniff implements Sniff
     /**
      * @return int[]
      */
-    public function register()
+    public function register(): array
     {
         return [T_USE];
     }
@@ -23,10 +23,8 @@ class UnusedUseSniff implements Sniff
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
-     *
-     * @return void
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         // Only check use statements in the global scope.
         if (!SniffHelper::isGlobalUse($phpcsFile, $stackPtr)) {
@@ -56,7 +54,7 @@ class UnusedUseSniff implements Sniff
 
             $comma = $phpcsFile->findNext(T_COMMA, $from + 1, $to);
             if (false === $comma
-                || $phpcsFile->findNext(Tokens::$emptyTokens, $comma + 1, $to, true) === false
+                || !$phpcsFile->findNext(Tokens::$emptyTokens, $comma + 1, $to, true)
             ) {
                 $error = 'Redundant use group for one declaration';
 
@@ -172,7 +170,7 @@ class UnusedUseSniff implements Sniff
      * @param int  $from
      * @param int  $to
      */
-    private function removeUse(File $phpcsFile, $from, $to)
+    private function removeUse(File $phpcsFile, int $from, int $to): void
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -204,7 +202,7 @@ class UnusedUseSniff implements Sniff
      *
      * @return bool
      */
-    private function isClassUsed(File $phpcsFile, $usePtr, $classPtr)
+    private function isClassUsed(File $phpcsFile, int $usePtr, int $classPtr): bool
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -251,7 +249,7 @@ class UnusedUseSniff implements Sniff
         // Only if alias is not used.
         if (T_AS !== $tokens[$prev]['code']) {
             $isGroup = T_OPEN_USE_GROUP === $tokens[$prev]['code']
-                || $phpcsFile->findPrevious(T_OPEN_USE_GROUP, $prev, $usePtr) !== false;
+                || false !== $phpcsFile->findPrevious(T_OPEN_USE_GROUP, $prev, $usePtr);
 
             $useNamespace = '';
             if ($isGroup || T_COMMA !== $tokens[$prev]['code']) {
@@ -334,16 +332,7 @@ class UnusedUseSniff implements Sniff
                     }
                 } elseif (T_DOC_COMMENT_STRING === $tokens[$classUsed]['code']) {
                     if (T_DOC_COMMENT_TAG === $tokens[$beforeUsage]['code']
-                        && in_array($tokens[$beforeUsage]['content'], [
-                            '@var',
-                            '@param',
-                            '@return',
-                            '@throws',
-                            '@method',
-                            '@property',
-                            '@property-read',
-                            '@property-write',
-                        ], true)
+                        && in_array($tokens[$beforeUsage]['content'], SniffHelper::TAGS_WITH_TYPE, true)
                     ) {
                         return true;
                     }
@@ -373,7 +362,7 @@ class UnusedUseSniff implements Sniff
      *
      * @return string
      */
-    private function getNamespace(File $phpcsFile, $ptr, array $stop)
+    private function getNamespace(File $phpcsFile, int $ptr, array $stop): string
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -396,7 +385,7 @@ class UnusedUseSniff implements Sniff
      *
      * @return string|null
      */
-    private function determineType(File $phpcsFile, $beforePtr, $ptr)
+    private function determineType(File $phpcsFile, int $beforePtr, int $ptr): ?string
     {
         $tokens = $phpcsFile->getTokens();
 

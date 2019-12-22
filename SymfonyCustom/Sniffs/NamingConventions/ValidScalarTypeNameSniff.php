@@ -24,11 +24,9 @@ class ValidScalarTypeNameSniff implements Sniff
     ];
 
     /**
-     * A list of tokenizers this sniff supports.
-     *
      * @return array
      */
-    public function register()
+    public function register(): array
     {
         $tokens = Tokens::$castTokens;
         $tokens[] = T_DOC_COMMENT_OPEN_TAG;
@@ -37,15 +35,10 @@ class ValidScalarTypeNameSniff implements Sniff
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile All the tokens found in the document.
-     * @param int  $stackPtr  The position of the current token in
-     *                        the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
         if (T_DOC_COMMENT_OPEN_TAG === $tokens[$stackPtr]['code']) {
@@ -56,14 +49,10 @@ class ValidScalarTypeNameSniff implements Sniff
     }
 
     /**
-     * Validates PHPDoc comment.
-     *
-     * @param File $phpcsFile File to process
-     * @param int  $stackPtr  Position of PHPDoc comment to validate
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    protected function validateDocComment(File $phpcsFile, $stackPtr)
+    private function validateDocComment(File $phpcsFile, int $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
         foreach ($tokens[$stackPtr]['comment_tags'] as $commentTag) {
@@ -83,14 +72,10 @@ class ValidScalarTypeNameSniff implements Sniff
     }
 
     /**
-     * Validates cast operator.
-     *
-     * @param File $phpcsFile File to process
-     * @param int  $stackPtr  Position of cast to validate
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    protected function validateCast(File $phpcsFile, $stackPtr)
+    private function validateCast(File $phpcsFile, int $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
         preg_match('/^\(\s*(\S+)\s*\)$/', $tokens[$stackPtr]['content'], $matches);
@@ -100,22 +85,15 @@ class ValidScalarTypeNameSniff implements Sniff
     }
 
     /**
-     * Validates type name.
-     *
-     * @param File   $phpcsFile File to process
-     * @param int    $stackPtr  Position, where error will be raised
-     * @param string $typeName  Type name to validate
-     *
-     * @return void
+     * @param File   $phpcsFile
+     * @param int    $stackPtr
+     * @param string $typeName
      */
-    protected function validateTypeName(
-        File $phpcsFile,
-        $stackPtr,
-        $typeName
-    ) {
+    private function validateTypeName(File $phpcsFile, int $stackPtr, string $typeName): void
+    {
         $validTypeName = $this->getValidTypeName($typeName);
 
-        if (false !== $validTypeName) {
+        if (null !== $validTypeName) {
             $needFix = $phpcsFile->addFixableError(
                 'For type-hinting in PHPDocs and casting, use %s instead of %s',
                 $stackPtr,
@@ -137,19 +115,17 @@ class ValidScalarTypeNameSniff implements Sniff
     }
 
     /**
-     * Returns valid type name.
+     * @param string $typeName
      *
-     * @param string $typeName Invalid type name.
-     *
-     * @return string|bool     Valid type name if provided one is invalid, false otherwise.
+     * @return string|null
      */
-    protected function getValidTypeName($typeName)
+    private function getValidTypeName(string $typeName): ?string
     {
         $typeName = strtolower($typeName);
         if (isset($this->types[$typeName])) {
             return $this->types[$typeName];
         }
 
-        return false;
+        return null;
     }
 }

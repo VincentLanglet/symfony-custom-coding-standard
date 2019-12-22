@@ -11,9 +11,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class ValidClassNameSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
     public function register()
     {
@@ -26,14 +24,10 @@ class ValidClassNameSniff implements Sniff
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
      * @param File $phpcsFile All the tokens found in the document.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
         $line = $tokens[$stackPtr]['line'];
@@ -118,7 +112,5 @@ class ValidClassNameSniff implements Sniff
 
             $stackPtr++;
         }
-
-        return;
     }
 }

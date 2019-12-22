@@ -15,7 +15,7 @@ class UseWithoutStartingBackslashSniff implements Sniff
     /**
      * @return int[]
      */
-    public function register()
+    public function register(): array
     {
         return [T_USE];
     }
@@ -24,9 +24,9 @@ class UseWithoutStartingBackslashSniff implements Sniff
      * @param File $phpcsFile
      * @param int  $stackPtr
      *
-     * @return int|void
+     * @return void
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         if (!SniffHelper::isGlobalUse($phpcsFile, $stackPtr)) {
             return;

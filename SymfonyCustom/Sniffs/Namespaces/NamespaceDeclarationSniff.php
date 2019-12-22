@@ -12,24 +12,18 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 class NamespaceDeclarationSniff implements Sniff
 {
     /**
-     * Returns an array of tokens this test wants to listen for.
-     *
-     * @return array
+     * @return int[]
      */
-    public function register()
+    public function register(): array
     {
         return [T_NAMESPACE];
     }
 
     /**
-     * Processes this test, when one of its tokens is encountered.
-     *
-     * @param File $phpcsFile The file being scanned.
-     * @param int  $stackPtr  The position of the current token in the stack passed in $tokens.
-     *
-     * @return void
+     * @param File $phpcsFile
+     * @param int  $stackPtr
      */
-    public function process(File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -58,9 +52,9 @@ class NamespaceDeclarationSniff implements Sniff
         }
 
         $error = 'There must be one blank line before the namespace declaration';
-        $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'BlankLineBefore');
+        $fix = $phpcsFile->addFixableError($error, $stackPtr, 'BlankLineBefore');
 
-        if (true === $fix) {
+        if ($fix) {
             if (0 === $diff) {
                 $phpcsFile->fixer->addNewlineBefore($stackPtr);
             } else {
