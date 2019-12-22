@@ -70,17 +70,31 @@
     <!-- Disallow -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+    <rule ref="Generic.PHP.BacktickOperator"/>
     <rule ref="Generic.PHP.DisallowShortOpenTag"/>
     <rule ref="Generic.PHP.ForbiddenFunctions"/>
     <rule ref="PEAR.Commenting.InlineComment"/>
+    <rule ref="Squiz.PHP.CommentedOutCode"/>
+    <rule ref="Squiz.PHP.DisallowMultipleAssignments"/>
+    <rule ref="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
     <rule ref="Squiz.PHP.DiscouragedFunctions"/>
+    <rule ref="Squiz.PHP.Eval"/>
+    <rule ref="Squiz.PHP.NonExecutableCode"/>
     <rule ref="Squiz.Operators.ValidLogicalOperators"/>
 
     <!-- Others -->
+    <rule ref="Generic.Strings.UnnecessaryStringConcat">
+        <properties>
+            <property name="allowMultiline" value="true"/>
+        </properties>
+    </rule>
     <rule ref="Squiz.Classes.ClassFileName"/>
     <rule ref="Squiz.Commenting.DocCommentAlignment">
         <exclude name="Squiz.Commenting.DocCommentAlignment.SpaceAfterStar"/>
     </rule>
+    <rule ref="Squiz.Commenting.EmptyCatchComment"/>
     <rule ref="Squiz.NamingConventions.ValidVariableName">
         <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
         <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
@@ -90,6 +104,7 @@
     <rule ref="Squiz.Strings.DoubleQuoteUsage">
         <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
     </rule>
+    <rule ref="Squiz.Strings.EchoedStrings"/>
 
     <!-- Custom -->
     <rule ref="SymfonyCustom.Commenting.FunctionComment">

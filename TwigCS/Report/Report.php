@@ -85,7 +85,8 @@ class Report
         }
 
         return array_filter($this->messages, function (SniffViolation $message) use ($filters) {
-            $fileFilter = $levelFilter = true;
+            $fileFilter = true;
+            $levelFilter = true;
 
             if (isset($filters['file']) && $filters['file']) {
                 $fileFilter = (string) $message->getFilename() === (string) $filters['file'];

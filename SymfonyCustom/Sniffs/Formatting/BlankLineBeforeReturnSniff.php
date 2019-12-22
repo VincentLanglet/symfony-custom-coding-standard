@@ -72,8 +72,6 @@ class BlankLineBeforeReturnSniff implements Sniff
                 $phpcsFile->fixer->endChangeset();
             }
         }
-
-        return;
     }
 
     /**
