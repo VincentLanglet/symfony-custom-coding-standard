@@ -8,7 +8,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Ensures there are no spaces on ++/-- or on +/- sign operators or "!" boolean negators.
+ * Ensures there are no spaces +/- sign operators or "!" boolean negators.
  */
 class UnaryOperatorSpacingSniff implements Sniff
 {
@@ -17,7 +17,7 @@ class UnaryOperatorSpacingSniff implements Sniff
      */
     public function register(): array
     {
-        return [T_DEC, T_INC, T_MINUS, T_PLUS, T_BOOLEAN_NOT];
+        return [T_MINUS, T_PLUS, T_BOOLEAN_NOT];
     }
 
     /**
@@ -27,40 +27,6 @@ class UnaryOperatorSpacingSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
-
-        // Check decrement / increment.
-        if (T_DEC === $tokens[$stackPtr]['code'] || T_INC === $tokens[$stackPtr]['code']) {
-            $modifyLeft = substr($tokens[$stackPtr - 1]['content'], 0, 1) === '$'
-                || ';' === $tokens[$stackPtr + 1]['content'];
-
-            if ($modifyLeft && T_WHITESPACE === $tokens[$stackPtr - 1]['code']) {
-                $fix = $phpcsFile->addFixableError(
-                    'There must not be a single space before a unary operator statement',
-                    $stackPtr,
-                    'IncDecLeft'
-                );
-
-                if ($fix) {
-                    $phpcsFile->fixer->replaceToken($stackPtr - 1, '');
-                }
-
-                return;
-            }
-
-            if (!$modifyLeft && substr($tokens[$stackPtr + 1]['content'], 0, 1) !== '$') {
-                $fix = $phpcsFile->addFixableError(
-                    'A unary operator statement must not be followed by a single space',
-                    $stackPtr,
-                    'IncDecRight'
-                );
-
-                if ($fix) {
-                    $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
-                }
-
-                return;
-            }
-        }
 
         // Check "!" operator.
         if (T_BOOLEAN_NOT === $tokens[$stackPtr]['code'] && T_WHITESPACE === $tokens[$stackPtr + 1]['code']) {
