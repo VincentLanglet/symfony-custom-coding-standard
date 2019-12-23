@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymfonyCustom\Sniffs\Commenting;
 
 use PHP_CodeSniffer\Files\File;
@@ -18,15 +20,15 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
     public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
-        $find   = Tokens::$methodPrefixes;
+        $find = Tokens::$methodPrefixes;
         $find[] = T_WHITESPACE;
 
-        $commentEnd = $phpcsFile->findPrevious($find, ($stackPtr - 1), null, true);
+        $commentEnd = $phpcsFile->findPrevious($find, $stackPtr - 1, null, true);
         if (T_COMMENT === $tokens[$commentEnd]['code']) {
             // Inline comments might just be closing comments for control structures or functions
             // instead of function comments using the wrong comment type.
             // If there is other code on the line, assume they relate to that code.
-            $prev = $phpcsFile->findPrevious($find, ($commentEnd - 1), null, true);
+            $prev = $phpcsFile->findPrevious($find, $commentEnd - 1, null, true);
             if (false !== $prev && $tokens[$prev]['line'] === $tokens[$commentEnd]['line']) {
                 $commentEnd = $prev;
             }
@@ -46,7 +48,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                 return;
             }
 
-            if (($tokens[$stackPtr]['line'] - 1) !== $tokens[$commentEnd]['line']) {
+            if ($tokens[$stackPtr]['line'] - 1 !== $tokens[$commentEnd]['line']) {
                 $phpcsFile->addError(
                     'There must be no blank lines after the function comment',
                     $commentEnd,
@@ -183,9 +185,9 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
 
         if (null !== $throw) {
             $exception = null;
-            if (T_DOC_COMMENT_STRING === $tokens[($throw + 2)]['code']) {
+            if (T_DOC_COMMENT_STRING === $tokens[$throw + 2]['code']) {
                 $matches = [];
-                preg_match('/([^\s]+)(?:\s+(.*))?/', $tokens[($throw + 2)]['content'], $matches);
+                preg_match('/([^\s]+)(?:\s+(.*))?/', $tokens[$throw + 2]['content'], $matches);
                 $exception = $matches[1];
             }
 
@@ -221,7 +223,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
     private function processWhitespace(File $phpcsFile, int $commentStart, bool $hasComment = true): void
     {
         $tokens = $phpcsFile->getTokens();
-        $before = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
+        $before = $phpcsFile->findPrevious(T_WHITESPACE, $commentStart - 1, null, true);
 
         $startLine = $tokens[$commentStart]['line'];
         $prevLine = $tokens[$before]['line'];
@@ -248,14 +250,14 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                 if ($found > 1) {
                     $phpcsFile->fixer->beginChangeset();
 
-                    for ($i = ($before + 1); $i < ($commentStart - 1); $i++) {
+                    for ($i = $before + 1; $i < $commentStart - 1; $i++) {
                         $phpcsFile->fixer->replaceToken($i, '');
                     }
 
                     $phpcsFile->fixer->endChangeset();
                 } else {
                     // Try and maintain indentation.
-                    if (T_WHITESPACE === $tokens[($commentStart - 1)]['code']) {
+                    if (T_WHITESPACE === $tokens[$commentStart - 1]['code']) {
                         $phpcsFile->fixer->addNewlineBefore($commentStart - 1);
                     } else {
                         $phpcsFile->fixer->addNewlineBefore($commentStart);

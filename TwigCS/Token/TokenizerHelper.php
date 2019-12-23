@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Token;
 
 use Twig\Environment;
@@ -17,7 +19,7 @@ class TokenizerHelper
     /**
      * @var array
      */
-    private $options;
+    private $options = [];
 
     /**
      * @param Environment $env

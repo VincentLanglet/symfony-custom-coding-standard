@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymfonyCustom\Sniffs\Commenting;
 
 use PHP_CodeSniffer\Files\File;
@@ -26,7 +28,7 @@ class VariableCommentSniff extends AbstractVariableSniff
             T_WHITESPACE,
         ];
 
-        $commentEnd = $phpcsFile->findPrevious($ignore, ($stackPtr - 1), null, true);
+        $commentEnd = $phpcsFile->findPrevious($ignore, $stackPtr - 1, null, true);
         if (false === $commentEnd
             || (T_DOC_COMMENT_CLOSE_TAG !== $tokens[$commentEnd]['code']
             && T_COMMENT !== $tokens[$commentEnd]['code'])
@@ -135,7 +137,7 @@ class VariableCommentSniff extends AbstractVariableSniff
     private function processWhitespace(File $phpcsFile, int $commentStart): void
     {
         $tokens = $phpcsFile->getTokens();
-        $before = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
+        $before = $phpcsFile->findPrevious(T_WHITESPACE, $commentStart - 1, null, true);
 
         $startLine = $tokens[$commentStart]['line'];
         $prevLine = $tokens[$before]['line'];
@@ -159,14 +161,14 @@ class VariableCommentSniff extends AbstractVariableSniff
                 if ($found > 1) {
                     $phpcsFile->fixer->beginChangeset();
 
-                    for ($i = ($before + 1); $i < ($commentStart - 1); $i++) {
+                    for ($i = $before + 1; $i < $commentStart - 1; $i++) {
                         $phpcsFile->fixer->replaceToken($i, '');
                     }
 
                     $phpcsFile->fixer->endChangeset();
                 } else {
                     // Try and maintain indentation.
-                    if (T_WHITESPACE === $tokens[($commentStart - 1)]['code']) {
+                    if (T_WHITESPACE === $tokens[$commentStart - 1]['code']) {
                         $phpcsFile->fixer->addNewlineBefore($commentStart - 1);
                     } else {
                         $phpcsFile->fixer->addNewlineBefore($commentStart);

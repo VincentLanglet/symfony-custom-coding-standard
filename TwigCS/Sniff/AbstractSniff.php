@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Sniff;
 
 use Exception;
@@ -14,14 +16,14 @@ use TwigCS\Token\Token;
 abstract class AbstractSniff implements SniffInterface
 {
     /**
-     * @var Report
+     * @var Report|null
      */
-    protected $report = null;
+    protected $report;
 
     /**
-     * @var Fixer
+     * @var Fixer|null
      */
-    protected $fixer = null;
+    protected $fixer;
 
     /**
      * @param Report $report

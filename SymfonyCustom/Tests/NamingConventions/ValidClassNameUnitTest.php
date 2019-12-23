@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymfonyCustom\Tests\NamingConventions;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;

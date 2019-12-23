@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Token;
 
 /**
@@ -8,26 +10,26 @@ namespace TwigCS\Token;
 class Token
 {
     // From Twig\Token
-    const EOF_TYPE                 = -1;
-    const TEXT_TYPE                = 0;
-    const BLOCK_START_TYPE         = 1;
-    const VAR_START_TYPE           = 2;
-    const BLOCK_END_TYPE           = 3;
-    const VAR_END_TYPE             = 4;
-    const NAME_TYPE                = 5;
-    const NUMBER_TYPE              = 6;
-    const STRING_TYPE              = 7;
-    const OPERATOR_TYPE            = 8;
-    const PUNCTUATION_TYPE         = 9;
-    const INTERPOLATION_START_TYPE = 10;
-    const INTERPOLATION_END_TYPE   = 11;
-    const ARROW_TYPE               = 12;
+    public const EOF_TYPE                 = -1;
+    public const TEXT_TYPE                = 0;
+    public const BLOCK_START_TYPE         = 1;
+    public const VAR_START_TYPE           = 2;
+    public const BLOCK_END_TYPE           = 3;
+    public const VAR_END_TYPE             = 4;
+    public const NAME_TYPE                = 5;
+    public const NUMBER_TYPE              = 6;
+    public const STRING_TYPE              = 7;
+    public const OPERATOR_TYPE            = 8;
+    public const PUNCTUATION_TYPE         = 9;
+    public const INTERPOLATION_START_TYPE = 10;
+    public const INTERPOLATION_END_TYPE   = 11;
+    public const ARROW_TYPE               = 12;
     // New constants
-    const WHITESPACE_TYPE          = 13;
-    const TAB_TYPE                 = 14;
-    const EOL_TYPE                 = 15;
-    const COMMENT_START_TYPE       = 16;
-    const COMMENT_END_TYPE         = 17;
+    public const WHITESPACE_TYPE          = 13;
+    public const TAB_TYPE                 = 14;
+    public const EOL_TYPE                 = 15;
+    public const COMMENT_START_TYPE       = 16;
+    public const COMMENT_END_TYPE         = 17;
 
     /**
      * @var int

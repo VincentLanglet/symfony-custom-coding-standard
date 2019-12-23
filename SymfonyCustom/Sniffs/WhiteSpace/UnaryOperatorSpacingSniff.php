@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymfonyCustom\Sniffs\WhiteSpace;
 
 use PHP_CodeSniffer\Files\File;
@@ -28,10 +30,10 @@ class UnaryOperatorSpacingSniff implements Sniff
 
         // Check decrement / increment.
         if (T_DEC === $tokens[$stackPtr]['code'] || T_INC === $tokens[$stackPtr]['code']) {
-            $modifyLeft = substr($tokens[($stackPtr - 1)]['content'], 0, 1) === '$'
-                || ';' === $tokens[($stackPtr + 1)]['content'];
+            $modifyLeft = substr($tokens[$stackPtr - 1]['content'], 0, 1) === '$'
+                || ';' === $tokens[$stackPtr + 1]['content'];
 
-            if ($modifyLeft && T_WHITESPACE === $tokens[($stackPtr - 1)]['code']) {
+            if ($modifyLeft && T_WHITESPACE === $tokens[$stackPtr - 1]['code']) {
                 $fix = $phpcsFile->addFixableError(
                     'There must not be a single space before a unary operator statement',
                     $stackPtr,
@@ -45,7 +47,7 @@ class UnaryOperatorSpacingSniff implements Sniff
                 return;
             }
 
-            if (!$modifyLeft && substr($tokens[($stackPtr + 1)]['content'], 0, 1) !== '$') {
+            if (!$modifyLeft && substr($tokens[$stackPtr + 1]['content'], 0, 1) !== '$') {
                 $fix = $phpcsFile->addFixableError(
                     'A unary operator statement must not be followed by a single space',
                     $stackPtr,
@@ -99,7 +101,7 @@ class UnaryOperatorSpacingSniff implements Sniff
 
         // Check plus / minus value assignments or comparisons.
         if (T_MINUS === $tokens[$stackPtr]['code'] || T_PLUS === $tokens[$stackPtr]['code']) {
-            if (!$operatorSuffixAllowed && T_WHITESPACE === $tokens[($stackPtr + 1)]['code']) {
+            if (!$operatorSuffixAllowed && T_WHITESPACE === $tokens[$stackPtr + 1]['code']) {
                 $fix = $phpcsFile->addFixableError(
                     'A unary operator statement must not be followed by a space',
                     $stackPtr,

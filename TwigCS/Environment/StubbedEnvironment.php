@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Environment;
 
 use Symfony\Bridge\Twig\TokenParser\DumpTokenParser;

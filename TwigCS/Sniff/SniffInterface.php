@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Sniff;
 
 use TwigCS\Report\Report;

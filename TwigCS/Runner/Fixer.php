@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Runner;
 
 use Exception;
@@ -24,14 +26,14 @@ class Fixer
     protected $eolChar = "\n";
 
     /**
-     * @var Ruleset
+     * @var Ruleset|null
      */
-    protected $ruleset = null;
+    protected $ruleset;
 
     /**
-     * @var Tokenizer
+     * @var Tokenizer|null
      */
-    protected $tokenizer = null;
+    protected $tokenizer;
 
     /**
      * The list of tokens that make up the file contents.
@@ -186,14 +188,14 @@ class Fixer
 
         $contents = $this->getContents();
 
-        $tempName  = tempnam(sys_get_temp_dir(), 'phpcs-fixer');
+        $tempName = tempnam(sys_get_temp_dir(), 'phpcs-fixer');
         $fixedFile = fopen($tempName, 'w');
         fwrite($fixedFile, $contents);
 
         // We must use something like shell_exec() because whitespace at the end
         // of lines is critical to diff files.
         $filename = escapeshellarg($filename);
-        $cmd      = "diff -u -L$filename -LPHP_CodeSniffer $filename \"$tempName\"";
+        $cmd = "diff -u -L$filename -LPHP_CodeSniffer $filename \"$tempName\"";
 
         $diff = shell_exec($cmd);
 
@@ -202,7 +204,7 @@ class Fixer
             unlink($tempName);
         }
 
-        $diffLines = explode(PHP_EOL, $diff);
+        $diffLines = null !== $diff ? explode(PHP_EOL, $diff) : [];
         if (count($diffLines) === 1) {
             // Seems to be required for cygwin.
             $diffLines = explode("\n", $diff);
@@ -265,7 +267,7 @@ class Fixer
             return;
         }
 
-        $this->changeset   = [];
+        $this->changeset = [];
         $this->inChangeset = true;
     }
 

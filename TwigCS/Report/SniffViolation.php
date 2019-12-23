@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Report;
 
 use LogicException;
@@ -10,10 +12,10 @@ use TwigCS\Sniff\SniffInterface;
  */
 class SniffViolation
 {
-    const LEVEL_NOTICE  = 'NOTICE';
-    const LEVEL_WARNING = 'WARNING';
-    const LEVEL_ERROR   = 'ERROR';
-    const LEVEL_FATAL   = 'FATAL';
+    private const LEVEL_NOTICE  = 'NOTICE';
+    private const LEVEL_WARNING = 'WARNING';
+    private const LEVEL_ERROR   = 'ERROR';
+    private const LEVEL_FATAL   = 'FATAL';
 
     /**
      * @var int
@@ -53,13 +55,10 @@ class SniffViolation
      */
     public function __construct(int $level, string $message, string $filename, int $line = null)
     {
-        $this->level        = $level;
-        $this->message      = $message;
-        $this->line         = $line;
-        $this->filename     = $filename;
-
-        $this->sniff        = null;
-        $this->linePosition = null;
+        $this->level = $level;
+        $this->message = $message;
+        $this->line = $line;
+        $this->filename = $filename;
     }
 
     /**

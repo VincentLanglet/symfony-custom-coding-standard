@@ -12,7 +12,7 @@ PHP_CodeSniffer\Config::setConfigData(
 );
 
 // Ignore all other Standards in tests
-$standards   = PHP_CodeSniffer\Util\Standards::getInstalledStandards();
+$standards = PHP_CodeSniffer\Util\Standards::getInstalledStandards();
 $standards[] = 'Generic';
 
 $ignoredStandardsStr = implode(
