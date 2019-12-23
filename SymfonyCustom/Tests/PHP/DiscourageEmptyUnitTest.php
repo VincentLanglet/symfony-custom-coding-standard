@@ -1,6 +1,8 @@
 <?php
 
-namespace SymfonyCustom\Tests\Objects;
+declare(strict_types=1);
+
+namespace SymfonyCustom\Tests\PHP;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 

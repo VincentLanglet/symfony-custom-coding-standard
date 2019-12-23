@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymfonyCustom\Sniffs\WhiteSpace;
 
 use PHP_CodeSniffer\Files\File;
@@ -27,14 +29,14 @@ class OpenBracketSpacingSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (isset($tokens[($stackPtr + 1)])
-            && T_WHITESPACE === $tokens[($stackPtr + 1)]['code']
-            && false === strpos($tokens[($stackPtr + 1)]['content'], $phpcsFile->eolChar)
+        if (isset($tokens[$stackPtr + 1])
+            && T_WHITESPACE === $tokens[$stackPtr + 1]['code']
+            && false === strpos($tokens[$stackPtr + 1]['content'], $phpcsFile->eolChar)
         ) {
             $error = 'There should be no space after an opening "%s"';
             $fix = $phpcsFile->addFixableError(
                 $error,
-                ($stackPtr + 1),
+                $stackPtr + 1,
                 'OpeningWhitespace',
                 [$tokens[$stackPtr]['content']]
             );

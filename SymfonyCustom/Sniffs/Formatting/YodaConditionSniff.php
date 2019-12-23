@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymfonyCustom\Sniffs\Formatting;
 
 use PHP_CodeSniffer\Files\File;
@@ -27,7 +29,7 @@ class YodaConditionSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $beginners   = Tokens::$booleanOperators;
+        $beginners = Tokens::$booleanOperators;
         $beginners[] = T_IF;
         $beginners[] = T_ELSEIF;
         $beginners[] = T_EQUAL;
@@ -65,12 +67,12 @@ class YodaConditionSniff implements Sniff
         }
 
         // Check if this is a var to var comparison, e.g.: if ( $var1 == $var2 ).
-        $nextNonEmpty = $phpcsFile->findNext(Tokens::$emptyTokens, ($stackPtr + 1), null, true);
+        $nextNonEmpty = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
 
         if (isset(Tokens::$castTokens[$tokens[$nextNonEmpty]['code']])) {
             $nextNonEmpty = $phpcsFile->findNext(
                 Tokens::$emptyTokens,
-                ($nextNonEmpty + 1),
+                $nextNonEmpty + 1,
                 null,
                 true
             );
@@ -79,7 +81,7 @@ class YodaConditionSniff implements Sniff
         if (in_array($tokens[$nextNonEmpty]['code'], [T_SELF, T_PARENT, T_STATIC], true)) {
             $nextNonEmpty = $phpcsFile->findNext(
                 array_merge(Tokens::$emptyTokens, [T_DOUBLE_COLON]),
-                ($nextNonEmpty + 1),
+                $nextNonEmpty + 1,
                 null,
                 true
             );

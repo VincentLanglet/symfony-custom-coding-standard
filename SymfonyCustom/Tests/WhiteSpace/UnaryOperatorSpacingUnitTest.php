@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymfonyCustom\Tests\WhiteSpace;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
@@ -21,9 +23,7 @@ class UnaryOperatorSpacingUnitTest extends AbstractSniffUnitTest
             7  => 1,
             9  => 1,
             12 => 1,
-            14 => 1,
-            17 => 1,
-            18 => 1,
+            13 => 1,
         ];
     }
 

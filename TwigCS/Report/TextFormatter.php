@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Report;
 
 use Symfony\Component\Console\Helper\TableCell;
@@ -13,10 +15,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class TextFormatter
 {
-    const ERROR_CURSOR_CHAR   = '>>';
-    const ERROR_LINE_FORMAT   = '%-5s| %s';
-    const ERROR_CONTEXT_LIMIT = 2;
-    const ERROR_LINE_WIDTH    = 120;
+    private const ERROR_CURSOR_CHAR   = '>>';
+    private const ERROR_LINE_FORMAT   = '%-5s| %s';
+    private const ERROR_CONTEXT_LIMIT = 2;
+    private const ERROR_LINE_WIDTH    = 120;
 
     /**
      * @var SymfonyStyle
@@ -50,7 +52,7 @@ class TextFormatter
 
             $rows = [];
             foreach ($fileMessages as $message) {
-                $lines = $this->getContext(file_get_contents($file), $message->getLine(), $this::ERROR_CONTEXT_LIMIT);
+                $lines = $this->getContext(file_get_contents($file), $message->getLine(), self::ERROR_CONTEXT_LIMIT);
 
                 $formattedText = [];
                 if (!$message->getLine()) {
@@ -58,7 +60,7 @@ class TextFormatter
                 }
 
                 foreach ($lines as $no => $code) {
-                    $formattedText[] = sprintf($this::ERROR_LINE_FORMAT, $no, wordwrap($code, $this::ERROR_LINE_WIDTH));
+                    $formattedText[] = sprintf(self::ERROR_LINE_FORMAT, $no, wordwrap($code, self::ERROR_LINE_WIDTH));
 
                     if ($no === $message->getLine()) {
                         $formattedText[] = $this->formatErrorMessage($message);
@@ -145,9 +147,9 @@ class TextFormatter
     protected function formatErrorMessage(SniffViolation $message): string
     {
         return sprintf(
-            '<fg=red>'.$this::ERROR_LINE_FORMAT.'</fg=red>',
-            $this::ERROR_CURSOR_CHAR,
-            wordwrap($message->getMessage(), $this::ERROR_LINE_WIDTH)
+            '<fg=red>'.self::ERROR_LINE_FORMAT.'</fg=red>',
+            self::ERROR_CURSOR_CHAR,
+            wordwrap($message->getMessage(), self::ERROR_LINE_WIDTH)
         );
     }
 }

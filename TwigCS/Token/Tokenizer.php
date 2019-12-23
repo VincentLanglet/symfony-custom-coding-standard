@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Token;
 
 use Exception;
@@ -11,77 +13,77 @@ use Twig\Source;
  */
 class Tokenizer
 {
-    const STATE_DATA          = 0;
-    const STATE_BLOCK         = 1;
-    const STATE_VAR           = 2;
-    const STATE_STRING        = 3;
-    const STATE_INTERPOLATION = 4;
-    const STATE_COMMENT       = 5;
+    private const STATE_DATA          = 0;
+    private const STATE_BLOCK         = 1;
+    private const STATE_VAR           = 2;
+    private const STATE_STRING        = 3;
+    private const STATE_INTERPOLATION = 4;
+    private const STATE_COMMENT       = 5;
 
-    const REGEX_NAME            = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
-    const REGEX_NUMBER          = '/[0-9]+(?:\.[0-9]+)?/A';
-    const REGEX_STRING          = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
-    const REGEX_DQ_STRING_DELIM = '/"/A';
-    const REGEX_DQ_STRING_PART  = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
-    const PUNCTUATION           = '()[]{}:.,|';
+    private const REGEX_NAME            = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
+    private const REGEX_NUMBER          = '/[0-9]+(?:\.[0-9]+)?/A';
+    private const REGEX_STRING          = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
+    private const REGEX_DQ_STRING_DELIM = '/"/A';
+    private const REGEX_DQ_STRING_PART  = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
+    private const PUNCTUATION           = '()[]{}:.,|';
 
     /**
      * @var array
      */
-    private $options;
+    private $options = [];
 
     /**
      * @var string[]
      */
-    private $regexes;
+    private $regexes = [];
 
     /**
      * @var int
      */
-    protected $cursor;
+    protected $cursor = 0;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected $end;
 
     /**
      * @var int
      */
-    protected $line;
+    protected $line = 1;
 
     /**
      * @var int
      */
-    protected $currentPosition;
+    protected $currentPosition = 0;
 
     /**
      * @var Token[]
      */
-    protected $tokens;
+    protected $tokens = [];
 
     /**
      * @var array
      */
-    protected $tokenPositions;
+    protected $tokenPositions = [];
 
     /**
      * @var int[]
      */
-    protected $state;
+    protected $state = [];
 
     /**
      * @var array
      */
-    protected $bracketsAndTernary;
+    protected $bracketsAndTernary = [];
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $code;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $filename;
 
@@ -172,6 +174,7 @@ class Tokenizer
         $this->currentPosition = 0;
         $this->tokens = [];
         $this->state = [];
+        $this->bracketsAndTernary = [];
 
         $this->code = str_replace(["\r\n", "\r"], "\n", $source->getCode());
         $this->end = strlen($this->code);
@@ -281,23 +284,23 @@ class Tokenizer
             $this->lexWhitespace();
         } elseif (PHP_EOL === $currentToken) {
             $this->lexEOL();
-        } elseif (preg_match($this->regexes['operator'], $this->code, $match, null, $this->cursor)) {
+        } elseif (preg_match($this->regexes['operator'], $this->code, $match, 0, $this->cursor)) {
             $this->lexOperator($match[0]);
-        } elseif (preg_match(self::REGEX_NAME, $this->code, $match, null, $this->cursor)) {
+        } elseif (preg_match(self::REGEX_NAME, $this->code, $match, 0, $this->cursor)) {
             // names
             $this->pushToken(Token::NAME_TYPE, $match[0]);
             $this->moveCursor($match[0]);
-        } elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, null, $this->cursor)) {
+        } elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor)) {
             // numbers
             $number = (float) $match[0];  // floats
             if (ctype_digit($match[0]) && $number <= PHP_INT_MAX) {
                 $number = (int) $match[0]; // integers lower than the maximum
             }
-            $this->pushToken(Token::NUMBER_TYPE, $number);
+            $this->pushToken(Token::NUMBER_TYPE, (string) $number);
             $this->moveCursor($match[0]);
         } elseif (false !== strpos(self::PUNCTUATION, $this->code[$this->cursor])) {
             $this->lexPunctuation();
-        } elseif (preg_match(self::REGEX_STRING, $this->code, $match, null, $this->cursor)) {
+        } elseif (preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
             // strings
             $this->pushToken(Token::STRING_TYPE, addcslashes(stripcslashes($match[0]), '\\'));
             $this->moveCursor($match[0]);
@@ -382,7 +385,7 @@ class Tokenizer
             $this->lexWhitespace();
         } elseif (PHP_EOL === $currentToken) {
             $this->lexEOL();
-        } elseif (preg_match('/\S+/', $this->code, $match, null, $this->cursor)) {
+        } elseif (preg_match('/\S+/', $this->code, $match, 0, $this->cursor)) {
             $value = $match[0];
             // Stop if cursor reaches the next token start.
             if (0 !== $limit && $limit <= ($this->cursor + strlen($value))) {

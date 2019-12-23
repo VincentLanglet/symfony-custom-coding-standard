@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Report;
 
 /**
@@ -7,49 +9,40 @@ namespace TwigCS\Report;
  */
 class Report
 {
-    const MESSAGE_TYPE_NOTICE  = 0;
-    const MESSAGE_TYPE_WARNING = 1;
-    const MESSAGE_TYPE_ERROR   = 2;
-    const MESSAGE_TYPE_FATAL   = 3;
+    public const MESSAGE_TYPE_NOTICE  = 0;
+    public const MESSAGE_TYPE_WARNING = 1;
+    public const MESSAGE_TYPE_ERROR   = 2;
+    public const MESSAGE_TYPE_FATAL   = 3;
 
     /**
      * @var SniffViolation[]
      */
-    protected $messages;
+    protected $messages = [];
 
     /**
      * @var string[]
      */
-    protected $files;
+    protected $files = [];
 
     /**
      * @var int
      */
-    protected $totalNotices;
+    protected $totalNotices = 0;
 
     /**
      * @var int
      */
-    protected $totalWarnings;
+    protected $totalWarnings = 0;
 
     /**
      * @var int
      */
-    protected $totalErrors;
-
-    public function __construct()
-    {
-        $this->messages = [];
-        $this->files = [];
-        $this->totalNotices = 0;
-        $this->totalWarnings = 0;
-        $this->totalErrors = 0;
-    }
+    protected $totalErrors = 0;
 
     /**
      * @param SniffViolation $sniffViolation
      *
-     * @return $this
+     * @return self
      */
     public function addMessage(SniffViolation $sniffViolation): Report
     {

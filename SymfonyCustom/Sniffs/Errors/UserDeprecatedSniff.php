@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymfonyCustom\Sniffs\Errors;
 
 use PHP_CodeSniffer\Files\File;

@@ -25,11 +25,6 @@
         </properties>
     </rule>
 
-    <!-- Override FunctionDeclaration to check space after type hinting -->
-    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint">
-        <severity>5</severity>
-    </rule>
-
     <!-- Override ScopeIndent to check phpDoc comments indent-->
     <rule ref="Generic.WhiteSpace.ScopeIndent">
         <properties>
@@ -52,7 +47,6 @@
             <property name="ignoreNewlines" value="true" />
         </properties>
     </rule>
-    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
     <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
     <rule ref="Squiz.WhiteSpace.OperatorSpacing">
@@ -109,6 +103,25 @@
         <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
     </rule>
     <rule ref="Squiz.Strings.EchoedStrings"/>
+
+    <!-- Starting PSR12 integration -->
+    <rule ref="Generic.WhiteSpace.IncrementDecrementSpacing"/>
+    <rule ref="PSR12.Classes.AnonClassDeclaration"/>
+    <rule ref="PSR12.Classes.ClassInstantiation"/>
+    <rule ref="PSR12.Classes.ClosingBrace"/>
+    <rule ref="PSR12.ControlStructures.BooleanOperatorPlacement"/>
+    <!--<rule ref="PSR12.ControlStructures.ControlStructureSpacing"/>-->
+    <rule ref="PSR12.Files.DeclareStatement"/>
+    <rule ref="PSR12.Files.ImportStatement"/>
+    <rule ref="PSR12.Functions.NullableTypeDeclaration"/>
+    <rule ref="PSR12.Functions.ReturnTypeDeclaration"/>
+    <!--<rule ref="PSR12.Operators.OperatorSpacing"/>-->
+    <rule ref="PSR12.Traits.UseDeclaration"/>
+    <!--<rule ref="Squiz.ControlStructures.ControlSignature"/>-->
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint">
+        <severity>5</severity>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
 
     <!-- Custom -->
     <rule ref="SymfonyCustom.Commenting.FunctionComment">

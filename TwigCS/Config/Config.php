@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TwigCS\Config;
 
 use Exception;
@@ -23,7 +25,7 @@ class Config
     /**
      * @var array
      */
-    protected $config;
+    protected $config = [];
 
     /**
      * @param array $config

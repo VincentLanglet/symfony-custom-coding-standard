@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymfonyCustom\Sniffs;
 
 use PHP_CodeSniffer\Files\File;
@@ -70,7 +72,7 @@ class SniffHelper
             return false;
         }
 
-        $nextNonEmpty = $phpcsFile->findNext(Tokens::$emptyTokens, ($stackPtr + 1), null, true);
+        $nextNonEmpty = $phpcsFile->findNext(Tokens::$emptyTokens, $stackPtr + 1, null, true);
 
         return !$nextNonEmpty || T_NS_SEPARATOR !== $tokens[$nextNonEmpty]['code'];
     }
