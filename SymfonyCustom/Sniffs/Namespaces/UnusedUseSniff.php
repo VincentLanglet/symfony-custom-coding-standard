@@ -311,7 +311,7 @@ class UnusedUseSniff implements Sniff
                 || ('class' === $type
                     && ((T_DOC_COMMENT_STRING === $tokens[$classUsed]['code']
                             && preg_match(
-                                '/(\s|\||\(|^)'.preg_quote($searchName, '/').'(\s|\||\\\\|$|\[\])/i',
+                                '/(\s|\||\(|^)'.preg_quote($searchName, '/').'(\s|\||\\\\|<|$|\[\])/i',
                                 $tokens[$classUsed]['content']
                             ))
                         || (T_DOC_COMMENT_TAG === $tokens[$classUsed]['code']

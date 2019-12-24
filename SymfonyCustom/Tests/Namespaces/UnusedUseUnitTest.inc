@@ -131,3 +131,17 @@ use /* comment */DateTime;
 new MyClass1();
 new MyClass2();
 new MyClass3();
+
+namespace BugCollection;
+
+use Doctrine\Collection;
+
+/**
+ * @param Collection<int, \Client> $a
+ *
+ * @return null
+ */
+function ($a)
+{
+    return null;
+}
