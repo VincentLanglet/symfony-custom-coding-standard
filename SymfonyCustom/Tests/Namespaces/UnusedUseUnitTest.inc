@@ -135,9 +135,11 @@ new MyClass3();
 namespace BugCollection;
 
 use Doctrine\Collection;
+use Doctrine\Value;
+use Doctrine\Key;
 
 /**
- * @param Collection<int, \Client> $a
+ * @param Collection<Key, Value> $a
  *
  * @return null
  */
