@@ -62,6 +62,7 @@ class Linter
 
         // Process
         foreach ($files as $file) {
+            $file = strval($file);
             $this->setErrorHandler($report, $file);
 
             $this->processTemplate($file, $ruleset, $report);
@@ -94,6 +95,7 @@ class Linter
         }
 
         foreach ($files as $file) {
+            $file = strval($file);
             $success = $fixer->fixFile($file);
 
             if (!$success) {
