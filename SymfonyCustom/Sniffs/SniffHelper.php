@@ -8,7 +8,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Tokens;
 
 /**
- * class Helper
+ * class SniffHelper
  *
  * @internal
  */

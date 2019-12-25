@@ -7,6 +7,7 @@ namespace SymfonyCustom\Sniffs\Arrays;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
+use SymfonyCustom\Sniffs\FixerHelper;
 
 /**
  * A test to ensure that arrays conform to the array coding standard.
@@ -74,12 +75,7 @@ class ArrayDeclarationSniff implements Sniff
                 );
 
                 if ($fix) {
-                    $phpcsFile->fixer->beginChangeset();
-                    for ($i = $stackPtr + 1; $i < $arrayStart; $i++) {
-                        $phpcsFile->fixer->replaceToken($i, '');
-                    }
-
-                    $phpcsFile->fixer->endChangeset();
+                    FixerHelper::removeAll($phpcsFile, $stackPtr + 1, $arrayStart);
                 }
             }
         } else {
@@ -100,12 +96,7 @@ class ArrayDeclarationSniff implements Sniff
                 );
 
                 if ($fix) {
-                    $phpcsFile->fixer->beginChangeset();
-                    for ($i = $arrayStart + 1; $i < $arrayEnd; $i++) {
-                        $phpcsFile->fixer->replaceToken($i, '');
-                    }
-
-                    $phpcsFile->fixer->endChangeset();
+                    FixerHelper::removeAll($phpcsFile, $arrayStart + 1, $arrayEnd);
                 }
             }
 
@@ -310,11 +301,7 @@ class ArrayDeclarationSniff implements Sniff
                 [$currentIndent, $tokens[$end]['column'] - 1]
             );
             if ($fix) {
-                if (0 === $found) {
-                    $phpcsFile->fixer->addContent($end - 1, str_repeat(' ', $expected));
-                } else {
-                    $phpcsFile->fixer->replaceToken($end - 1, str_repeat(' ', $expected));
-                }
+                FixerHelper::fixWhitespaceBefore($phpcsFile, $end, $expected, $found);
             }
         }
 
@@ -542,11 +529,7 @@ class ArrayDeclarationSniff implements Sniff
                         );
 
                         if ($fix) {
-                            if (0 === $found) {
-                                $phpcsFile->fixer->addContent($value['value'] - 1, str_repeat(' ', $expected));
-                            } else {
-                                $phpcsFile->fixer->replaceToken($value['value'] - 1, str_repeat(' ', $expected));
-                            }
+                            FixerHelper::fixWhitespaceBefore($phpcsFile, $value['value'], $expected, $found);
                         }
                     }
                 }
@@ -651,7 +634,7 @@ class ArrayDeclarationSniff implements Sniff
                 );
 
                 if ($fix) {
-                    $this->align($phpcsFile, $index['index'], $expected, $found);
+                    FixerHelper::fixWhitespaceBefore($phpcsFile, $index['index'], $expected, $found);
                 }
 
                 continue;
@@ -675,7 +658,7 @@ class ArrayDeclarationSniff implements Sniff
                 );
 
                 if ($fix) {
-                    $this->align($phpcsFile, $index['arrow'], $expected, $found);
+                    FixerHelper::fixWhitespaceBefore($phpcsFile, $index['arrow'], $expected, $found);
                 }
 
                 continue;
@@ -698,34 +681,9 @@ class ArrayDeclarationSniff implements Sniff
                 );
 
                 if ($fix) {
-                    $this->align($phpcsFile, $index['value'], $expected, $found);
+                    FixerHelper::fixWhitespaceBefore($phpcsFile, $index['value'], $expected, $found);
                 }
             }
-        }
-    }
-
-    /**
-     * @param File       $phpcsFile
-     * @param int        $elementIndex
-     * @param int        $expected
-     * @param int|string $found
-     */
-    private function align(File $phpcsFile, int $elementIndex, int $expected, $found): void
-    {
-        if ('newline' === $found) {
-            $phpcsFile->fixer->beginChangeset();
-
-            $prev = $phpcsFile->findPrevious(T_WHITESPACE, $elementIndex - 1, null, true);
-            for ($i = $prev + 1; $i < $elementIndex; $i++) {
-                $phpcsFile->fixer->replaceToken($i, '');
-            }
-
-            $phpcsFile->fixer->replaceToken($elementIndex - 1, str_repeat(' ', $expected));
-            $phpcsFile->fixer->endChangeset();
-        } elseif (0 === $found) {
-            $phpcsFile->fixer->addContent($elementIndex - 1, str_repeat(' ', $expected));
-        } else {
-            $phpcsFile->fixer->replaceToken($elementIndex - 1, str_repeat(' ', $expected));
         }
     }
 }

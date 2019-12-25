@@ -36,7 +36,7 @@ class DocCommentForbiddenTagsSniff implements Sniff
             $phpcsFile->addError(
                 'The %s annotation is forbidden to use',
                 $stackPtr,
-                '',
+                'Invalid',
                 [$tokens[$stackPtr]['content']]
             );
         }
