@@ -64,6 +64,37 @@ class FixerHelper
      * @param int        $expected
      * @param int|string $found
      */
+    public static function fixWhitespaceAfter(
+        File $phpcsFile,
+        int $stackPtr,
+        int $expected,
+        $found
+    ): void {
+        $phpcsFile->fixer->beginChangeset();
+
+        if (0 === $found) {
+            $phpcsFile->fixer->addContent($stackPtr, str_repeat(' ', $expected));
+        } else {
+            if ('newline' === $found) {
+                $next = $phpcsFile->findNext(T_WHITESPACE, $stackPtr, null, true);
+
+                for ($i = $stackPtr + 1; $i < $next; $i++) {
+                    $phpcsFile->fixer->replaceToken($i, '');
+                }
+            }
+
+            $phpcsFile->fixer->replaceToken($stackPtr + 1, str_repeat(' ', $expected));
+        }
+
+        $phpcsFile->fixer->endChangeset();
+    }
+
+    /**
+     * @param File       $phpcsFile
+     * @param int        $stackPtr
+     * @param int        $expected
+     * @param int|string $found
+     */
     public static function fixWhitespaceBefore(
         File $phpcsFile,
         int $stackPtr,

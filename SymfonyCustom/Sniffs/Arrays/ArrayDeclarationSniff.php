@@ -158,56 +158,40 @@ class ArrayDeclarationSniff implements Sniff
         $nextArrow = $phpcsFile->findNext(T_DOUBLE_ARROW, $start + 1, $end);
         while (false !== $nextArrow) {
             if (T_WHITESPACE !== $tokens[$nextArrow - 1]['code']) {
+                $spaceBefore = 0;
+            } else {
+                $spaceBefore = $tokens[$nextArrow - 1]['length'];
+            }
+
+            if (1 !== $spaceBefore) {
                 $fix = $phpcsFile->addFixableError(
-                    'Expected 1 space between "%s" and double arrow; 0 found',
+                    'Expected 1 space between "%s" and double arrow; %s found',
                     $nextArrow,
-                    'NoSpaceBeforeDoubleArrow',
-                    [$tokens[$nextArrow - 1]['content']]
+                    'SpaceAfterDoubleArrow',
+                    [$tokens[$nextArrow - 1]['content'], $spaceBefore]
                 );
 
                 if ($fix) {
-                    $phpcsFile->fixer->addContentBefore($nextArrow, ' ');
-                }
-            } else {
-                $spaceLength = $tokens[$nextArrow - 1]['length'];
-                if (1 !== $spaceLength) {
-                    $fix = $phpcsFile->addFixableError(
-                        'Expected 1 space between "%s" and double arrow; %s found',
-                        $nextArrow,
-                        'SpaceBeforeDoubleArrow',
-                        [$tokens[$nextArrow - 2]['content'], $spaceLength]
-                    );
-
-                    if ($fix) {
-                        $phpcsFile->fixer->replaceToken($nextArrow - 1, ' ');
-                    }
+                    FixerHelper::fixWhitespaceBefore($phpcsFile, $nextArrow, 1, $spaceBefore);
                 }
             }
 
             if (T_WHITESPACE !== $tokens[$nextArrow + 1]['code']) {
+                $spaceAfter = 0;
+            } else {
+                $spaceAfter = $tokens[$nextArrow + 1]['length'];
+            }
+
+            if (1 !== $spaceAfter) {
                 $fix = $phpcsFile->addFixableError(
-                    'Expected 1 space between double arrow and "%s"; 0 found',
+                    'Expected 1 space between double arrow and "%s"; %s found',
                     $nextArrow,
-                    'NoSpaceAfterDoubleArrow',
-                    [$tokens[$nextArrow + 1]['content']]
+                    'SpaceAfterDoubleArrow',
+                    [$tokens[$nextArrow + 1]['content'], $spaceAfter]
                 );
 
                 if ($fix) {
-                    $phpcsFile->fixer->addContent($nextArrow, ' ');
-                }
-            } else {
-                $spaceLength = $tokens[$nextArrow + 1]['length'];
-                if (1 !== $spaceLength) {
-                    $fix = $phpcsFile->addFixableError(
-                        'Expected 1 space between double arrow and "%s"; %s found',
-                        $nextArrow,
-                        'SpaceAfterDoubleArrow',
-                        [$tokens[$nextArrow + 2]['content'], $spaceLength]
-                    );
-
-                    if ($fix) {
-                        $phpcsFile->fixer->replaceToken($nextArrow + 1, ' ');
-                    }
+                    FixerHelper::fixWhitespaceAfter($phpcsFile, $nextArrow, 1, $spaceAfter);
                 }
             }
 
@@ -218,29 +202,21 @@ class ArrayDeclarationSniff implements Sniff
             // We have a multiple value array
             foreach ($commas as $comma) {
                 if (T_WHITESPACE !== $tokens[$comma + 1]['code']) {
+                    $spaceAfter = 0;
+                } else {
+                    $spaceAfter = $tokens[$comma + 1]['length'];
+                }
+
+                if (1 !== $spaceAfter) {
                     $fix = $phpcsFile->addFixableError(
-                        'Expected 1 space between comma and "%s"; 0 found',
+                        'Expected 1 space between comma and "%s"; %s found',
                         $comma,
-                        'NoSpaceAfterComma',
-                        [$tokens[$comma + 1]['content']]
+                        'SpaceAfterComma',
+                        [$tokens[$comma + 1]['content'], $spaceAfter]
                     );
 
                     if ($fix) {
-                        $phpcsFile->fixer->addContent($comma, ' ');
-                    }
-                } else {
-                    $spaceLength = $tokens[$comma + 1]['length'];
-                    if (1 !== $spaceLength) {
-                        $fix = $phpcsFile->addFixableError(
-                            'Expected 1 space between comma and "%s"; %s found',
-                            $comma,
-                            'SpaceAfterComma',
-                            [$tokens[$comma + 2]['content'], $spaceLength]
-                        );
-
-                        if ($fix) {
-                            $phpcsFile->fixer->replaceToken($comma + 1, ' ');
-                        }
+                        FixerHelper::fixWhitespaceAfter($phpcsFile, $comma, 1, $spaceAfter);
                     }
                 }
 
