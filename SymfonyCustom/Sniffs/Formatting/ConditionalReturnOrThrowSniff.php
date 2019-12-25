@@ -29,9 +29,10 @@ class ConditionalReturnOrThrowSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
         $opener = $phpcsFile->findPrevious([T_IF, T_CASE], $stackPtr);
 
-        if ($opener
+        if (false !== $opener
             && isset($tokens[$opener]['scope_closer'])
-            && $stackPtr <= $tokens[$opener]['scope_closer']) {
+            && $stackPtr <= $tokens[$opener]['scope_closer']
+        ) {
             $isClosure = $phpcsFile->findPrevious(T_CLOSURE, $stackPtr, $opener);
             if (false !== $isClosure) {
                 return;
