@@ -10,9 +10,9 @@
          stopOnFailure="false"
          bootstrap="./bootstrap.php"
 >
-    <testsuites>
-        <testsuite name="Symfony Coding Standard Test Suite">
-            <file>./vendor/squizlabs/php_codesniffer/tests/Standards/AllSniffs.php</file>
-        </testsuite>
-    </testsuites>
+    <filter>
+        <whitelist>
+            <directory>./vendor/squizlabs/php_codesniffer/src/Standards/SymfonyCustom</directory>
+        </whitelist>
+    </filter>
 </phpunit>

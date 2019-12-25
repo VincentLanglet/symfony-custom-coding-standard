@@ -21,12 +21,8 @@ class ValidFileNameUnitTest extends AbstractSniffUnitTest
     protected function getErrorList($filename = '')
     {
         switch ($filename) {
-            case 'ValidFileNameUnitTest.inc':
-                return [];
             case 'ValidFileNameUnitTest.Invalid.inc':
-                return [
-                    1 => 1,
-                ];
+                return [1 => 1];
             default:
                 return [];
         }

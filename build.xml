@@ -39,6 +39,15 @@
         </exec>
     </target>
 
+    <target name="coverage" depends="symlink-cs" description="Run coverage with PHPUnit">
+        <exec executable="${phpunit.bin}" failonerror="true" >
+            <arg value="--verbose"/>
+            <arg value="--group=SymfonyCustom"/>
+            <arg value="${phpcs.dir}/tests/AllTests.php"/>
+            <arg value="--coverage-html=coverage"/>
+        </exec>
+    </target>
+
     <target name="phpcs" depends="symlink-cs" description="Find coding standard violations using PHP Code Sniffer">
         <exec executable="${phpcs.bin}" failonerror="true">
             <arg value="--standard=SymfonyCustom"/>
