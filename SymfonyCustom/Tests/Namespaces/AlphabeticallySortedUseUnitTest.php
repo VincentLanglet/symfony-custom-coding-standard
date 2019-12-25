@@ -21,8 +21,6 @@ class AlphabeticallySortedUseUnitTest extends AbstractSniffUnitTest
         return [
             7  => 1,
             22 => 1,
-            34 => 1,
-            39 => 2,
             58 => 1,
         ];
     }

@@ -26,7 +26,6 @@ class VariableCommentUnitTest extends AbstractSniffUnitTest
             73  => 1,
             84  => 1,
             123 => 1,
-            125 => 1,
             131 => 1,
         ];
     }

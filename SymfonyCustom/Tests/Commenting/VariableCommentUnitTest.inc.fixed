@@ -122,7 +122,6 @@ class VariableCommentUnitTest
      *
      */
     public $emptyVarDoc = '';
-
     /**
      * @var int
      */
