@@ -6,7 +6,7 @@ namespace SymfonyCustom\Sniffs\Commenting;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
-use SymfonyCustom\Sniffs\FixerHelper;
+use SymfonyCustom\Helpers\FixerHelper;
 
 /**
  * Ensures doc blocks follow basic formatting.
