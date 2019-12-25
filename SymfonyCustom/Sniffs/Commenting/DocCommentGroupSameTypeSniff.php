@@ -6,6 +6,7 @@ namespace SymfonyCustom\Sniffs\Commenting;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use SymfonyCustom\Sniffs\FixerHelper;
 use SymfonyCustom\Sniffs\SniffHelper;
 
 /**
@@ -70,7 +71,12 @@ class DocCommentGroupSameTypeSniff implements Sniff
                         );
 
                         if ($fix) {
-                            $this->removeLines($phpcsFile, $previousElement, $previousLine + 1, $commentTagLine - 1);
+                            FixerHelper::removeLines(
+                                $phpcsFile,
+                                $previousElement,
+                                $previousLine + 1,
+                                $commentTagLine
+                            );
                         }
                     }
                 } elseif ($currentIsCustom && $previousIsCustom) {
@@ -82,7 +88,12 @@ class DocCommentGroupSameTypeSniff implements Sniff
                         );
 
                         if ($fix) {
-                            $this->removeLines($phpcsFile, $previousElement, $previousLine + 1, $commentTagLine - 1);
+                            FixerHelper::removeLines(
+                                $phpcsFile,
+                                $previousElement,
+                                $previousLine + 1,
+                                $commentTagLine
+                            );
                         }
                     }
                 } elseif (!$currentIsCustom && !$isNewType) {
@@ -106,7 +117,12 @@ class DocCommentGroupSameTypeSniff implements Sniff
 
                             $phpcsFile->fixer->addContentBefore($firstOnLine, $content.$phpcsFile->eolChar);
                         } else {
-                            $this->removeLines($phpcsFile, $previousElement, $previousLine + 2, $commentTagLine - 1);
+                            FixerHelper::removeLines(
+                                $phpcsFile,
+                                $previousElement,
+                                $previousLine + 2,
+                                $commentTagLine
+                            );
                         }
                     }
                 }
@@ -118,30 +134,5 @@ class DocCommentGroupSameTypeSniff implements Sniff
                 $typeSeen[] = $currentType;
             }
         }
-    }
-
-    /**
-     * @param File $phpcsFile
-     * @param int  $fromPtr
-     * @param int  $fromLine
-     * @param int  $toLine
-     */
-    private function removeLines(File $phpcsFile, int $fromPtr, int $fromLine, int $toLine): void
-    {
-        $tokens = $phpcsFile->getTokens();
-
-        $phpcsFile->fixer->beginChangeset();
-
-        for ($i = $fromPtr;; $i++) {
-            if ($tokens[$i]['line'] > $toLine) {
-                break;
-            }
-
-            if ($fromLine <= $tokens[$i]['line']) {
-                $phpcsFile->fixer->replaceToken($i, '');
-            }
-        }
-
-        $phpcsFile->fixer->endChangeset();
     }
 }

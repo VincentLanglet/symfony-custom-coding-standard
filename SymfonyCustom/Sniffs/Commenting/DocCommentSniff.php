@@ -6,6 +6,7 @@ namespace SymfonyCustom\Sniffs\Commenting;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use SymfonyCustom\Sniffs\FixerHelper;
 
 /**
  * Ensures doc blocks follow basic formatting.
@@ -111,16 +112,7 @@ class DocCommentSniff implements Sniff
             );
 
             if ($fix) {
-                $phpcsFile->fixer->beginChangeset();
-                for ($i = $stackPtr + 1; $i < $short; $i++) {
-                    if ($tokens[$i + 1]['line'] === $tokens[$short]['line']) {
-                        break;
-                    }
-
-                    $phpcsFile->fixer->replaceToken($i, '');
-                }
-
-                $phpcsFile->fixer->endChangeset();
+                FixerHelper::removeAll($phpcsFile, $stackPtr + 1, $short);
             }
         }
 
@@ -160,16 +152,7 @@ class DocCommentSniff implements Sniff
             );
 
             if ($fix) {
-                $phpcsFile->fixer->beginChangeset();
-                for ($i = $prev + 1; $i < $commentEnd; $i++) {
-                    if ($tokens[$i + 1]['line'] === $tokens[$commentEnd]['line']) {
-                        break;
-                    }
-
-                    $phpcsFile->fixer->replaceToken($i, '');
-                }
-
-                $phpcsFile->fixer->endChangeset();
+                FixerHelper::removeAll($phpcsFile, $prev + 1, $commentEnd);
             }
         }
     }
