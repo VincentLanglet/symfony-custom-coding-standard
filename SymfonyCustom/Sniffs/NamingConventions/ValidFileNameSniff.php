@@ -48,9 +48,6 @@ class ValidFileNameSniff implements Sniff
                 'Invalid',
                 [$filename]
             );
-            $phpcsFile->recordMetric($stackPtr, 'Alphanumeric filename', 'no');
-        } else {
-            $phpcsFile->recordMetric($stackPtr, 'Alphanumeric filename', 'yes');
         }
     }
 }
