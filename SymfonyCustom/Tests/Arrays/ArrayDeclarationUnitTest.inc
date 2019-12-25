@@ -135,3 +135,15 @@ return [
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class          => ['test' => true],
     Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle::class => ['all' => true],
 ];
+
+[
+    0 => 1,
+    1
+    => 2,
+];
+
+[
+    0 => 1,
+    1 =>
+    2,
+];
