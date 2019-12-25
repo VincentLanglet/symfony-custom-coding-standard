@@ -6,8 +6,8 @@ namespace SymfonyCustom\Sniffs\Commenting;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
-use SymfonyCustom\Sniffs\FixerHelper;
-use SymfonyCustom\Sniffs\SniffHelper;
+use SymfonyCustom\Helpers\FixerHelper;
+use SymfonyCustom\Helpers\SniffHelper;
 
 /**
  * Throws errors if comments are not grouped by type with one blank line between them.

@@ -28,9 +28,13 @@
         "phpunit/phpunit": "^7.0"
     },
     "autoload": {
-        "psr-4": { "TwigCS\\": "TwigCS/" }
+        "psr-4": {
+            "TwigCS\\": "TwigCS/src/"
+        }
     },
     "autoload-dev": {
-        "psr-4": { "TwigCS\\Tests\\": "TwigCS/Tests/" }
+        "psr-4": {
+            "TwigCS\\Tests\\": "TwigCS/tests/"
+        }
     }
 }

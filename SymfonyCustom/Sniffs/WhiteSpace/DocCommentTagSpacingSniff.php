@@ -6,7 +6,7 @@ namespace SymfonyCustom\Sniffs\WhiteSpace;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
-use SymfonyCustom\Sniffs\SniffHelper;
+use SymfonyCustom\Helpers\SniffHelper;
 
 /**
  * Checks that there are not 2 empty lines following each other.

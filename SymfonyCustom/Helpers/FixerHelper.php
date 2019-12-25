@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SymfonyCustom\Sniffs;
+namespace SymfonyCustom\Helpers;
 
 use PHP_CodeSniffer\Files\File;
 

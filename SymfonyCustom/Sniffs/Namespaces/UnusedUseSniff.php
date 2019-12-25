@@ -7,7 +7,7 @@ namespace SymfonyCustom\Sniffs\Namespaces;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
-use SymfonyCustom\Sniffs\SniffHelper;
+use SymfonyCustom\Helpers\SniffHelper;
 
 /**
  * Checks for "use" statements that are not needed in a file.

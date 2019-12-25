@@ -7,7 +7,7 @@ namespace SymfonyCustom\Sniffs\Arrays;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
-use SymfonyCustom\Sniffs\FixerHelper;
+use SymfonyCustom\Helpers\FixerHelper;
 
 /**
  * A test to ensure that arrays conform to the array coding standard.
