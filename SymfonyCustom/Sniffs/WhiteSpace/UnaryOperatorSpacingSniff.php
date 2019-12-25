@@ -17,7 +17,7 @@ class UnaryOperatorSpacingSniff implements Sniff
      */
     public function register(): array
     {
-        return [T_MINUS, T_PLUS, T_BOOLEAN_NOT];
+        return [T_MINUS, T_PLUS];
     }
 
     /**
@@ -27,21 +27,6 @@ class UnaryOperatorSpacingSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
-
-        // Check "!" operator.
-        if (T_BOOLEAN_NOT === $tokens[$stackPtr]['code'] && T_WHITESPACE === $tokens[$stackPtr + 1]['code']) {
-            $fix = $phpcsFile->addFixableError(
-                'A unary operator statement must not be followed by a space',
-                $stackPtr,
-                'BooleanNot'
-            );
-
-            if ($fix) {
-                $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
-            }
-
-            return;
-        }
 
         // Find the last syntax item to determine if this is an unary operator.
         $lastSyntaxItem = $phpcsFile->findPrevious(
@@ -66,17 +51,15 @@ class UnaryOperatorSpacingSniff implements Sniff
         );
 
         // Check plus / minus value assignments or comparisons.
-        if (T_MINUS === $tokens[$stackPtr]['code'] || T_PLUS === $tokens[$stackPtr]['code']) {
-            if (!$operatorSuffixAllowed && T_WHITESPACE === $tokens[$stackPtr + 1]['code']) {
-                $fix = $phpcsFile->addFixableError(
-                    'A unary operator statement must not be followed by a space',
-                    $stackPtr,
-                    'Invalid'
-                );
+        if (!$operatorSuffixAllowed && T_WHITESPACE === $tokens[$stackPtr + 1]['code']) {
+            $fix = $phpcsFile->addFixableError(
+                'A unary operator statement must not be followed by a space',
+                $stackPtr,
+                'Invalid'
+            );
 
-                if ($fix) {
-                    $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
-                }
+            if ($fix) {
+                $phpcsFile->fixer->replaceToken($stackPtr + 1, '');
             }
         }
     }

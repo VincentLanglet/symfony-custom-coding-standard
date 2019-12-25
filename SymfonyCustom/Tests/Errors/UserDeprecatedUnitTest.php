@@ -19,7 +19,8 @@ class UserDeprecatedUnitTest extends AbstractSniffUnitTest
     protected function getErrorList(): array
     {
         return [
-            30 => 1,
+            3 => 1,
+            6 => 1,
         ];
     }
 

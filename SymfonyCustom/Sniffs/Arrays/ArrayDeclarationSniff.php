@@ -651,11 +651,7 @@ class ArrayDeclarationSniff implements Sniff
                 );
 
                 if ($fix) {
-                    if (0 === $found) {
-                        $phpcsFile->fixer->addContent($index['index'] - 1, str_repeat(' ', $expected));
-                    } else {
-                        $phpcsFile->fixer->replaceToken($index['index'] - 1, str_repeat(' ', $expected));
-                    }
+                    $this->align($phpcsFile, $index['index'], $expected, $found);
                 }
 
                 continue;
@@ -679,20 +675,7 @@ class ArrayDeclarationSniff implements Sniff
                 );
 
                 if ($fix) {
-                    if ('newline' === $found) {
-                        $prev = $phpcsFile->findPrevious(T_WHITESPACE, $index['value'] - 1, null, true);
-                        $phpcsFile->fixer->beginChangeset();
-                        for ($i = $prev + 1; $i < $index['value']; $i++) {
-                            $phpcsFile->fixer->replaceToken($i, '');
-                        }
-
-                        $phpcsFile->fixer->replaceToken($index['value'] - 1, str_repeat(' ', $expected));
-                        $phpcsFile->fixer->endChangeset();
-                    } elseif (0 === $found) {
-                        $phpcsFile->fixer->addContent($index['arrow'] - 1, str_repeat(' ', $expected));
-                    } else {
-                        $phpcsFile->fixer->replaceToken($index['arrow'] - 1, str_repeat(' ', $expected));
-                    }
+                    $this->align($phpcsFile, $index['arrow'], $expected, $found);
                 }
 
                 continue;
@@ -709,28 +692,40 @@ class ArrayDeclarationSniff implements Sniff
 
                 $fix = $phpcsFile->addFixableError(
                     'Array value not aligned correctly; expected %s space(s) but found %s',
-                    $index['arrow'],
+                    $index['value'],
                     'ValueNotAligned',
                     [$expected, $found]
                 );
 
                 if ($fix) {
-                    if ('newline' === $found) {
-                        $prev = $phpcsFile->findPrevious(T_WHITESPACE, $index['value'] - 1, null, true);
-                        $phpcsFile->fixer->beginChangeset();
-                        for ($i = $prev + 1; $i < $index['value']; $i++) {
-                            $phpcsFile->fixer->replaceToken($i, '');
-                        }
-
-                        $phpcsFile->fixer->replaceToken($index['value'] - 1, str_repeat(' ', $expected));
-                        $phpcsFile->fixer->endChangeset();
-                    } elseif (0 === $found) {
-                        $phpcsFile->fixer->addContent($index['value'] - 1, str_repeat(' ', $expected));
-                    } else {
-                        $phpcsFile->fixer->replaceToken($index['value'] - 1, str_repeat(' ', $expected));
-                    }
+                    $this->align($phpcsFile, $index['value'], $expected, $found);
                 }
             }
+        }
+    }
+
+    /**
+     * @param File       $phpcsFile
+     * @param int        $elementIndex
+     * @param int        $expected
+     * @param int|string $found
+     */
+    private function align(File $phpcsFile, int $elementIndex, int $expected, $found): void
+    {
+        if ('newline' === $found) {
+            $phpcsFile->fixer->beginChangeset();
+
+            $prev = $phpcsFile->findPrevious(T_WHITESPACE, $elementIndex - 1, null, true);
+            for ($i = $prev + 1; $i < $elementIndex; $i++) {
+                $phpcsFile->fixer->replaceToken($i, '');
+            }
+
+            $phpcsFile->fixer->replaceToken($elementIndex - 1, str_repeat(' ', $expected));
+            $phpcsFile->fixer->endChangeset();
+        } elseif (0 === $found) {
+            $phpcsFile->fixer->addContent($elementIndex - 1, str_repeat(' ', $expected));
+        } else {
+            $phpcsFile->fixer->replaceToken($elementIndex - 1, str_repeat(' ', $expected));
         }
     }
 }
