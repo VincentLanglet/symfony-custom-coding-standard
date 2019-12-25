@@ -30,6 +30,7 @@ class DocCommentGroupSameTypeUnitTest extends AbstractSniffUnitTest
             29 => 1,
             33 => 1,
             67 => 1,
+            75 => 1,
         ];
     }
 

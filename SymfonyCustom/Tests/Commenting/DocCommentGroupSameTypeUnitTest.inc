@@ -66,3 +66,11 @@
  * @Route("/{id}/")
  * @param
  */
+
+/**
+ * @param string $a
+ *
+ * @return string
+ *
+ * @param string $b
+ */

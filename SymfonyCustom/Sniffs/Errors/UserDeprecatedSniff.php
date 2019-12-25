@@ -38,22 +38,32 @@ class UserDeprecatedSniff implements Sniff
 
         do {
             $string = $phpcsFile->findNext(T_STRING, $opener, $closer);
-
             if (false === $string) {
                 break;
             }
 
-            if ('E_USER_DEPRECATED' === $tokens[$string]['content'] && '@' !== $tokens[$stackPtr - 1]['content']) {
-                $phpcsFile->addError(
-                    'Calls to trigger_error with type E_USER_DEPRECATED must be switched to opt-in via @ operator',
-                    $stackPtr,
-                    'Invalid'
-                );
+            $opener = $string + 1;
 
-                break;
-            } else {
-                $opener = $string + 1;
+            if ('E_USER_DEPRECATED' !== $tokens[$string]['content']) {
+                continue;
             }
+
+            if ('@' === $tokens[$stackPtr - 1]['content']) {
+                continue;
+            }
+
+            if ('@' === $tokens[$stackPtr - 2]['content']
+                && 'T_NS_SEPARATOR' === $tokens[$stackPtr - 1]['type']
+            ) {
+                continue;
+            }
+
+            $phpcsFile->addError(
+                'Calls to trigger_error with type E_USER_DEPRECATED must be switched to opt-in via @ operator',
+                $stackPtr,
+                'Invalid'
+            );
+            break;
         } while ($opener < $closer);
     }
 }

@@ -29,114 +29,94 @@ class DocCommentGroupSameTypeSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $previousType = '';
+        $typeSeen = [];
+        $previousTag = false;
+        $previousIsCustom = false;
+
         foreach ($tokens[$stackPtr]['comment_tags'] as $commentTag) {
             $currentType = $tokens[$commentTag]['content'];
+            $currentIsCustom = !in_array($currentType, SniffHelper::TAGS);
+            $isNewType = !in_array($currentType, $typeSeen);
+
             $commentTagLine = $tokens[$commentTag]['line'];
 
-            $previousString = $phpcsFile->findPrevious(
-                T_DOC_COMMENT_STRING,
-                $commentTag,
-                $stackPtr
-            );
-
-            $previousTag = $phpcsFile->findPrevious(
-                T_DOC_COMMENT_TAG,
-                $commentTag - 1,
-                $stackPtr
-            );
-
+            $previousString = $phpcsFile->findPrevious(T_DOC_COMMENT_STRING, $commentTag, $stackPtr);
             $previousLine = -1;
+
             if (false !== $previousString) {
                 $previousLine = $tokens[$previousString]['line'];
                 $previousElement = $previousString;
             }
 
             if (false !== $previousTag) {
+                $previousType = $tokens[$previousTag]['content'];
                 $previousTagLine = $tokens[$previousTag]['line'];
 
                 if ($previousTagLine > $previousLine) {
                     $previousLine = $previousTagLine;
                     $previousElement = $previousTag;
                 }
+            } else {
+                $previousType = null;
             }
 
             if (isset($previousElement) && $previousLine >= 0) {
-                $currentIsCustom = !in_array($currentType, SniffHelper::TAGS);
-                $previousIsCustom = '' !== $previousType
-                    && !in_array($previousType, SniffHelper::TAGS);
-
-                if (($previousType === $currentType) || ($currentIsCustom && $previousIsCustom)) {
+                if ($previousType === $currentType) {
                     if ($previousLine !== $commentTagLine - 1) {
-                        if ($previousType === $currentType) {
-                            $fix = $phpcsFile->addFixableError(
-                                'Expected no empty lines between annotations of the same type',
-                                $commentTag,
-                                'SameType'
-                            );
-                        } else {
-                            $fix = $phpcsFile->addFixableError(
-                                'Expected no empty lines between custom annotations',
-                                $commentTag,
-                                'CustomType'
-                            );
-                        }
-
-                        if ($fix) {
-                            $phpcsFile->fixer->beginChangeset();
-                            $this->removeLines(
-                                $phpcsFile,
-                                $previousElement,
-                                $previousLine + 1,
-                                $commentTagLine - 1
-                            );
-                            $phpcsFile->fixer->endChangeset();
-                        }
-                    }
-                } else {
-                    if ($previousLine !== $commentTagLine - 2) {
                         $fix = $phpcsFile->addFixableError(
-                            'Expected exactly one empty line between annotations of different types',
+                            'Expected no empty lines between annotations of the same type',
                             $commentTag,
-                            'DifferentType'
+                            'SameType'
                         );
 
                         if ($fix) {
-                            $phpcsFile->fixer->beginChangeset();
+                            $this->removeLines($phpcsFile, $previousElement, $previousLine + 1, $commentTagLine - 1);
+                        }
+                    }
+                } elseif ($currentIsCustom && $previousIsCustom) {
+                    if ($previousLine !== $commentTagLine - 1) {
+                        $fix = $phpcsFile->addFixableError(
+                            'Expected no empty lines between custom annotations',
+                            $commentTag,
+                            'CustomType'
+                        );
 
-                            if ($previousLine === $commentTagLine - 1) {
-                                $firstOnLine = $phpcsFile->findFirstOnLine(
-                                    [],
-                                    $commentTag,
-                                    true
-                                );
-                                $star = $phpcsFile->findNext(
-                                    T_DOC_COMMENT_STAR,
-                                    $firstOnLine
-                                );
-                                $content = $phpcsFile->getTokensAsString(
-                                    $firstOnLine,
-                                    $star - $firstOnLine + 1
-                                );
-                                $phpcsFile->fixer->addContentBefore(
-                                    $firstOnLine,
-                                    $content.$phpcsFile->eolChar
-                                );
-                            } else {
-                                $this->removeLines(
-                                    $phpcsFile,
-                                    $previousElement,
-                                    $previousLine + 2,
-                                    $commentTagLine - 1
-                                );
-                            }
-                            $phpcsFile->fixer->endChangeset();
+                        if ($fix) {
+                            $this->removeLines($phpcsFile, $previousElement, $previousLine + 1, $commentTagLine - 1);
+                        }
+                    }
+                } elseif (!$currentIsCustom && !$isNewType) {
+                    $phpcsFile->addError(
+                        'Annotation of the same type should be together',
+                        $commentTag,
+                        'GroupSameType'
+                    );
+                } elseif ($previousLine !== $commentTagLine - 2) {
+                    $fix = $phpcsFile->addFixableError(
+                        'Expected exactly one empty line between annotations of different types',
+                        $commentTag,
+                        'DifferentType'
+                    );
+
+                    if ($fix) {
+                        if ($previousLine === $commentTagLine - 1) {
+                            $firstOnLine = $phpcsFile->findFirstOnLine([], $commentTag, true);
+                            $star = $phpcsFile->findNext(T_DOC_COMMENT_STAR, $firstOnLine);
+                            $content = $phpcsFile->getTokensAsString($firstOnLine, $star - $firstOnLine + 1);
+
+                            $phpcsFile->fixer->addContentBefore($firstOnLine, $content.$phpcsFile->eolChar);
+                        } else {
+                            $this->removeLines($phpcsFile, $previousElement, $previousLine + 2, $commentTagLine - 1);
                         }
                     }
                 }
             }
 
-            $previousType = $currentType;
+            $previousTag = $commentTag;
+            $previousIsCustom = $currentIsCustom;
+            if (!$currentIsCustom && $isNewType) {
+                $typeSeen[] = $currentType;
+            }
         }
     }
 
@@ -150,6 +130,8 @@ class DocCommentGroupSameTypeSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
+        $phpcsFile->fixer->beginChangeset();
+
         for ($i = $fromPtr;; $i++) {
             if ($tokens[$i]['line'] > $toLine) {
                 break;
@@ -159,5 +141,7 @@ class DocCommentGroupSameTypeSniff implements Sniff
                 $phpcsFile->fixer->replaceToken($i, '');
             }
         }
+
+        $phpcsFile->fixer->endChangeset();
     }
 }
