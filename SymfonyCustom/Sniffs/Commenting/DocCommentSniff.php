@@ -38,10 +38,7 @@ class DocCommentSniff implements Sniff
 
         $commentEnd = $tokens[$stackPtr]['comment_closer'];
 
-        $empty = [
-            T_DOC_COMMENT_WHITESPACE,
-            T_DOC_COMMENT_STAR,
-        ];
+        $empty = [T_DOC_COMMENT_WHITESPACE, T_DOC_COMMENT_STAR];
 
         $short = $phpcsFile->findNext($empty, $stackPtr + 1, $commentEnd, true);
         if (false === $short) {

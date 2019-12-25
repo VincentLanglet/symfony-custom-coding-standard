@@ -8,7 +8,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Ensures there are no spaces +/- sign operators or "!" boolean negators.
+ * Ensures there are no spaces +/- sign operators.
  */
 class UnaryOperatorSpacingSniff implements Sniff
 {

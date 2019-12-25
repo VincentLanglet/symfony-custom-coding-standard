@@ -7,12 +7,17 @@
     <exclude-pattern>*/vendor/*</exclude-pattern>
 
     <!-- ************** -->
-    <!-- ***  PSR2  *** -->
+    <!-- ***  PSR12  *** -->
     <!-- ************** -->
 
-    <!-- Include the whole PSR-2 (so PSR-1) standard without the file length limit -->
-    <rule ref="PSR2">
+    <!-- Include the PSR-12 (so PSR-1) standard without the file length limit -->
+    <rule ref="PSR12">
         <exclude name="Generic.Files.LineLength"/>
+
+        <!-- TODO -->
+        <exclude name="PSR12.ControlStructures.ControlStructureSpacing"/>
+        <exclude name="PSR12.Operators.OperatorSpacing"/>
+        <exclude name="Squiz.ControlStructures.ControlSignature"/>
     </rule>
     <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
         <type>error</type>
@@ -53,7 +58,19 @@
         </properties>
     </rule>
     <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacingBeforeFirst" value="0"/>
+            <property name="spacing" value="1"/>
+            <property name="spacingAfterLast" value="0"/>
+        </properties>
+    </rule>
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+    <rule ref="Squiz.WhiteSpace.MemberVarSpacing">
+        <properties>
+            <property name="spacingBeforeFirst" value="0"/>
+        </properties>
+    </rule>
     <rule ref="Squiz.WhiteSpace.OperatorSpacing">
         <properties>
             <property name="ignoreNewlines" value="true"/>
@@ -108,25 +125,6 @@
         <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
     </rule>
     <rule ref="Squiz.Strings.EchoedStrings"/>
-
-    <!-- Starting PSR12 integration -->
-    <rule ref="Generic.WhiteSpace.IncrementDecrementSpacing"/>
-    <rule ref="PSR12.Classes.AnonClassDeclaration"/>
-    <rule ref="PSR12.Classes.ClassInstantiation"/>
-    <rule ref="PSR12.Classes.ClosingBrace"/>
-    <rule ref="PSR12.ControlStructures.BooleanOperatorPlacement"/>
-    <!--<rule ref="PSR12.ControlStructures.ControlStructureSpacing"/>-->
-    <rule ref="PSR12.Files.DeclareStatement"/>
-    <rule ref="PSR12.Files.ImportStatement"/>
-    <rule ref="PSR12.Functions.NullableTypeDeclaration"/>
-    <rule ref="PSR12.Functions.ReturnTypeDeclaration"/>
-    <!--<rule ref="PSR12.Operators.OperatorSpacing"/>-->
-    <rule ref="PSR12.Traits.UseDeclaration"/>
-    <!--<rule ref="Squiz.ControlStructures.ControlSignature"/>-->
-    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint">
-        <severity>5</severity>
-    </rule>
-    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
 
     <!-- Custom -->
     <rule ref="SymfonyCustom.Commenting.FunctionComment">

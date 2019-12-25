@@ -110,8 +110,6 @@ class VariableCommentSniff extends AbstractVariableSniff
                 $phpcsFile->fixer->replaceToken($string, implode(' ', $newContent));
             }
         }
-
-        $this->processWhitespace($phpcsFile, $commentStart);
     }
 
     /**
@@ -128,53 +126,5 @@ class VariableCommentSniff extends AbstractVariableSniff
      */
     protected function processVariableInString(File $phpcsFile, $stackPtr): void
     {
-    }
-
-    /**
-     * @param File $phpcsFile
-     * @param int  $commentStart
-     */
-    private function processWhitespace(File $phpcsFile, int $commentStart): void
-    {
-        $tokens = $phpcsFile->getTokens();
-        $before = $phpcsFile->findPrevious(T_WHITESPACE, $commentStart - 1, null, true);
-
-        $startLine = $tokens[$commentStart]['line'];
-        $prevLine = $tokens[$before]['line'];
-
-        $found = $startLine - $prevLine - 1;
-
-        // Skip for class opening
-        if ($found < 1 && T_OPEN_CURLY_BRACKET !== $tokens[$before]['code']) {
-            if ($found < 0) {
-                $found = 0;
-            }
-
-            $fix = $phpcsFile->addFixableError(
-                'Expected 1 blank line before docblock; %s found',
-                $commentStart,
-                'SpacingBeforeDocblock',
-                [$found]
-            );
-
-            if ($fix) {
-                if ($found > 1) {
-                    $phpcsFile->fixer->beginChangeset();
-
-                    for ($i = $before + 1; $i < $commentStart - 1; $i++) {
-                        $phpcsFile->fixer->replaceToken($i, '');
-                    }
-
-                    $phpcsFile->fixer->endChangeset();
-                } else {
-                    // Try and maintain indentation.
-                    if (T_WHITESPACE === $tokens[$commentStart - 1]['code']) {
-                        $phpcsFile->fixer->addNewlineBefore($commentStart - 1);
-                    } else {
-                        $phpcsFile->fixer->addNewlineBefore($commentStart);
-                    }
-                }
-            }
-        }
     }
 }

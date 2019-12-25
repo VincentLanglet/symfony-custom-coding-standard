@@ -62,42 +62,6 @@ class AlphabeticallySortedUseSniff implements Sniff
                 return $stackPtr + 1;
             }
 
-            // Check empty lines between use statements.
-            // There must be no empty lines between use statements.
-            $lineDiff = $tokens[$use['ptrUse']]['line'] - $tokens[$lastUse['ptrUse']]['line'];
-            if ($lineDiff > 1) {
-                $fix = $phpcsFile->addFixableError(
-                    'There must not be any empty line between use statement',
-                    $use['ptrUse'],
-                    'EmptyLine'
-                );
-
-                if ($fix) {
-                    $phpcsFile->fixer->beginChangeset();
-                    for ($i = $lastUse['ptrEnd'] + 1; $i < $use['ptrUse']; ++$i) {
-                        if (false !== strpos($tokens[$i]['content'], $phpcsFile->eolChar)) {
-                            $phpcsFile->fixer->replaceToken($i, '');
-                            --$lineDiff;
-
-                            if (1 === $lineDiff) {
-                                break;
-                            }
-                        }
-                    }
-                    $phpcsFile->fixer->endChangeset();
-                }
-            } elseif (0 === $lineDiff) {
-                $fix = $phpcsFile->addFixableError(
-                    'Each use statement must be in new line',
-                    $use['ptrUse'],
-                    'TheSameLine'
-                );
-
-                if ($fix) {
-                    $phpcsFile->fixer->addNewline($lastUse['ptrEnd']);
-                }
-            }
-
             $lastUse = $use;
         }
 
