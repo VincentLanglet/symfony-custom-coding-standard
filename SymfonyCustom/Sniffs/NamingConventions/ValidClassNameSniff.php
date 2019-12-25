@@ -39,13 +39,7 @@ class ValidClassNameSniff implements Sniff
             if (T_INTERFACE === $tokens[$stackPtr]['code']) {
                 $name = $phpcsFile->findNext(T_STRING, $stackPtr);
 
-                if ($name && substr($tokens[$name]['content'], -9) !== 'Interface') {
-                    $phpcsFile->addError(
-                        'Interface name is not suffixed with "Interface"',
-                        $stackPtr,
-                        'InvalidInterfaceName'
-                    );
-                }
+                $this->checkSuffix($phpcsFile, $stackPtr, $name, 'Interface');
                 break;
             }
 
@@ -53,13 +47,7 @@ class ValidClassNameSniff implements Sniff
             if (T_TRAIT === $tokens[$stackPtr]['code']) {
                 $name = $phpcsFile->findNext(T_STRING, $stackPtr);
 
-                if ($name && substr($tokens[$name]['content'], -5) !== 'Trait') {
-                    $phpcsFile->addError(
-                        'Trait name is not suffixed with "Trait"',
-                        $stackPtr,
-                        'InvalidTraitName'
-                    );
-                }
+                $this->checkSuffix($phpcsFile, $stackPtr, $name, 'Trait');
                 break;
             }
 
@@ -67,44 +55,65 @@ class ValidClassNameSniff implements Sniff
             if (T_EXTENDS === $tokens[$stackPtr]['code']) {
                 $extend = $phpcsFile->findNext(T_STRING, $stackPtr);
 
-                if ($extend
-                    && substr($tokens[$extend]['content'], -9) === 'Exception'
-                ) {
+                if ($extend && substr($tokens[$extend]['content'], -9) === 'Exception') {
                     $class = $phpcsFile->findPrevious(T_CLASS, $stackPtr);
                     $name = $phpcsFile->findNext(T_STRING, $class);
 
-                    if ($name
-                        && substr($tokens[$name]['content'], -9) !== 'Exception'
-                    ) {
-                        $phpcsFile->addError(
-                            'Exception name is not suffixed with "Exception"',
-                            $stackPtr,
-                            'InvalidExceptionName'
-                        );
-                    }
+                    $this->checkSuffix($phpcsFile, $stackPtr, $name, 'Exception');
                 }
                 break;
             }
 
             // Prefix abstract classes with Abstract.
             if (T_ABSTRACT === $tokens[$stackPtr]['code']) {
-                $name = $phpcsFile->findNext(T_STRING, $stackPtr);
-                $function = $phpcsFile->findNext(T_FUNCTION, $stackPtr);
+                $name = $phpcsFile->findNext([T_STRING, T_FUNCTION], $stackPtr);
 
                 // Making sure we're not dealing with an abstract function
-                if ($name && (false === $function || $name < $function)
-                    && substr($tokens[$name]['content'], 0, 8) !== 'Abstract'
-                ) {
-                    $phpcsFile->addError(
-                        'Abstract class name is not prefixed with "Abstract"',
-                        $stackPtr,
-                        'InvalidAbstractName'
-                    );
+                if (false !== $name && T_FUNCTION !== $tokens[$name]['code']) {
+                    $this->checkPrefix($phpcsFile, $stackPtr, $name, 'Abstract');
                 }
                 break;
             }
 
             $stackPtr++;
+        }
+    }
+
+    /**
+     * @param File     $phpcsFile
+     * @param int      $stackPtr
+     * @param int|bool $name
+     * @param string   $prefix
+     */
+    private function checkPrefix(File $phpcsFile, int $stackPtr, $name, string $prefix): void
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        if (false !== $name && substr($tokens[$name]['content'], 0, strlen($prefix)) !== $prefix) {
+            $phpcsFile->addError(
+                "$prefix name is not prefixed with '$prefix'",
+                $stackPtr,
+                "Invalid{$prefix}Name"
+            );
+        }
+    }
+
+    /**
+     * @param File     $phpcsFile
+     * @param int      $stackPtr
+     * @param int|bool $name
+     * @param string   $suffix
+     */
+    private function checkSuffix(File $phpcsFile, int $stackPtr, $name, string $suffix): void
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        if (false !== $name && substr($tokens[$name]['content'], -strlen($suffix)) !== $suffix) {
+            $phpcsFile->addError(
+                "$suffix name is not suffixed with '$suffix'",
+                $stackPtr,
+                "Invalid{$suffix}Name"
+            );
         }
     }
 }
