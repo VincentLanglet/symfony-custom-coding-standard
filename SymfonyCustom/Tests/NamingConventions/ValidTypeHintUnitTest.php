@@ -40,6 +40,7 @@ class ValidTypeHintUnitTest extends AbstractSniffUnitTest
             50 => 1,
             51 => 1,
             52 => 1,
+            55 => 1,
         ];
     }
 

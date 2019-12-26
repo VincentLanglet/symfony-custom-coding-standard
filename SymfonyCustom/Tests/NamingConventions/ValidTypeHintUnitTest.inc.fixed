@@ -51,3 +51,5 @@ echo ( float ) $a;
  * @return string[]|int[]|null
  * @return Foo<int|string|null, bool|string|null>|int[]|null
  */
+
+/** @method array<int, bool|null>|int[]|array<array<int>> truc */

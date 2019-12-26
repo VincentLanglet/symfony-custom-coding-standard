@@ -14,13 +14,7 @@ use SymfonyCustom\Helpers\SniffHelper;
  */
 class ValidTypeHintSniff implements Sniff
 {
-    private const TEXT = '[\\\\a-z0-9]';
-    private const OPENER = '\<|\[|\{|\(';
-    private const MIDDLE = '\,|\:|\=\>';
-    private const CLOSER = '\>|\]|\}|\)';
-    private const SEPARATOR = '\&|\|';
-
-    /*
+    /**
      * <simple> is any non-array, non-generic, non-alternated type, eg `int` or `\Foo`
      * <array> is array of <simple>, eg `int[]` or `\Foo[]`
      * <generic> is generic collection type, like `array<string, int>`, `Collection<Item>` and more complex like `Collection<int, \null|SubCollection<string>>`
@@ -30,24 +24,24 @@ class ValidTypeHintSniff implements Sniff
     private const REGEX_TYPES = '
     (?<types>
         (?<type>
-            (?<array>
-                (?&simple)(\[\])*
-            )
-            |
-            (?<simple>
-                [@$?]?[\\\\\w]+
-            )
-            |
             (?<generic>
-                (?<genericName>(?&simple))
-                <
-                    (?:(?<genericKey>(?&types)),\s*)?(?<genericValue>(?&types)|(?&generic))
+                (?<genericName>(?&simple))\s*
+                <\s*
+                    (?:
+                        (?<genericKey>(?&types))\s*
+                        ,\s*
+                    )?
+                    (?<genericValue>(?&types)|(?&generic))\s*
                 >
             )
+            |
+            (?<array>(?&simple)(\s*\[\s*\])+)
+            |
+            (?<simple>[@$?]?[\\\\\w]+)
         )
         (?:
-            \|
-            (?:(?&simple)|(?&array)|(?&generic))
+            \s*\|\s*
+            (?:(?&generic)|(?&array)|(?&simple))
         )*
     )
     ';
@@ -76,7 +70,7 @@ class ValidTypeHintSniff implements Sniff
             );
 
             $content = 1 === $matchingResult ? $matches['types'] : '';
-            $endOfContent = preg_replace('/'.preg_quote($content, '/').'/', '', $tokens[$stackPtr + 2]['content'], 1);
+            $endOfContent = substr($tokens[$stackPtr + 2]['content'], strlen($content));
 
             $suggestedType = $this->getValidTypes($content);
 
@@ -98,35 +92,16 @@ class ValidTypeHintSniff implements Sniff
     /**
      * @param string $content
      *
-     * @return array
-     */
-    private function getTypes(string $content): array
-    {
-        $types = [];
-        while ('' !== $content && false !== $content) {
-            preg_match('{^'.self::REGEX_TYPES.'$}x', $content, $matches);
-
-            $types[] = $matches['type'];
-            $content = substr($content, strlen($matches['type']) + 1);
-        }
-
-        return $types;
-    }
-
-    /**
-     * @param string $content
-     *
      * @return string
      */
     private function getValidTypes(string $content): string
     {
+        $content = preg_replace('/\s/', '', $content);
         $types = $this->getTypes($content);
-
         foreach ($types as $index => $type) {
-            $type = str_replace(' ', '', $type);
-
             preg_match('{^'.self::REGEX_TYPES.'$}x', $type, $matches);
-            if (isset($matches['generic'])) {
+
+            if (isset($matches['generic']) && '' !== $matches['generic']) {
                 $validType = $this->getValidType($matches['genericName']).'<';
 
                 if ('' !== $matches['genericKey']) {
@@ -155,6 +130,24 @@ class ValidTypeHintSniff implements Sniff
         });
 
         return implode('|', $types);
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return array
+     */
+    private function getTypes(string $content): array
+    {
+        $types = [];
+        while ('' !== $content && false !== $content) {
+            preg_match('{^'.self::REGEX_TYPES.'$}x', $content, $matches);
+
+            $types[] = $matches['type'];
+            $content = substr($content, strlen($matches['type']) + 1);
+        }
+
+        return $types;
     }
 
     /**
