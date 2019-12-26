@@ -141,6 +141,19 @@ class ValidTypeHintSniff implements Sniff
             $types[$index] = $validType;
         }
 
+        $types = array_unique($types);
+        usort($types, function ($type1, $type2) {
+            if ('null' === $type1) {
+                return 1;
+            }
+
+            if ('null' === $type2) {
+                return -1;
+            }
+
+            return 0;
+        });
+
         return implode('|', $types);
     }
 
