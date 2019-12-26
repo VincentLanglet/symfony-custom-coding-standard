@@ -22,14 +22,6 @@ echo ( float ) $a;
 // Only PHPDoc comments are checked
 /* @var boolean $a */
 
-
-echo ( int ) $a;
-echo (bool) $a;
-echo (bool) $a;
-echo (int) $a;
-echo (float) $a;
-echo (float) $a;
-
 /**
  * @param bool $a
  * @param bool $a
@@ -49,3 +41,7 @@ echo (float) $a;
 /** @var int $b */
 /** @var float $c */
 /** @var float $c */
+
+/** @method int|string  */
+/** @method array<int,bool>|int[]|array<int> truc */
+/** @method array<int,bool>|int[]|string|(int|bool)[] truc */

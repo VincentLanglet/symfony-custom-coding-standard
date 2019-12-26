@@ -6,34 +6,25 @@ namespace SymfonyCustom\Sniffs\NamingConventions;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
-use PHP_CodeSniffer\Util\Tokens;
+use PHP_CodeSniffer\Util\Common;
+use SymfonyCustom\Helpers\SniffHelper;
 
 /**
  * Throws errors if scalar type name are not valid.
  */
 class ValidScalarTypeNameSniff implements Sniff
 {
-    /**
-     * Types to replace: key is type to replace, value is type to replace with.
-     *
-     * @var array
-     */
-    public $types = [
-        'boolean' => 'bool',
-        'double'  => 'float',
-        'integer' => 'int',
-        'real'    => 'float',
-    ];
+    private const TYPING = '\\\\a-z0-9';
+    private const OPENER = '\<\[\{\(';
+    private const CLOSER = '\>\]\}\)';
+    private const MIDDLE = '\,\:\&\|';
 
     /**
      * @return array
      */
     public function register(): array
     {
-        $tokens = Tokens::$castTokens;
-        $tokens[] = T_DOC_COMMENT_OPEN_TAG;
-
-        return $tokens;
+        return [T_DOC_COMMENT_TAG];
     }
 
     /**
@@ -43,75 +34,41 @@ class ValidScalarTypeNameSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
-        if (T_DOC_COMMENT_OPEN_TAG === $tokens[$stackPtr]['code']) {
-            $this->validateDocComment($phpcsFile, $stackPtr);
-        } else {
-            $this->validateCast($phpcsFile, $stackPtr);
-        }
-    }
 
-    /**
-     * @param File $phpcsFile
-     * @param int  $stackPtr
-     */
-    private function validateDocComment(File $phpcsFile, int $stackPtr): void
-    {
-        $tokens = $phpcsFile->getTokens();
-        foreach ($tokens[$stackPtr]['comment_tags'] as $commentTag) {
-            if (in_array(
-                $tokens[$commentTag]['content'],
-                ['@param', '@return', '@var']
-            )
-            ) {
-                $docString = $phpcsFile->findNext(T_DOC_COMMENT_STRING, $commentTag);
-                if (false !== $docString) {
-                    $stringParts = explode(' ', $tokens[$docString]['content']);
-                    $typeName = $stringParts[0];
-                    $this->validateTypeName($phpcsFile, $docString, $typeName);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param File $phpcsFile
-     * @param int  $stackPtr
-     */
-    private function validateCast(File $phpcsFile, int $stackPtr): void
-    {
-        $tokens = $phpcsFile->getTokens();
-        preg_match('/^\(\s*(\S+)\s*\)$/', $tokens[$stackPtr]['content'], $matches);
-        $typeName = $matches[1];
-
-        $this->validateTypeName($phpcsFile, $stackPtr, $typeName);
-    }
-
-    /**
-     * @param File   $phpcsFile
-     * @param int    $stackPtr
-     * @param string $typeName
-     */
-    private function validateTypeName(File $phpcsFile, int $stackPtr, string $typeName): void
-    {
-        $validTypeName = $this->getValidTypeName($typeName);
-
-        if (null !== $validTypeName) {
-            $needFix = $phpcsFile->addFixableError(
-                'For type-hinting in PHPDocs and casting, use %s instead of %s',
-                $stackPtr,
-                '',
-                [$validTypeName, $typeName]
+        if (in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS_WITH_TYPE)) {
+            preg_match(
+                '`^((?:'
+                    .'['.self::OPENER.self::MIDDLE.']\s*'
+                    .'|(?:['.self::TYPING.self::CLOSER.']\s+)(?=[\|'.self::OPENER.self::MIDDLE.self::CLOSER.'])'
+                    .'|['.self::TYPING.self::CLOSER.']'
+                .')+)(.*)?`i',
+                $tokens[($stackPtr + 2)]['content'],
+                $match
             );
-            if ($needFix) {
-                $tokens = $phpcsFile->getTokens();
-                $phpcsFile->fixer->beginChangeset();
-                $newContent = str_replace(
-                    $typeName,
-                    $validTypeName,
-                    $tokens[$stackPtr]['content']
+
+            if (isset($match[1]) === false) {
+                return;
+            }
+
+            // Check type (can be multiple, separated by '|').
+            $type = $match[1];
+            $suggestedType = $this->getValidTypeName($type);
+            if ($type !== $suggestedType) {
+                $fix = $phpcsFile->addFixableError(
+                    'For type-hinting in PHPDocs, use %s instead of %s',
+                    $stackPtr + 2,
+                    'Invalid',
+                    [$suggestedType, $type]
                 );
-                $phpcsFile->fixer->replaceToken($stackPtr, $newContent);
-                $phpcsFile->fixer->endChangeset();
+
+                if ($fix) {
+                    $replacement = $suggestedType;
+                    if (isset($match[2])) {
+                        $replacement .= $match[2];
+                    }
+
+                    $phpcsFile->fixer->replaceToken($stackPtr + 2, $replacement);
+                }
             }
         }
     }
@@ -119,15 +76,48 @@ class ValidScalarTypeNameSniff implements Sniff
     /**
      * @param string $typeName
      *
-     * @return string|null
+     * @return string
      */
-    private function getValidTypeName(string $typeName): ?string
+    private function getValidTypeName(string $typeName): string
     {
-        $typeName = strtolower($typeName);
-        if (isset($this->types[$typeName])) {
-            return $this->types[$typeName];
+        $typeNameWithoutSpace = str_replace(' ', '', $typeName);
+        $parts = preg_split(
+            '/([\|'.self::OPENER.self::MIDDLE.self::CLOSER.'])/',
+            $typeNameWithoutSpace,
+            -1,
+            PREG_SPLIT_DELIM_CAPTURE
+        );
+        $partsNumber = count($parts) - 1;
+
+        $validType = '';
+        for ($i = 0; $i < $partsNumber; $i += 2) {
+            $validType .= $this->suggestType($parts[$i]).$parts[$i + 1];
         }
 
-        return null;
+        if ('' !== $parts[$partsNumber]) {
+            $validType .= $this->suggestType($parts[$partsNumber]);
+        }
+
+        return $validType;
+    }
+
+    /**
+     * @param string $typeName
+     *
+     * @return string
+     */
+    private function suggestType(string $typeName): string
+    {
+        $lowerType = strtolower($typeName);
+        switch ($lowerType) {
+            case 'bool':
+            case 'boolean':
+                return 'bool';
+            case 'int':
+            case 'integer':
+                return 'int';
+        }
+
+        return Common::suggestType($typeName);
     }
 }

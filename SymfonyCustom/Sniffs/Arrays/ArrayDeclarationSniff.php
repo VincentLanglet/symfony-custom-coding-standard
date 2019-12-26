@@ -36,16 +36,8 @@ class ArrayDeclarationSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
 
         if (T_ARRAY === $tokens[$stackPtr]['code']) {
-            $phpcsFile->recordMetric($stackPtr, 'Short array syntax used', 'no');
-
             // Array keyword should be lower case.
             if (strtolower($tokens[$stackPtr]['content']) !== $tokens[$stackPtr]['content']) {
-                if (strtoupper($tokens[$stackPtr]['content']) === $tokens[$stackPtr]['content']) {
-                    $phpcsFile->recordMetric($stackPtr, 'Array keyword case', 'upper');
-                } else {
-                    $phpcsFile->recordMetric($stackPtr, 'Array keyword case', 'mixed');
-                }
-
                 $fix = $phpcsFile->addFixableError(
                     'Array keyword should be lower case; expected "array" but found "%s"',
                     $stackPtr,
@@ -56,8 +48,6 @@ class ArrayDeclarationSniff implements Sniff
                 if ($fix) {
                     $phpcsFile->fixer->replaceToken($stackPtr, 'array');
                 }
-            } else {
-                $phpcsFile->recordMetric($stackPtr, 'Array keyword case', 'lower');
             }
 
             $arrayStart = $tokens[$stackPtr]['parenthesis_opener'];
@@ -79,7 +69,6 @@ class ArrayDeclarationSniff implements Sniff
                 }
             }
         } else {
-            $phpcsFile->recordMetric($stackPtr, 'Short array syntax used', 'yes');
             $arrayStart = $stackPtr;
             $arrayEnd = $tokens[$stackPtr]['bracket_closer'];
         }
@@ -449,17 +438,15 @@ class ArrayDeclarationSniff implements Sniff
             );
 
             if (T_COMMA !== $tokens[$trailingContent]['code']) {
-                $phpcsFile->recordMetric($stackPtr, 'Array end comma', 'no');
                 $fix = $phpcsFile->addFixableError(
                     'Comma required after last value in array declaration',
                     $trailingContent,
                     'NoCommaAfterLast'
                 );
+
                 if ($fix) {
                     $phpcsFile->fixer->addContent($trailingContent, ',');
                 }
-            } else {
-                $phpcsFile->recordMetric($stackPtr, 'Array end comma', 'yes');
             }
 
             $lastValueLine = $stackPtr;
