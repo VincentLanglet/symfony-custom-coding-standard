@@ -11,7 +11,7 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
  *
  * @group SymfonyCustom
  */
-class ValidScalarTypeNameUnitTest extends AbstractSniffUnitTest
+class ValidTypeHintUnitTest extends AbstractSniffUnitTest
 {
     /**
      * @return array
@@ -38,6 +38,8 @@ class ValidScalarTypeNameUnitTest extends AbstractSniffUnitTest
             46 => 1,
             47 => 1,
             48 => 1,
+            54 => 1,
+            56 => 1,
         ];
     }
 

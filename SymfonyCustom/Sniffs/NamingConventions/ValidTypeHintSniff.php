@@ -10,14 +10,15 @@ use PHP_CodeSniffer\Util\Common;
 use SymfonyCustom\Helpers\SniffHelper;
 
 /**
- * Throws errors if scalar type name are not valid.
+ * Throws errors if PHPDocs type hint are not valid.
  */
-class ValidScalarTypeNameSniff implements Sniff
+class ValidTypeHintSniff implements Sniff
 {
-    private const TYPING = '\\\\a-z0-9';
+    private const TEXT = '\\\\a-z0-9';
     private const OPENER = '\<\[\{\(';
     private const CLOSER = '\>\]\}\)';
-    private const MIDDLE = '\,\:\&\|';
+    private const MIDDLE = '\,\:';
+    private const SEPARATOR = '\&\|';
 
     /**
      * @return array
@@ -38,9 +39,10 @@ class ValidScalarTypeNameSniff implements Sniff
         if (in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS_WITH_TYPE)) {
             preg_match(
                 '`^((?:'
-                    .'['.self::OPENER.self::MIDDLE.']\s*'
-                    .'|(?:['.self::TYPING.self::CLOSER.']\s+)(?=[\|'.self::OPENER.self::MIDDLE.self::CLOSER.'])'
-                    .'|['.self::TYPING.self::CLOSER.']'
+                    .'['.self::OPENER.self::MIDDLE.self::SEPARATOR.']\s*'
+                    .'|(?:['.self::TEXT.self::CLOSER.']\s+)'
+                        .'(?=[\|'.self::OPENER.self::MIDDLE.self::CLOSER.self::SEPARATOR.'])'
+                    .'|['.self::TEXT.self::CLOSER.']'
                 .')+)(.*)?`i',
                 $tokens[($stackPtr + 2)]['content'],
                 $match
@@ -82,7 +84,7 @@ class ValidScalarTypeNameSniff implements Sniff
     {
         $typeNameWithoutSpace = str_replace(' ', '', $typeName);
         $parts = preg_split(
-            '/([\|'.self::OPENER.self::MIDDLE.self::CLOSER.'])/',
+            '/([\|'.self::OPENER.self::MIDDLE.self::CLOSER.self::SEPARATOR.'])/',
             $typeNameWithoutSpace,
             -1,
             PREG_SPLIT_DELIM_CAPTURE
@@ -93,7 +95,7 @@ class ValidScalarTypeNameSniff implements Sniff
         for ($i = 0; $i < $partsNumber; $i += 2) {
             $validType .= $this->suggestType($parts[$i]).$parts[$i + 1];
 
-            if (in_array($parts[$i + 1], [',', ':'])) {
+            if (preg_match('/['.self::MIDDLE.']/', $parts[$i + 1])) {
                 $validType .= ' ';
             }
         }
@@ -102,7 +104,7 @@ class ValidScalarTypeNameSniff implements Sniff
             $validType .= $this->suggestType($parts[$partsNumber]);
         }
 
-        return $validType;
+        return trim($validType);
     }
 
     /**
