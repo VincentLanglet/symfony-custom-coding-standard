@@ -7,7 +7,6 @@ namespace SymfonyCustom\Sniffs\NamingConventions;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Common;
-use PHP_CodeSniffer\Util\Tokens;
 use SymfonyCustom\Helpers\SniffHelper;
 
 /**
@@ -15,6 +14,11 @@ use SymfonyCustom\Helpers\SniffHelper;
  */
 class ValidScalarTypeNameSniff implements Sniff
 {
+    private const TYPING = '\\\\a-z0-9';
+    private const OPENER = '\<\[\{\(';
+    private const CLOSER = '\>\]\}\)';
+    private const MIDDLE = '\,\:\&\|';
+
     /**
      * @return array
      */
@@ -33,7 +37,11 @@ class ValidScalarTypeNameSniff implements Sniff
 
         if (in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS_WITH_TYPE)) {
             preg_match(
-                '`^((?:\|?(?:array\([^\)]*\)|[\\\\a-z0-9\[\<\,\>\]]+))*)( .*)?`i',
+                '`^((?:'
+                    .'['.self::OPENER.self::MIDDLE.']\s*'
+                    .'|(?:['.self::TYPING.self::CLOSER.']\s+)(?=[\|'.self::OPENER.self::MIDDLE.self::CLOSER.'])'
+                    .'|['.self::TYPING.self::CLOSER.']'
+                .')+)(.*)?`i',
                 $tokens[($stackPtr + 2)]['content'],
                 $match
             );
@@ -44,17 +52,7 @@ class ValidScalarTypeNameSniff implements Sniff
 
             // Check type (can be multiple, separated by '|').
             $type = $match[1];
-            $typeNames = explode('|', $type);
-            $suggestedNames = [];
-            foreach ($typeNames as $i => $typeName) {
-                $suggestedName = $this->getValidTypeName($typeName);
-
-                if (in_array($suggestedName, $suggestedNames, true) === false) {
-                    $suggestedNames[] = $suggestedName;
-                }
-            }
-
-            $suggestedType = implode('|', $suggestedNames);
+            $suggestedType = $this->getValidTypeName($type);
             if ($type !== $suggestedType) {
                 $fix = $phpcsFile->addFixableError(
                     'For type-hinting in PHPDocs, use %s instead of %s',
@@ -82,7 +80,13 @@ class ValidScalarTypeNameSniff implements Sniff
      */
     private function getValidTypeName(string $typeName): string
     {
-        $parts = preg_split('/([\<\,\>])/', $typeName, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $typeNameWithoutSpace = str_replace(' ', '', $typeName);
+        $parts = preg_split(
+            '/([\|'.self::OPENER.self::MIDDLE.self::CLOSER.'])/',
+            $typeNameWithoutSpace,
+            -1,
+            PREG_SPLIT_DELIM_CAPTURE
+        );
         $partsNumber = count($parts) - 1;
 
         $validType = '';
@@ -104,10 +108,6 @@ class ValidScalarTypeNameSniff implements Sniff
      */
     private function suggestType(string $typeName): string
     {
-        if ('[]' === substr($typeName, -2)) {
-            return $this->suggestType(substr($typeName, 0, -2)).'[]';
-        }
-
         $lowerType = strtolower($typeName);
         switch ($lowerType) {
             case 'bool':

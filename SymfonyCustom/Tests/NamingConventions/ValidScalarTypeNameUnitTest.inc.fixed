@@ -43,4 +43,5 @@ echo ( float ) $a;
 /** @var float $c */
 
 /** @method int|string  */
-/** @method array<int,bool>|int[]|string  */
+/** @method array<int,bool>|int[]|array<int> truc */
+/** @method array<int,bool>|int[]|string|(int|bool)[] truc */
