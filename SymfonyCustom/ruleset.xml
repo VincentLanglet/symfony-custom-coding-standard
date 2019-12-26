@@ -13,12 +13,20 @@
     <!-- Include the PSR-12 (so PSR-1) standard without the file length limit -->
     <rule ref="PSR12">
         <exclude name="Generic.Files.LineLength"/>
-
-        <!-- TODO -->
         <exclude name="PSR12.ControlStructures.ControlStructureSpacing"/>
         <exclude name="PSR12.Operators.OperatorSpacing"/>
-        <exclude name="Squiz.ControlStructures.ControlSignature"/>
     </rule>
+    <!-- Instead of PSR12.ControlStructures.ControlStructureSpacing -->
+    <rule ref="PSR2.ControlStructures.ControlStructureSpacing"/>
+    <!-- Instead of PSR12.Operators.OperatorSpacing-->
+    <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+
+    <!-- Change warning to error -->
     <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
         <type>error</type>
     </rule>
@@ -65,15 +73,9 @@
             <property name="spacingAfterLast" value="0"/>
         </properties>
     </rule>
-    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
     <rule ref="Squiz.WhiteSpace.MemberVarSpacing">
         <properties>
             <property name="spacingBeforeFirst" value="0"/>
-        </properties>
-    </rule>
-    <rule ref="Squiz.WhiteSpace.OperatorSpacing">
-        <properties>
-            <property name="ignoreNewlines" value="true"/>
         </properties>
     </rule>
     <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">

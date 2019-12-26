@@ -14,11 +14,11 @@ use SymfonyCustom\Helpers\SniffHelper;
  */
 class ValidTypeHintSniff implements Sniff
 {
-    private const TEXT = '\\\\a-z0-9';
-    private const OPENER = '\<\[\{\(';
-    private const CLOSER = '\>\]\}\)';
-    private const MIDDLE = '\,\:';
-    private const SEPARATOR = '\&\|';
+    private const TEXT = '[\\\\a-z0-9]';
+    private const OPENER = '\<|\[|\{|\(';
+    private const MIDDLE = '\,|\:|\=\>';
+    private const CLOSER = '\>|\]|\}|\)';
+    private const SEPARATOR = '\&|\|';
 
     /**
      * @return array
@@ -39,10 +39,12 @@ class ValidTypeHintSniff implements Sniff
         if (in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS_WITH_TYPE)) {
             preg_match(
                 '`^((?:'
-                    .'['.self::OPENER.self::MIDDLE.self::SEPARATOR.']\s*'
-                    .'|(?:['.self::TEXT.self::CLOSER.']\s+)'
-                        .'(?=[\|'.self::OPENER.self::MIDDLE.self::CLOSER.self::SEPARATOR.'])'
-                    .'|['.self::TEXT.self::CLOSER.']'
+                    .'(?:'.self::OPENER.'|'.self::MIDDLE.'|'.self::SEPARATOR.')\s+'
+                        .'(?='.self::TEXT.'|'.self::OPENER.'|'.self::MIDDLE.'|'.self::CLOSER.'|'.self::SEPARATOR.')'
+                    .'|'.self::OPENER.'|'.self::MIDDLE.'|'.self::SEPARATOR
+                    .'|(?:'.self::TEXT.'|'.self::CLOSER.')\s+'
+                        .'(?='.self::OPENER.'|'.self::MIDDLE.'|'.self::CLOSER.'|'.self::SEPARATOR.')'
+                    .'|'.self::TEXT.'|'.self::CLOSER.''
                 .')+)(.*)?`i',
                 $tokens[($stackPtr + 2)]['content'],
                 $match
@@ -52,7 +54,6 @@ class ValidTypeHintSniff implements Sniff
                 return;
             }
 
-            // Check type (can be multiple, separated by '|').
             $type = $match[1];
             $suggestedType = $this->getValidTypeName($type);
             if ($type !== $suggestedType) {
@@ -84,7 +85,7 @@ class ValidTypeHintSniff implements Sniff
     {
         $typeNameWithoutSpace = str_replace(' ', '', $typeName);
         $parts = preg_split(
-            '/([\|'.self::OPENER.self::MIDDLE.self::CLOSER.self::SEPARATOR.'])/',
+            '/('.self::OPENER.'|'.self::MIDDLE.'|'.self::CLOSER.'|'.self::SEPARATOR.')/',
             $typeNameWithoutSpace,
             -1,
             PREG_SPLIT_DELIM_CAPTURE
@@ -93,9 +94,15 @@ class ValidTypeHintSniff implements Sniff
 
         $validType = '';
         for ($i = 0; $i < $partsNumber; $i += 2) {
-            $validType .= $this->suggestType($parts[$i]).$parts[$i + 1];
+            $validType .= $this->suggestType($parts[$i]);
 
-            if (preg_match('/['.self::MIDDLE.']/', $parts[$i + 1])) {
+            if ('=>' === $parts[$i + 1]) {
+                $validType .= ' ';
+            }
+
+            $validType .= $parts[$i + 1];
+
+            if (preg_match('/'.self::MIDDLE.'/', $parts[$i + 1])) {
                 $validType .= ' ';
             }
         }
