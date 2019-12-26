@@ -45,3 +45,4 @@ echo ( float ) $a;
 /** @method integer|string  */
 /** @method array<integer,boolean>|integer[]|array<integer> truc */
 /** @method array<integer, boolean>| integer[] |string|(integer|boolean)[] truc */
+/** @method array{scheme:string,host:string} truc */

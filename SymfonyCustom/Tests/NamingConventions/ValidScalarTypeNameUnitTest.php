@@ -37,6 +37,7 @@ class ValidScalarTypeNameUnitTest extends AbstractSniffUnitTest
             45 => 1,
             46 => 1,
             47 => 1,
+            48 => 1,
         ];
     }
 
