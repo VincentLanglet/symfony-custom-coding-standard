@@ -37,7 +37,6 @@ class UnusedUseUnitTest extends AbstractSniffUnitTest
             127 => 1,
             128 => 1,
             129 => 1,
-            144 => 1,
         ];
     }
 

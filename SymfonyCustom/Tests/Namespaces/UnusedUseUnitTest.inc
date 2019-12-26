@@ -139,14 +139,10 @@ use Doctrine\Value;
 use Doctrine\Value2;
 use Doctrine\Key;
 use Doctrine\Key2;
-use Used\Schemetype;
-use Used\Host;
-use NotUsed\Path;
 
 /**
  * @param Collection<Key, Value> $a
  * @param Collection<Key2,Value2> $a
- * @param array{scheme:Schemetype,host: Host,path:string} $parsed_url
  *
  * @return null
  */
