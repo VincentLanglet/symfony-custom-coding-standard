@@ -92,6 +92,10 @@ class ValidScalarTypeNameSniff implements Sniff
         $validType = '';
         for ($i = 0; $i < $partsNumber; $i += 2) {
             $validType .= $this->suggestType($parts[$i]).$parts[$i + 1];
+
+            if (in_array($parts[$i + 1], [',', ':'])) {
+                $validType .= ' ';
+            }
         }
 
         if ('' !== $parts[$partsNumber]) {
