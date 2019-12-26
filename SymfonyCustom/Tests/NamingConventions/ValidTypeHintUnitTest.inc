@@ -46,6 +46,7 @@ echo ( float ) $a;
 /** @method array<integer,boolean>|integer[]|array<integer> truc */
 /** @method array<integer, boolean>| integer[] |string|(integer|boolean)[] truc */
 /** @method array{scheme:string,host:string} truc */
+/** @method array(int=>string) truc */
 
 /**
  * Avoid weird bug
@@ -56,3 +57,5 @@ echo ( float ) $a;
  * @method array<integer,
  * @method array|
  */
+/** @method array<integer, */
+/** @method array<integer, $truc */
