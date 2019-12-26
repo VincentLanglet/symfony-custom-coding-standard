@@ -20,6 +20,38 @@ class ValidTypeHintSniff implements Sniff
     private const CLOSER = '\>|\]|\}|\)';
     private const SEPARATOR = '\&|\|';
 
+    /*
+     * <simple> is any non-array, non-generic, non-alternated type, eg `int` or `\Foo`
+     * <array> is array of <simple>, eg `int[]` or `\Foo[]`
+     * <generic> is generic collection type, like `array<string, int>`, `Collection<Item>` and more complex like `Collection<int, \null|SubCollection<string>>`
+     * <type> is <simple>, <array> or <generic> type, like `int`, `bool[]` or `Collection<ItemKey, ItemVal>`
+     * <types> is one or more types alternated via `|`, like `int|bool[]|Collection<ItemKey, ItemVal>`
+     */
+    private const REGEX_TYPES = '
+    (?<types>
+        (?<type>
+            (?<array>
+                (?&simple)(\[\])*
+            )
+            |
+            (?<simple>
+                [@$?]?[\\\\\w]+
+            )
+            |
+            (?<generic>
+                (?<genericName>(?&simple))
+                <
+                    (?:(?<genericKey>(?&types)),\s*)?(?<genericValue>(?&types)|(?&generic))
+                >
+            )
+        )
+        (?:
+            \|
+            (?:(?&simple)|(?&array)|(?&generic))
+        )*
+    )
+    ';
+
     /**
      * @return array
      */
@@ -37,81 +69,79 @@ class ValidTypeHintSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
 
         if (in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS_WITH_TYPE)) {
-            preg_match(
-                '`^((?:'
-                    .'(?:'.self::OPENER.'|'.self::MIDDLE.'|'.self::SEPARATOR.')\s+'
-                        .'(?='.self::TEXT.'|'.self::OPENER.'|'.self::MIDDLE.'|'.self::CLOSER.'|'.self::SEPARATOR.')'
-                    .'|'.self::OPENER.'|'.self::MIDDLE.'|'.self::SEPARATOR
-                    .'|(?:'.self::TEXT.'|'.self::CLOSER.')\s+'
-                        .'(?='.self::OPENER.'|'.self::MIDDLE.'|'.self::CLOSER.'|'.self::SEPARATOR.')'
-                    .'|'.self::TEXT.'|'.self::CLOSER.''
-                .')+)(.*)?`i',
-                $tokens[($stackPtr + 2)]['content'],
-                $match
+            $matchingResult = preg_match(
+                '{^'.self::REGEX_TYPES.'(?:[ \t].*)?$}sx',
+                $tokens[$stackPtr + 2]['content'],
+                $matches
             );
 
-            if (isset($match[1]) === false) {
-                return;
-            }
+            $content = 1 === $matchingResult ? $matches['types'] : '';
+            $endOfContent = preg_replace('/'.preg_quote($content, '/').'/', '', $tokens[$stackPtr + 2]['content'], 1);
 
-            $type = $match[1];
-            $suggestedType = $this->getValidTypeName($type);
-            if ($type !== $suggestedType) {
+            $suggestedType = $this->getValidTypes($content);
+
+            if ($content !== $suggestedType) {
                 $fix = $phpcsFile->addFixableError(
                     'For type-hinting in PHPDocs, use %s instead of %s',
                     $stackPtr + 2,
                     'Invalid',
-                    [$suggestedType, $type]
+                    [$suggestedType, $content]
                 );
 
                 if ($fix) {
-                    $replacement = $suggestedType;
-                    if (isset($match[2])) {
-                        $replacement .= $match[2];
-                    }
-
-                    $phpcsFile->fixer->replaceToken($stackPtr + 2, $replacement);
+                    $phpcsFile->fixer->replaceToken($stackPtr + 2, $suggestedType.$endOfContent);
                 }
             }
         }
     }
 
     /**
-     * @param string $typeName
+     * @param string $content
+     *
+     * @return array
+     */
+    private function getTypes(string $content): array
+    {
+        $types = [];
+        while ('' !== $content && false !== $content) {
+            preg_match('{^'.self::REGEX_TYPES.'$}x', $content, $matches);
+
+            $types[] = $matches['type'];
+            $content = substr($content, strlen($matches['type']) + 1);
+        }
+
+        return $types;
+    }
+
+    /**
+     * @param string $content
      *
      * @return string
      */
-    private function getValidTypeName(string $typeName): string
+    private function getValidTypes(string $content): string
     {
-        $typeNameWithoutSpace = str_replace(' ', '', $typeName);
-        $parts = preg_split(
-            '/('.self::OPENER.'|'.self::MIDDLE.'|'.self::CLOSER.'|'.self::SEPARATOR.')/',
-            $typeNameWithoutSpace,
-            -1,
-            PREG_SPLIT_DELIM_CAPTURE
-        );
-        $partsNumber = count($parts) - 1;
+        $types = $this->getTypes($content);
 
-        $validType = '';
-        for ($i = 0; $i < $partsNumber; $i += 2) {
-            $validType .= $this->suggestType($parts[$i]);
+        foreach ($types as $index => $type) {
+            $type = str_replace(' ', '', $type);
 
-            if ('=>' === $parts[$i + 1]) {
-                $validType .= ' ';
+            preg_match('{^'.self::REGEX_TYPES.'$}x', $type, $matches);
+            if (isset($matches['generic'])) {
+                $validType = $this->getValidType($matches['genericName']).'<';
+
+                if ('' !== $matches['genericKey']) {
+                    $validType .= $this->getValidTypes($matches['genericKey']).', ';
+                }
+
+                $validType .= $this->getValidTypes($matches['genericValue']).'>';
+            } else {
+                $validType = $this->getValidType($type);
             }
 
-            $validType .= $parts[$i + 1];
-
-            if (preg_match('/'.self::MIDDLE.'/', $parts[$i + 1])) {
-                $validType .= ' ';
-            }
+            $types[$index] = $validType;
         }
 
-        if ('' !== $parts[$partsNumber]) {
-            $validType .= $this->suggestType($parts[$partsNumber]);
-        }
-
-        return trim($validType);
+        return implode('|', $types);
     }
 
     /**
@@ -119,8 +149,12 @@ class ValidTypeHintSniff implements Sniff
      *
      * @return string
      */
-    private function suggestType(string $typeName): string
+    private function getValidType(string $typeName): string
     {
+        if ('[]' === substr($typeName, -2)) {
+            return $this->getValidType(substr($typeName, 0, -2)).'[]';
+        }
+
         $lowerType = strtolower($typeName);
         switch ($lowerType) {
             case 'bool':
