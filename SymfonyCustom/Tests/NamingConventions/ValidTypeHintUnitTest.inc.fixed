@@ -53,3 +53,13 @@ echo ( float ) $a;
  */
 
 /** @method array<int, bool|null>|int[]|array<array<int>> truc */
+/** @method Generator<int, string, string, bool> truc */
+/** @method Generator<array<int>, array<int>, array<int>, array<int>> truc */
+/** @method array{integer: int, boolean?: bool} truc */
+/** @param class-string|class-string<Client>|int truc */
+
+/**
+ * @param array{0: int, 1?: int}
+ * @param array{int, int}
+ * @param array{foo: int, bar: string}
+ */
