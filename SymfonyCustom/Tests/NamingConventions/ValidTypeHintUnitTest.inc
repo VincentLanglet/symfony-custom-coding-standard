@@ -1,24 +1,5 @@
 <?php
 
-echo (bool) $a;
-echo (int) $a;
-echo (float) $a;
-echo ( float ) $a;
-
-/**
- * @param bool  $a
- * @param int   $b
- * @param float $c
- *
- * @return bool
- * @return int
- * @return float
- */
-
-/** @var bool $a */
-/** @var int $b */
-/** @var float $c */
-
 // Only PHPDoc comments are checked
 /* @var boolean $a */
 
@@ -62,4 +43,10 @@ echo ( float ) $a;
  * @param array{0: integer, 1?: integer}
  * @param array{integer, integer}
  * @param array{foo: integer, bar: string}
+ */
+
+/**
+ * @param (integer|string)|bool
+ * @param (integer&string)|bool
+ * @param integer&string|bool
  */

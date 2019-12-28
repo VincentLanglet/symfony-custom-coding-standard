@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SymfonyCustom\Sniffs\NamingConventions;
 
+use PHP_CodeSniffer\Exceptions\DeepExitException;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Common;
@@ -26,51 +27,59 @@ class ValidTypeHintSniff implements Sniff
     private const REGEX_TYPES = '
     (?<types>
         (?<type>
-            (?<generic>
-                (?<genericName>
-                    (?&simple)
-                )
-                \s*<\s*
-                    (?<genericContent>
-                        (?:(?&types)\s*,\s*)*
-                        (?&types)
-                    )
-                \s*>
-            )
-            |
-            (?<object>
-                array\s*{\s*
-                    (?<objectContent>
-                        (?:
-                            (?<objectKeyValue>
-                                (?:\w+\s*\??:\s*)?
-                                (?&types)
-                            )
-                            \s*,\s*
-                        )*
-                        (?&objectKeyValue)
-                    )
-                \s*}
-            )
-            |
             (?<array>
-                (?&simple)(?:
+                (?&notArray)(?:
                     \s*\[\s*\]
                 )+
             )
             |
-            (?<classString>
-                class-string(?:
-                    \s*<\s*[\\\\\w]+\s*>
-                )?
-            )
-            |
-            (?<simple>
-                [@$?]?[\\\\\w]+
+            (?<notArray>
+                (?<multiple>
+                    \(\s*(?<mutipleContent>
+                        (?&types)
+                    )\s*\)
+                )
+                |
+                (?<generic>
+                    (?<genericName>
+                        (?&simple)
+                    )
+                    \s*<\s*
+                        (?<genericContent>
+                            (?:(?&types)\s*,\s*)*
+                            (?&types)
+                        )
+                    \s*>
+                )
+                |
+                (?<object>
+                    array\s*{\s*
+                        (?<objectContent>
+                            (?:
+                                (?<objectKeyValue>
+                                    (?:\w+\s*\??:\s*)?
+                                    (?&types)
+                                )
+                                \s*,\s*
+                            )*
+                            (?&objectKeyValue)
+                        )
+                    \s*}
+                )
+                |
+                (?<classString>
+                    class-string(?:
+                        \s*<\s*[\\\\\w]+\s*>
+                    )?
+                )
+                |
+                (?<simple>
+                    [@$?]?[\\\\\w]+
+                )
             )
         )
         (?:
-            \s*\|\s*(?&type)
+            \s*[\|&]\s*(?&type)
         )*
     )
     ';
@@ -91,29 +100,41 @@ class ValidTypeHintSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS_WITH_TYPE)) {
-            $matchingResult = preg_match(
-                '{^'.self::REGEX_TYPES.'(?:[ \t].*)?$}sx',
-                $tokens[$stackPtr + 2]['content'],
-                $matches
+        if (!in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS_WITH_TYPE)) {
+            return;
+        }
+
+        $matchingResult = preg_match(
+            '{^'.self::REGEX_TYPES.'(?:[\s\t].*)?$}sx',
+            $tokens[$stackPtr + 2]['content'],
+            $matches
+        );
+
+        $content = 1 === $matchingResult ? $matches['types'] : '';
+        $endOfContent = substr($tokens[$stackPtr + 2]['content'], strlen($content));
+
+        try {
+            $suggestedType = $this->getValidTypes($content);
+        } catch (DeepExitException $exception) {
+            $phpcsFile->addError(
+                $exception->getMessage(),
+                $stackPtr + 2,
+                'Exception'
             );
 
-            $content = 1 === $matchingResult ? $matches['types'] : '';
-            $endOfContent = substr($tokens[$stackPtr + 2]['content'], strlen($content));
+            return;
+        }
 
-            $suggestedType = $this->getValidTypes($content);
+        if ($content !== $suggestedType) {
+            $fix = $phpcsFile->addFixableError(
+                'For type-hinting in PHPDocs, use %s instead of %s',
+                $stackPtr + 2,
+                'Invalid',
+                [$suggestedType, $content]
+            );
 
-            if ($content !== $suggestedType) {
-                $fix = $phpcsFile->addFixableError(
-                    'For type-hinting in PHPDocs, use %s instead of %s',
-                    $stackPtr + 2,
-                    'Invalid',
-                    [$suggestedType, $content]
-                );
-
-                if ($fix) {
-                    $phpcsFile->fixer->replaceToken($stackPtr + 2, $suggestedType.$endOfContent);
-                }
+            if ($fix) {
+                $phpcsFile->fixer->replaceToken($stackPtr + 2, $suggestedType.$endOfContent);
             }
         }
     }
@@ -122,26 +143,57 @@ class ValidTypeHintSniff implements Sniff
      * @param string $content
      *
      * @return string
+     *
+     * @throws DeepExitException
      */
     private function getValidTypes(string $content): string
     {
         $content = preg_replace('/\s/', '', $content);
-        $types = $this->getTypes($content);
 
-        foreach ($types as $index => $type) {
-            preg_match('{^'.self::REGEX_TYPES.'$}x', $type, $matches);
+        $types = [];
+        $separators = [];
+        while ('' !== $content && false !== $content) {
+            preg_match('{^'.self::REGEX_TYPES.'$}x', $content, $matches);
 
-            if (isset($matches['generic']) && '' !== $matches['generic']) {
+            if (isset($matches['multiple']) && '' !== $matches['multiple']) {
+                $validType = '('.$this->getValidTypes($matches['mutipleContent']).')';
+            } elseif (isset($matches['generic']) && '' !== $matches['generic']) {
                 $validType = $this->getValidGenericType($matches['genericName'], $matches['genericContent']);
             } elseif (isset($matches['object']) && '' !== $matches['object']) {
                 $validType = $this->getValidObjectType($matches['objectContent']);
             } else {
-                $validType = $this->getValidType($type);
+                $validType = $this->getValidType($matches['type']);
             }
 
-            $types[$index] = $validType;
+            $types[] = $validType;
+
+            $separators[] = substr($content, strlen($matches['type']), 1);
+            $content = substr($content, strlen($matches['type']) + 1);
         }
 
+        // Remove last separator since it's an empty string
+        array_pop($separators);
+
+        $uniqueSeparators = array_unique($separators);
+        switch (count($uniqueSeparators)) {
+            case 0:
+                return implode('', $types);
+            case 1:
+                return implode($uniqueSeparators[0], $this->orderTypes($types));
+            default:
+                throw new DeepExitException(
+                    'Union and intersection types must be grouped with parenthesis when used in the same expression'
+                );
+        }
+    }
+
+    /**
+     * @param array $types
+     *
+     * @return array
+     */
+    private function orderTypes(array $types): array
+    {
         $types = array_unique($types);
         usort($types, function ($type1, $type2) {
             if ('null' === $type1) {
@@ -154,24 +206,6 @@ class ValidTypeHintSniff implements Sniff
 
             return 0;
         });
-
-        return implode('|', $types);
-    }
-
-    /**
-     * @param string $content
-     *
-     * @return array
-     */
-    private function getTypes(string $content): array
-    {
-        $types = [];
-        while ('' !== $content && false !== $content) {
-            preg_match('{^'.self::REGEX_TYPES.'$}x', $content, $matches);
-
-            $types[] = $matches['type'];
-            $content = substr($content, strlen($matches['type']) + 1);
-        }
 
         return $types;
     }
