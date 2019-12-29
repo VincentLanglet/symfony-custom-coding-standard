@@ -161,6 +161,8 @@ class ValidTypeHintSniff implements Sniff
                 $validType = $this->getValidGenericType($matches['genericName'], $matches['genericContent']);
             } elseif (isset($matches['object']) && '' !== $matches['object']) {
                 $validType = $this->getValidObjectType($matches['objectContent']);
+            } elseif (isset($matches['array']) && '' !== $matches['array']) {
+                $validType = $this->getValidTypes(substr($matches['array'], 0, -2)).'[]';
             } else {
                 $validType = $this->getValidType($matches['type']);
             }
@@ -215,6 +217,8 @@ class ValidTypeHintSniff implements Sniff
      * @param string $genericContent
      *
      * @return string
+     *
+     * @throws DeepExitException
      */
     private function getValidGenericType(string $genericName, string $genericContent): string
     {
@@ -234,6 +238,8 @@ class ValidTypeHintSniff implements Sniff
      * @param string $objectContent
      *
      * @return string
+     *
+     * @throws DeepExitException
      */
     private function getValidObjectType(string $objectContent): string
     {
@@ -263,10 +269,6 @@ class ValidTypeHintSniff implements Sniff
      */
     private function getValidType(string $typeName): string
     {
-        if ('[]' === substr($typeName, -2)) {
-            return $this->getValidType(substr($typeName, 0, -2)).'[]';
-        }
-
         $lowerType = strtolower($typeName);
         switch ($lowerType) {
             case 'bool':
