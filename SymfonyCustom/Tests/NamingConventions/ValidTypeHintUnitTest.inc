@@ -55,6 +55,7 @@
  * Class-string
  *
  * @param class-string|class-string<Client>|integer
+ * @param class-STRING|cLass-stRIng<Client>|int
  */
 
 /**

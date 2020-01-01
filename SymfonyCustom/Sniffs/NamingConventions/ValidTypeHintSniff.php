@@ -7,7 +7,6 @@ namespace SymfonyCustom\Sniffs\NamingConventions;
 use PHP_CodeSniffer\Exceptions\DeepExitException;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
-use PHP_CodeSniffer\Util\Common;
 use SymfonyCustom\Helpers\SniffHelper;
 
 /**
@@ -69,12 +68,18 @@ class ValidTypeHintSniff implements Sniff
                 |
                 (?<classString>
                     class-string(?:
-                        \s*<\s*[\\\\\w]+\s*>
+                        \s*<\s*
+                        (?<classStringContent>
+                            (?&simple)
+                        )
+                        \s*>
                     )?
                 )
                 |
                 (?<simple>
-                    [@$?]?[\\\\\w]+
+                    \\\\?\w+(?:\\\\\w+)*
+                    |
+                    \$this
                 )
             )
         )
@@ -83,6 +88,36 @@ class ValidTypeHintSniff implements Sniff
         )*
     )
     ';
+
+    private const PRIMITIVES_TYPES = [
+        'string',
+        'int',
+        'float',
+        'bool',
+        'array',
+        'resource',
+        'null',
+        'callable',
+        'iterable',
+    ];
+    private const KEYWORD_TYPES = [
+        'mixed',
+        'void',
+        'object',
+        'number',
+        'false',
+        'true',
+        'self',
+        'static',
+        '$this',
+    ];
+    private const ALIAS_TYPES = [
+        'boolean'  => 'bool',
+        'integer'  => 'int',
+        'double'   => 'float',
+        'real'     => 'float',
+        'callback' => 'callable',
+    ];
 
     /**
      * @return array
@@ -105,7 +140,7 @@ class ValidTypeHintSniff implements Sniff
         }
 
         $matchingResult = preg_match(
-            '{^'.self::REGEX_TYPES.'(?:[\s\t].*)?$}sx',
+            '{^'.self::REGEX_TYPES.'(?:[\s\t].*)?$}six',
             $tokens[$stackPtr + 2]['content'],
             $matches
         );
@@ -153,16 +188,18 @@ class ValidTypeHintSniff implements Sniff
         $types = [];
         $separators = [];
         while ('' !== $content && false !== $content) {
-            preg_match('{^'.self::REGEX_TYPES.'$}x', $content, $matches);
+            preg_match('{^'.self::REGEX_TYPES.'$}ix', $content, $matches);
 
-            if (isset($matches['multiple']) && '' !== $matches['multiple']) {
+            if (isset($matches['array']) && '' !== $matches['array']) {
+                $validType = $this->getValidTypes(substr($matches['array'], 0, -2)).'[]';
+            } elseif (isset($matches['multiple']) && '' !== $matches['multiple']) {
                 $validType = '('.$this->getValidTypes($matches['mutipleContent']).')';
             } elseif (isset($matches['generic']) && '' !== $matches['generic']) {
                 $validType = $this->getValidGenericType($matches['genericName'], $matches['genericContent']);
             } elseif (isset($matches['object']) && '' !== $matches['object']) {
                 $validType = $this->getValidObjectType($matches['objectContent']);
-            } elseif (isset($matches['array']) && '' !== $matches['array']) {
-                $validType = $this->getValidTypes(substr($matches['array'], 0, -2)).'[]';
+            } elseif (isset($matches['classString']) && '' !== $matches['classString']) {
+                $validType = preg_replace('/class-string/i', 'class-string', $matches['classString']);
             } else {
                 $validType = $this->getValidType($matches['type']);
             }
@@ -225,7 +262,7 @@ class ValidTypeHintSniff implements Sniff
         $validType = $this->getValidType($genericName).'<';
 
         while ('' !== $genericContent && false !== $genericContent) {
-            preg_match('{^'.self::REGEX_TYPES.',?}x', $genericContent, $matches);
+            preg_match('{^'.self::REGEX_TYPES.',?}ix', $genericContent, $matches);
 
             $validType .= $this->getValidTypes($matches['types']).', ';
             $genericContent = substr($genericContent, strlen($matches['types']) + 1);
@@ -253,7 +290,7 @@ class ValidTypeHintSniff implements Sniff
                 $objectContent = $split[2];
             }
 
-            preg_match('{^'.self::REGEX_TYPES.',?}x', $objectContent, $matches);
+            preg_match('{^'.self::REGEX_TYPES.',?}ix', $objectContent, $matches);
 
             $validType .= $this->getValidTypes($matches['types']).', ';
             $objectContent = substr($objectContent, strlen($matches['types']) + 1);
@@ -270,15 +307,14 @@ class ValidTypeHintSniff implements Sniff
     private function getValidType(string $typeName): string
     {
         $lowerType = strtolower($typeName);
-        switch ($lowerType) {
-            case 'bool':
-            case 'boolean':
-                return 'bool';
-            case 'int':
-            case 'integer':
-                return 'int';
+        if (in_array($lowerType, self::PRIMITIVES_TYPES) || in_array($lowerType, self::KEYWORD_TYPES)) {
+            return $lowerType;
         }
 
-        return Common::suggestType($typeName);
+        if (isset(self::ALIAS_TYPES[$lowerType])) {
+            return self::ALIAS_TYPES[$lowerType];
+        }
+
+        return $typeName;
     }
 }
