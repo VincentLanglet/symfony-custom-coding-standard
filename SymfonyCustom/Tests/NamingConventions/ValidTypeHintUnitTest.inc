@@ -14,10 +14,11 @@
  */
 
 /**
- * Don't care about case
+ * Don't care about case for reserved keyword
  *
- * @return BoOlEAn $a
+ * @return BOOL $a
  * @return boolean $a
+ * @return Boolean $a
  */
 
 /**
@@ -49,13 +50,6 @@
  * @param array{0: integer, 1?: integer}
  * @param array{integer, integer}
  * @param array{foo: integer, bar: string}
- */
-
-/**
- * Class-string
- *
- * @param class-string|class-string<Client>|integer
- * @param class-STRING|cLass-stRIng<Client>|int
  */
 
 /**

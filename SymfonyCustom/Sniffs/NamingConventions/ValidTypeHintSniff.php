@@ -19,8 +19,7 @@ class ValidTypeHintSniff implements Sniff
      * <array> is array of <simple>, eg `int[]` or `\Foo[]`
      * <generic> is generic collection type, like `array<string, int>`, `Collection<Item>` or more complex`
      * <object> is array key => value type, like `array{type: string, name: string, value: mixed}`
-     * <class-string> is Foo::class type, like `class-string` or `class-string<Foo>`
-     * <type> is <simple>, <class-string>, <array>, <object> or <generic> type
+     * <type> is <simple>, <array>, <object>, <generic> type
      * <types> is one or more types alternated via `|`, like `int|bool[]|Collection<ItemKey, ItemVal>`
      */
     private const REGEX_TYPES = '
@@ -66,16 +65,6 @@ class ValidTypeHintSniff implements Sniff
                     \s*}
                 )
                 |
-                (?<classString>
-                    class-string(?:
-                        \s*<\s*
-                        (?<classStringContent>
-                            (?&simple)
-                        )
-                        \s*>
-                    )?
-                )
-                |
                 (?<simple>
                     \\\\?\w+(?:\\\\\w+)*
                     |
@@ -89,28 +78,30 @@ class ValidTypeHintSniff implements Sniff
     )
     ';
 
-    private const PRIMITIVES_TYPES = [
-        'string',
-        'int',
-        'float',
-        'bool',
-        'array',
-        'resource',
-        'null',
-        'callable',
-        'iterable',
+    /**
+     * False if the type is not a reserved keyword and the check can't be case insensitive
+     **/
+    private const TYPES = [
+        'array'    => true,
+        'bool'     => true,
+        'callable' => true,
+        'false'    => true,
+        'float'    => true,
+        'int'      => true,
+        'iterable' => true,
+        'mixed'    => false,
+        'null'     => true,
+        'number'   => false,
+        'object'   => true,
+        'resource' => false,
+        'self'     => true,
+        'static'   => true,
+        'string'   => true,
+        'true'     => true,
+        'void'     => true,
+        '$this'    => true,
     ];
-    private const KEYWORD_TYPES = [
-        'mixed',
-        'void',
-        'object',
-        'number',
-        'false',
-        'true',
-        'self',
-        'static',
-        '$this',
-    ];
+
     private const ALIAS_TYPES = [
         'boolean'  => 'bool',
         'integer'  => 'int',
@@ -198,8 +189,6 @@ class ValidTypeHintSniff implements Sniff
                 $validType = $this->getValidGenericType($matches['genericName'], $matches['genericContent']);
             } elseif (isset($matches['object']) && '' !== $matches['object']) {
                 $validType = $this->getValidObjectType($matches['objectContent']);
-            } elseif (isset($matches['classString']) && '' !== $matches['classString']) {
-                $validType = preg_replace('/class-string/i', 'class-string', $matches['classString']);
             } else {
                 $validType = $this->getValidType($matches['type']);
             }
@@ -307,12 +296,13 @@ class ValidTypeHintSniff implements Sniff
     private function getValidType(string $typeName): string
     {
         $lowerType = strtolower($typeName);
-        if (in_array($lowerType, self::PRIMITIVES_TYPES) || in_array($lowerType, self::KEYWORD_TYPES)) {
-            return $lowerType;
+        if (isset(self::TYPES[$lowerType])) {
+            return self::TYPES[$lowerType] ? $lowerType : $typeName;
         }
 
-        if (isset(self::ALIAS_TYPES[$lowerType])) {
-            return self::ALIAS_TYPES[$lowerType];
+        // This can't be case insensitive since this is not reserved keyword
+        if (isset(self::ALIAS_TYPES[$typeName])) {
+            return self::ALIAS_TYPES[$typeName];
         }
 
         return $typeName;
