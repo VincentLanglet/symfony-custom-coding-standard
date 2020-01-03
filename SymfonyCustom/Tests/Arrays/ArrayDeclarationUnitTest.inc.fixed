@@ -4,9 +4,9 @@ function test()
 {
     $a = array();
 
-    $b = array();
+    $b = Array();
 
-    $c = array(
+    $c = Array(
         'a' => 1,
     );
 }
@@ -19,7 +19,7 @@ class TestClass
         'height' => '',
     );
 
-    private $_bad = array(
+    private $_bad = Array(
         'width'  => '',
         'height' => '',
     );
@@ -32,7 +32,7 @@ class TestClass
             'height' => '',
         );
 
-        $plane = array(
+        $plane = Array(
             'width'  => '',
             'height' => '',
         );
@@ -55,15 +55,15 @@ class TestClass
 
         $inline = array('aaa', 'bbb', 'ccc');
         $inline = array('aaa');
-        $inline = array('aaa');
+        $inline = Array('aaa');
 
         $bigone = array(
             'name'       => 'bigone',
-            'children'   => array(
+            'children'   => Array(
                 '1a'       => 'child',
                 '11b'      => 'child',
                 '111c'     => 'child',
-                'children' => array(
+                'children' => Array(
                     'child' => 'aaa',
                 ),
             ),
