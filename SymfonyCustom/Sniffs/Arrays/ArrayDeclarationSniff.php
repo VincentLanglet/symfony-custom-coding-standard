@@ -36,20 +36,6 @@ class ArrayDeclarationSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
 
         if (T_ARRAY === $tokens[$stackPtr]['code']) {
-            // Array keyword should be lower case.
-            if (strtolower($tokens[$stackPtr]['content']) !== $tokens[$stackPtr]['content']) {
-                $fix = $phpcsFile->addFixableError(
-                    'Array keyword should be lower case; expected "array" but found "%s"',
-                    $stackPtr,
-                    'NotLowerCase',
-                    [$tokens[$stackPtr]['content']]
-                );
-
-                if ($fix) {
-                    $phpcsFile->fixer->replaceToken($stackPtr, 'array');
-                }
-            }
-
             $arrayStart = $tokens[$stackPtr]['parenthesis_opener'];
             if (!isset($tokens[$arrayStart]['parenthesis_closer'])) {
                 return;
