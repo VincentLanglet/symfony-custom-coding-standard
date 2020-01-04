@@ -142,7 +142,7 @@ class ArrayDeclarationSniff implements Sniff
                 $fix = $phpcsFile->addFixableError(
                     'Expected 1 space between "%s" and double arrow; %s found',
                     $nextArrow,
-                    'SpaceAfterDoubleArrow',
+                    'SpaceBeforeDoubleArrow',
                     [$tokens[$nextArrow - 1]['content'], $spaceBefore]
                 );
 
