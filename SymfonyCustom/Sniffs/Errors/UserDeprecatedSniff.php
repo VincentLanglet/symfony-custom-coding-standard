@@ -52,9 +52,7 @@ class UserDeprecatedSniff implements Sniff
                 continue;
             }
 
-            if ('@' === $tokens[$stackPtr - 2]['content']
-                && 'T_NS_SEPARATOR' === $tokens[$stackPtr - 1]['type']
-            ) {
+            if ('@' === $tokens[$stackPtr - 2]['content'] && T_NS_SEPARATOR === $tokens[$stackPtr - 1]['code']) {
                 continue;
             }
 
