@@ -19,19 +19,20 @@ class YodaConditionUnitTest extends AbstractSniffUnitTest
     protected function getErrorList(): array
     {
         return [
-            2  => 2,
-            4  => 2,
-            11 => 1,
-            18 => 1,
-            25 => 1,
-            32 => 1,
-            49 => 1,
-            55 => 1,
-            62 => 1,
-            68 => 1,
-            87 => 1,
-            92 => 1,
-            95 => 1,
+            2   => 2,
+            4   => 2,
+            11  => 1,
+            18  => 1,
+            25  => 1,
+            32  => 1,
+            49  => 1,
+            55  => 1,
+            62  => 1,
+            68  => 1,
+            87  => 1,
+            92  => 1,
+            95  => 1,
+            102 => 1,
         ];
     }
 

@@ -98,3 +98,5 @@ if ($true == strtolower($check)) {
 $update = 'yes' === strtolower($this->from_post('update')); // Ok.
 
 $currentIsCustom = false === in_array($currentType, $this->tags); // Ok.
+
+$a = $originalContractOperation['isEligibleForBonus'] === $contractOperation->isEligibleForBonus(); // Bad.
