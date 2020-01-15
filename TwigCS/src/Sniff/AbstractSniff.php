@@ -48,26 +48,33 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
-     * @param Token  $token
-     * @param int    $type
-     * @param string $value
+     * @param Token        $token
+     * @param int|array    $type
+     * @param string|array $value
      *
      * @return bool
      */
-    public function isTokenMatching(Token $token, int $type, string $value = null): bool
+    public function isTokenMatching(Token $token, $type, $value = []): bool
     {
-        return $token->getType() === $type && (null === $value || $token->getValue() === $value);
+        if (!is_array($type)) {
+            $type = [$type];
+        }
+        if (!is_array($value)) {
+            $value = [$value];
+        }
+
+        return in_array($token->getType(), $type) && ([] === $value || in_array($token->getValue(), $value));
     }
 
     /**
-     * @param int   $type
-     * @param array $tokens
-     * @param int   $start
-     * @param bool  $exclude
+     * @param int|array $type
+     * @param array     $tokens
+     * @param int       $start
+     * @param bool      $exclude
      *
-     * @return int
+     * @return int|false
      */
-    public function findNext(int $type, array $tokens, int $start, bool $exclude = false): int
+    public function findNext($type, array $tokens, int $start, bool $exclude = false)
     {
         $i = 0;
 
@@ -75,23 +82,31 @@ abstract class AbstractSniff implements SniffInterface
             $i++;
         }
 
+        if (!isset($tokens[$start + $i])) {
+            return false;
+        }
+
         return $start + $i;
     }
 
     /**
-     * @param int   $type
-     * @param array $tokens
-     * @param int   $start
-     * @param bool  $exclude
+     * @param int|array $type
+     * @param array     $tokens
+     * @param int       $start
+     * @param bool      $exclude
      *
-     * @return int
+     * @return int|false
      */
-    public function findPrevious(int $type, array $tokens, int $start, bool $exclude = false): int
+    public function findPrevious($type, array $tokens, int $start, bool $exclude = false)
     {
         $i = 0;
 
         while (isset($tokens[$start - $i]) && $exclude === $this->isTokenMatching($tokens[$start - $i], $type)) {
             $i++;
+        }
+
+        if (!isset($tokens[$start - $i])) {
+            return false;
         }
 
         return $start - $i;

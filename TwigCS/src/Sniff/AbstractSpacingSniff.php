@@ -20,64 +20,68 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      */
     public function process(int $tokenPosition, array $tokens): void
     {
-        $token = $tokens[$tokenPosition];
+        $spaceAfter = $this->shouldHaveSpaceAfter($tokenPosition, $tokens);
+        $spaceBefore = $this->shouldHaveSpaceBefore($tokenPosition, $tokens);
 
-        if ($this->shouldHaveSpaceAfter($token)) {
-            $this->checkSpaceAfter($tokenPosition, $tokens);
+        if (null !== $spaceAfter) {
+            $this->checkSpaceAfter($tokenPosition, $tokens, $spaceAfter);
         }
 
-        if ($this->shouldHaveSpaceBefore($token)) {
-            $this->checkSpaceBefore($tokenPosition, $tokens);
+        if (null !== $spaceBefore) {
+            $this->checkSpaceBefore($tokenPosition, $tokens, $spaceBefore);
         }
     }
-
-    /**
-     * @param Token $token
-     *
-     * @return bool
-     */
-    abstract protected function shouldHaveSpaceAfter(Token $token): bool;
-
-    /**
-     * @param Token $token
-     *
-     * @return bool
-     */
-    abstract protected function shouldHaveSpaceBefore(Token $token): bool;
 
     /**
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
+     * @return int|null
+     */
+    abstract protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int;
+
+    /**
+     * @param int     $tokenPosition
+     * @param Token[] $tokens
+     *
+     * @return int|null
+     */
+    abstract protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int;
+
+    /**
+     * @param int     $tokenPosition
+     * @param Token[] $tokens
+     * @param int     $expected
+     *
      * @throws Exception
      */
-    protected function checkSpaceAfter(int $tokenPosition, array $tokens): void
+    protected function checkSpaceAfter(int $tokenPosition, array $tokens, int $expected): void
     {
         $token = $tokens[$tokenPosition];
 
         // Ignore new line
-        $next = $this->findNext(Token::WHITESPACE_TYPE, $tokens, $tokenPosition + 1, true);
-        if ($this->isTokenMatching($tokens[$next], Token::EOL_TYPE)) {
+        $next = $this->findNext(Token::WHITESPACE_TOKENS, $tokens, $tokenPosition + 1, true);
+        if (false !== $next && $this->isTokenMatching($tokens[$next], Token::EOL_TYPE)) {
             return;
         }
 
-        if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TYPE)) {
+        if ($this->isTokenMatching($tokens[$tokenPosition + 1], Token::WHITESPACE_TOKENS)) {
             $count = strlen($tokens[$tokenPosition + 1]->getValue());
         } else {
             $count = 0;
         }
 
-        if (1 !== $count) {
+        if ($expected !== $count) {
             $fix = $this->addFixableError(
-                sprintf('Expecting 1 whitespace after "%s"; found %d', $token->getValue(), $count),
+                sprintf('Expecting %d whitespace after "%s"; found %d', $expected, $token->getValue(), $count),
                 $token
             );
 
             if ($fix) {
                 if (0 === $count) {
-                    $this->fixer->addContent($tokenPosition, ' ');
+                    $this->fixer->addContent($tokenPosition, str_repeat(' ', $expected));
                 } else {
-                    $this->fixer->replaceToken($tokenPosition + 1, ' ');
+                    $this->fixer->replaceToken($tokenPosition + 1, str_repeat(' ', $expected));
                 }
             }
         }
@@ -86,36 +90,37 @@ abstract class AbstractSpacingSniff extends AbstractSniff
     /**
      * @param int     $tokenPosition
      * @param Token[] $tokens
+     * @param int     $expected
      *
      * @throws Exception
      */
-    protected function checkSpaceBefore(int $tokenPosition, array $tokens): void
+    protected function checkSpaceBefore(int $tokenPosition, array $tokens, int $expected): void
     {
         $token = $tokens[$tokenPosition];
 
         // Ignore new line
-        $previous = $this->findPrevious(Token::WHITESPACE_TYPE, $tokens, $tokenPosition - 1, true);
+        $previous = $this->findPrevious(Token::WHITESPACE_TOKENS, $tokens, $tokenPosition - 1, true);
         if ($this->isTokenMatching($tokens[$previous], Token::EOL_TYPE)) {
             return;
         }
 
-        if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TYPE)) {
+        if ($this->isTokenMatching($tokens[$tokenPosition - 1], Token::WHITESPACE_TOKENS)) {
             $count = strlen($tokens[$tokenPosition - 1]->getValue());
         } else {
             $count = 0;
         }
 
-        if (1 !== $count) {
+        if ($expected !== $count) {
             $fix = $this->addFixableError(
-                sprintf('Expecting 1 whitespace before "%s"; found %d', $token->getValue(), $count),
+                sprintf('Expecting %d whitespace before "%s"; found %d', $expected, $token->getValue(), $count),
                 $token
             );
 
             if ($fix) {
                 if (0 === $count) {
-                    $this->fixer->addContentBefore($tokenPosition, ' ');
+                    $this->fixer->addContentBefore($tokenPosition, str_repeat(' ', $expected));
                 } else {
-                    $this->fixer->replaceToken($tokenPosition - 1, ' ');
+                    $this->fixer->replaceToken($tokenPosition - 1, str_repeat(' ', $expected));
                 }
             }
         }

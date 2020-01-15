@@ -13,26 +13,42 @@ use TwigCS\Token\Token;
 class DelimiterSpacingSniff extends AbstractSpacingSniff
 {
     /**
-     * @param Token $token
+     * @param int     $tokenPosition
+     * @param Token[] $tokens
      *
-     * @return bool
+     * @return int|null
      */
-    protected function shouldHaveSpaceBefore(Token $token): bool
+    protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
-        return $this->isTokenMatching($token, Token::VAR_END_TYPE)
+        $token = $tokens[$tokenPosition];
+
+        if ($this->isTokenMatching($token, Token::VAR_END_TYPE)
             || $this->isTokenMatching($token, Token::BLOCK_END_TYPE)
-            || $this->isTokenMatching($token, Token::COMMENT_END_TYPE);
+            || $this->isTokenMatching($token, Token::COMMENT_END_TYPE)
+        ) {
+            return 1;
+        }
+
+        return null;
     }
 
     /**
-     * @param Token $token
+     * @param int     $tokenPosition
+     * @param Token[] $tokens
      *
-     * @return bool
+     * @return int|null
      */
-    protected function shouldHaveSpaceAfter(Token $token): bool
+    protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int
     {
-        return $this->isTokenMatching($token, Token::VAR_START_TYPE)
+        $token = $tokens[$tokenPosition];
+
+        if ($this->isTokenMatching($token, Token::VAR_START_TYPE)
             || $this->isTokenMatching($token, Token::BLOCK_START_TYPE)
-            || $this->isTokenMatching($token, Token::COMMENT_START_TYPE);
+            || $this->isTokenMatching($token, Token::COMMENT_START_TYPE)
+        ) {
+            return 1;
+        }
+
+        return null;
     }
 }

@@ -85,7 +85,7 @@ class TokenizerHelper
     public function getOperatorRegex(): string
     {
         $operators = array_merge(
-            ['=', '?'],
+            ['=', '?', '?:'],
             array_keys($this->env->getUnaryOperators()),
             array_keys($this->env->getBinaryOperators())
         );

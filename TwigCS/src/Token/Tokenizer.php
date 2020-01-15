@@ -396,7 +396,13 @@ class Tokenizer
             if ($nbTokenStart) {
                 $this->moveCurrentPosition($nbTokenStart);
             }
-            $this->pushToken(Token::TEXT_TYPE, $value);
+
+            if (self::STATE_COMMENT === $this->getState()) {
+                $this->pushToken(Token::COMMENT_TEXT_TYPE, $value);
+            } else {
+                $this->pushToken(Token::TEXT_TYPE, $value);
+            }
+
             $this->moveCursor($value);
         }
     }
@@ -436,7 +442,11 @@ class Tokenizer
             $currentToken = $this->code[$this->cursor];
         }
 
-        $this->pushToken(Token::TAB_TYPE, $whitespace);
+        if (self::STATE_COMMENT === $this->getState()) {
+            $this->pushToken(Token::COMMENT_TAB_TYPE, $whitespace);
+        } else {
+            $this->pushToken(Token::TAB_TYPE, $whitespace);
+        }
     }
 
     protected function lexWhitespace(): void
@@ -450,12 +460,21 @@ class Tokenizer
             $currentToken = $this->code[$this->cursor];
         }
 
-        $this->pushToken(Token::WHITESPACE_TYPE, $whitespace);
+        if (self::STATE_COMMENT === $this->getState()) {
+            $this->pushToken(Token::COMMENT_WHITESPACE_TYPE, $whitespace);
+        } else {
+            $this->pushToken(Token::WHITESPACE_TYPE, $whitespace);
+        }
     }
 
     protected function lexEOL(): void
     {
-        $this->pushToken(Token::EOL_TYPE, $this->code[$this->cursor]);
+        if (self::STATE_COMMENT === $this->getState()) {
+            $this->pushToken(Token::COMMENT_EOL_TYPE, $this->code[$this->cursor]);
+        } else {
+            $this->pushToken(Token::EOL_TYPE, $this->code[$this->cursor]);
+        }
+
         $this->moveCursor($this->code[$this->cursor]);
     }
 
