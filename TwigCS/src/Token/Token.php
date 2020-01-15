@@ -29,7 +29,28 @@ class Token
     public const TAB_TYPE                 = 14;
     public const EOL_TYPE                 = 15;
     public const COMMENT_START_TYPE       = 16;
-    public const COMMENT_END_TYPE         = 17;
+    public const COMMENT_TEXT_TYPE        = 17;
+    public const COMMENT_WHITESPACE_TYPE  = 18;
+    public const COMMENT_TAB_TYPE         = 19;
+    public const COMMENT_EOL_TYPE         = 20;
+    public const COMMENT_END_TYPE         = 21;
+
+    public const EMPTY_TOKENS = [
+        self::WHITESPACE_TYPE         => self::WHITESPACE_TYPE,
+        self::TAB_TYPE                => self::TAB_TYPE,
+        self::EOL_TYPE                => self::EOL_TYPE,
+        self::COMMENT_START_TYPE      => self::COMMENT_START_TYPE,
+        self::COMMENT_TEXT_TYPE       => self::COMMENT_TEXT_TYPE,
+        self::COMMENT_WHITESPACE_TYPE => self::COMMENT_WHITESPACE_TYPE,
+        self::COMMENT_TAB_TYPE        => self::COMMENT_TAB_TYPE,
+        self::COMMENT_EOL_TYPE        => self::COMMENT_EOL_TYPE,
+        self::COMMENT_END_TYPE        => self::COMMENT_END_TYPE,
+    ];
+
+    public const WHITESPACE_TOKENS = [
+        self::WHITESPACE_TYPE         => self::WHITESPACE_TYPE,
+        self::COMMENT_WHITESPACE_TYPE => self::COMMENT_WHITESPACE_TYPE,
+    ];
 
     /**
      * @var int
