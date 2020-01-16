@@ -9,7 +9,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 
 /**
- * Checks that there is no white space before a closing bracket, for ")", "}", and array bracket.
+ * Checks that there is no white space before a closing array bracket.
  * Square Brackets are handled by Squiz\Sniffs\Arrays\ArrayBracketSpacingSniff.
  */
 class CloseBracketSpacingSniff implements Sniff
@@ -19,7 +19,7 @@ class CloseBracketSpacingSniff implements Sniff
      */
     public function register(): array
     {
-        return [T_CLOSE_CURLY_BRACKET, T_CLOSE_PARENTHESIS, T_CLOSE_SHORT_ARRAY];
+        return [T_CLOSE_SHORT_ARRAY];
     }
 
     /**

@@ -8,7 +8,7 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
 /**
- * Checks that there is no white space after an opening bracket, for "(", "{", and array bracket.
+ * Checks that there is no white space after an opening array bracket.
  * Square Brackets are handled by Squiz_Sniffs_Arrays_ArrayBracketSpacingSniff.
  */
 class OpenBracketSpacingSniff implements Sniff
@@ -18,7 +18,7 @@ class OpenBracketSpacingSniff implements Sniff
      */
     public function register(): array
     {
-        return [T_OPEN_CURLY_BRACKET, T_OPEN_PARENTHESIS, T_OPEN_SHORT_ARRAY];
+        return [T_OPEN_SHORT_ARRAY];
     }
 
     /**
