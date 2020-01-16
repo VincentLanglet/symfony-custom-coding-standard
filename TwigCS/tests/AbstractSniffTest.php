@@ -49,6 +49,18 @@ abstract class AbstractSniffTest extends TestCase
             return;
         }
 
+        $fixedFile = __DIR__.'/Fixtures/'.$className.'.fixed.twig';
+        if (file_exists($fixedFile)) {
+            $fixer = new Fixer($ruleset, $tokenizer);
+            $sniff->enableFixer($fixer);
+            $fixer->fixFile($file);
+
+            $diff = $fixer->generateDiff($fixedFile);
+            if ('' !== $diff) {
+                self::fail($diff);
+            }
+        }
+
         $messages = $report->getMessages();
         $messagePositions = [];
 
@@ -60,23 +72,11 @@ abstract class AbstractSniffTest extends TestCase
                 if (null !== $line) {
                     $errorMessage = sprintf('Line %s: %s', $line, $errorMessage);
                 }
-                $this->fail($errorMessage);
+                self::fail($errorMessage);
             }
 
             $messagePositions[] = [$message->getLine() => $message->getLinePosition()];
         }
-        $this->assertEquals($expects, $messagePositions);
-
-        $fixedFile = __DIR__.'/Fixtures/'.$className.'.fixed.twig';
-        if (file_exists($fixedFile)) {
-            $fixer = new Fixer($ruleset, $tokenizer);
-            $sniff->enableFixer($fixer);
-            $fixer->fixFile($file);
-
-            $diff = $fixer->generateDiff($fixedFile);
-            if ('' !== $diff) {
-                $this->fail($diff);
-            }
-        }
+        self::assertEquals($expects, $messagePositions);
     }
 }

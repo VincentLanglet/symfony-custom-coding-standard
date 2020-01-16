@@ -25,15 +25,18 @@ class Token
     public const INTERPOLATION_END_TYPE   = 11;
     public const ARROW_TYPE               = 12;
     // New constants
-    public const WHITESPACE_TYPE          = 13;
-    public const TAB_TYPE                 = 14;
-    public const EOL_TYPE                 = 15;
-    public const COMMENT_START_TYPE       = 16;
-    public const COMMENT_TEXT_TYPE        = 17;
-    public const COMMENT_WHITESPACE_TYPE  = 18;
-    public const COMMENT_TAB_TYPE         = 19;
-    public const COMMENT_EOL_TYPE         = 20;
-    public const COMMENT_END_TYPE         = 21;
+    public const DQ_STRING_START_TYPE     = 13;
+    public const DQ_STRING_END_TYPE       = 14;
+    public const BLOCK_TAG_TYPE           = 15;
+    public const WHITESPACE_TYPE          = 16;
+    public const TAB_TYPE                 = 17;
+    public const EOL_TYPE                 = 18;
+    public const COMMENT_START_TYPE       = 19;
+    public const COMMENT_TEXT_TYPE        = 20;
+    public const COMMENT_WHITESPACE_TYPE  = 21;
+    public const COMMENT_TAB_TYPE         = 22;
+    public const COMMENT_EOL_TYPE         = 23;
+    public const COMMENT_END_TYPE         = 24;
 
     public const EMPTY_TOKENS = [
         self::WHITESPACE_TYPE         => self::WHITESPACE_TYPE,

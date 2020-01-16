@@ -37,8 +37,13 @@ class TokenizerHelper
     public function getBlockRegex(): string
     {
         return '/'
-            .'('.preg_quote($this->options['whitespace_trim']).')?'
-            .'('.preg_quote($this->options['tag_block'][1]).')'
+            .'('
+                .preg_quote($this->options['whitespace_trim'])
+                .'|'.preg_quote($this->options['whitespace_line_trim'])
+            .')?'
+            .'('
+                .preg_quote($this->options['tag_block'][1])
+            .')'
             .'/A';
     }
 
@@ -48,9 +53,14 @@ class TokenizerHelper
     public function getCommentRegex(): string
     {
         return '/'
-            .'('.preg_quote($this->options['whitespace_trim']).')?'
-            .'('.preg_quote($this->options['tag_comment'][1]).')'
-            .'/';
+            .'('
+                .preg_quote($this->options['whitespace_trim'])
+                .'|'.preg_quote($this->options['whitespace_line_trim'])
+            .')?'
+            .'('
+                .preg_quote($this->options['tag_comment'][1])
+            .')'
+            .'/'; // Should not be anchored
     }
 
     /**
@@ -59,8 +69,13 @@ class TokenizerHelper
     public function getVariableRegex(): string
     {
         return '/'
-            .'('.preg_quote($this->options['whitespace_trim']).')?'
-            .'('.preg_quote($this->options['tag_variable'][1]).')'
+            .'('
+                .preg_quote($this->options['whitespace_trim'])
+                .'|'.preg_quote($this->options['whitespace_line_trim'])
+            .')?'
+            .'('
+                .preg_quote($this->options['tag_variable'][1])
+            .')'
             .'/A';
     }
 
@@ -71,12 +86,39 @@ class TokenizerHelper
     {
         return '/'
             .'('
-                .preg_quote($this->options['tag_variable'][0], '/')
-                .'|'.preg_quote($this->options['tag_block'][0], '/')
-                .'|'.preg_quote($this->options['tag_comment'][0], '/')
+                .preg_quote($this->options['tag_variable'][0])
+                .'|'.preg_quote($this->options['tag_block'][0])
+                .'|'.preg_quote($this->options['tag_comment'][0])
             .')'
-            .'('.preg_quote($this->options['whitespace_trim'], '/').')?'
-            .'/s';
+            .'('
+                .preg_quote($this->options['whitespace_trim'])
+                .'|'.preg_quote($this->options['whitespace_line_trim'])
+            .')?'
+            .'/';
+    }
+
+    /**
+     * @return string
+     */
+    public function getInterpolationStartRegex(): string
+    {
+        return '/'
+            .'('
+                .preg_quote($this->options['interpolation'][0])
+            .')'
+            .'/A';
+    }
+
+    /**
+     * @return string
+     */
+    public function getInterpolationEndRegex(): string
+    {
+        return '/'
+            .'('
+                .preg_quote($this->options['interpolation'][1])
+            .')'
+            .'/A';
     }
 
     /**

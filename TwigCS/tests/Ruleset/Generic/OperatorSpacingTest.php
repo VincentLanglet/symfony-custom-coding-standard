@@ -51,6 +51,8 @@ class OperatorSpacingTest extends AbstractSniffTest
             [21 => 5],
             [22 => 5],
             [22 => 5],
+            [35 => 10],
+            [35 => 10],
         ]);
     }
 }
