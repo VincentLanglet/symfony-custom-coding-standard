@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the EmptyLines sniff.
- *
- * @group SymfonyCustom
  */
 class EmptyLinesUnitTest extends AbstractSniffUnitTest
 {

@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the ScopeOrder sniff.
- *
- * @group SymfonyCustom
  */
 class ScopeOrderUnitTest extends AbstractSniffUnitTest
 {

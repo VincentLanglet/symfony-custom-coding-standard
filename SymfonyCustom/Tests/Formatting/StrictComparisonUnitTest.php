@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the StrictComparison sniff.
- *
- * @group SymfonyCustom
  */
 class StrictComparisonUnitTest extends AbstractSniffUnitTest
 {

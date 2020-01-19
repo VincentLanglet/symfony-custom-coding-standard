@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the ConditionalReturnOrThrow sniff.
- *
- * @group SymfonyCustom
  */
 class ConditionalReturnOrThrowUnitTest extends AbstractSniffUnitTest
 {

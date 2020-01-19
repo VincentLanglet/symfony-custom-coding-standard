@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for VariableComment sniff.
- *
- * @group SymfonyCustom
  */
 class VariableCommentUnitTest extends AbstractSniffUnitTest
 {

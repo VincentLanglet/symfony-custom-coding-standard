@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the BlankLineBeforeReturn sniff.
- *
- * @group SymfonyCustom
  */
 class BlankLineBeforeReturnUnitTest extends AbstractSniffUnitTest
 {

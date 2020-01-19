@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the UnaryOperatorSpacing sniff.
- *
- * @group SymfonyCustom
  */
 class UnaryOperatorSpacingUnitTest extends AbstractSniffUnitTest
 {
