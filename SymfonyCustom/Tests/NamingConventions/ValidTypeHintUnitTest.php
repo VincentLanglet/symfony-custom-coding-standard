@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the ValidScalarTypeName sniff.
- *
- * @group SymfonyCustom
  */
 class ValidTypeHintUnitTest extends AbstractSniffUnitTest
 {

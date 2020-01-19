@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the ValidFileName sniff.
- *
- * @group SymfonyCustom
  */
 class ValidFileNameUnitTest extends AbstractSniffUnitTest
 {

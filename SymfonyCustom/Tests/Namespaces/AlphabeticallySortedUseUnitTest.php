@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the AlphabeticallySortedUse sniff.
- *
- * @group SymfonyCustom
  */
 class AlphabeticallySortedUseUnitTest extends AbstractSniffUnitTest
 {

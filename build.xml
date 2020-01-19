@@ -30,7 +30,7 @@
     <target name="phpunit" depends="symlink-cs" description="Run unit tests with PHPUnit">
         <exec executable="${phpunit.bin}" failonerror="true" >
             <arg value="--verbose"/>
-            <arg value="--group=SymfonyCustom"/>
+            <arg value="--filter=SymfonyCustom"/>
             <arg value="${phpcs.dir}/tests/AllTests.php"/>
         </exec>
         <exec executable="${phpunit.bin}" failonerror="true" >

@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the DocCommentForbiddenTags sniff.
- *
- * @group SymfonyCustom
  */
 class DocCommentForbiddenTagsUnitTest extends AbstractSniffUnitTest
 {

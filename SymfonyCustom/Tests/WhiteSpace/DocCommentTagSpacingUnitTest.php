@@ -8,8 +8,6 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
 /**
  * Unit test class for the DocCommentTagSpacing sniff.
- *
- * @group SymfonyCustom
  */
 class DocCommentTagSpacingUnitTest extends AbstractSniffUnitTest
 {
