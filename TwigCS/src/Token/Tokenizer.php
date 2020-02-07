@@ -20,15 +20,15 @@ class Tokenizer
     private const STATE_INTERPOLATION = 4;
     private const STATE_COMMENT       = 5;
 
+    private const SQ_STRING_PART = '[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*';
+    private const DQ_STRING_PART = '[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*';
+
     private const REGEX_NAME            = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
     private const REGEX_NUMBER          = '/[0-9]+(?:\.[0-9]+)?/A';
-    private const REGEX_STRING          = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
+    private const REGEX_STRING          = '/"('.self::DQ_STRING_PART.')"|\'('.self::SQ_STRING_PART.')\'/As';
+    private const REGEX_DQ_STRING_PART  = '/'.self::DQ_STRING_PART.'/As';
     private const REGEX_DQ_STRING_DELIM = '/"/A';
-    private const REGEX_DQ_STRING_PART  = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
     private const PUNCTUATION           = '()[]{}:.,|';
-
-    // TODO: Il faut surement changer les regex pour que "a#" et "a" soient traités de la même manière
-    // Car actuellement le second est DQ string (sans interpolation) alors que le premier est string
 
     /**
      * @var array
@@ -408,7 +408,7 @@ class Tokenizer
         } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor)
             && strlen($match[0]) > 0
         ) {
-            $this->pushToken(Token::STRING_TYPE, stripcslashes($match[0]));
+            $this->pushToken(Token::STRING_TYPE, $match[0]);
             $this->moveCursor($match[0]);
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             $bracket = array_pop($this->bracketsAndTernary);
@@ -667,7 +667,7 @@ class Tokenizer
      */
     protected function lexString(string $string): void
     {
-        $this->pushToken(Token::STRING_TYPE, addcslashes(stripcslashes($string), '\\'));
+        $this->pushToken(Token::STRING_TYPE, $string);
         $this->moveCursor($string);
     }
 }
