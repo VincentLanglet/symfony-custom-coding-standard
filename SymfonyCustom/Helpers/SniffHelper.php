@@ -8,11 +8,9 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Tokens;
 
 /**
- * class SniffHelper
- *
- * @internal
+ * Class SniffHelper
  */
-class SniffHelper
+class SniffHelper extends AbstractHelper
 {
     public const TAGS = [
         '@api',

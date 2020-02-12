@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace TwigCS\Tests\Ruleset\Generic;
+namespace TwigCS\Tests\Ruleset\Generic\OperatorSpacing;
 
 use TwigCS\Ruleset\Generic\OperatorSpacingSniff;
-use TwigCS\Tests\AbstractSniffTest;
+use TwigCS\Tests\Ruleset\AbstractSniffTest;
 
 /**
  * Class OperatorSpacingTest
@@ -14,7 +14,7 @@ class OperatorSpacingTest extends AbstractSniffTest
 {
     public function testSniff(): void
     {
-        $this->checkGenericSniff(new OperatorSpacingSniff(), [
+        $this->checkSniff(new OperatorSpacingSniff(), [
             [1 => 4],
             [1 => 4],
             [2 => 5],
@@ -51,6 +51,7 @@ class OperatorSpacingTest extends AbstractSniffTest
             [21 => 5],
             [22 => 5],
             [22 => 5],
+            [24 => 6],
             [35 => 10],
             [35 => 10],
         ]);

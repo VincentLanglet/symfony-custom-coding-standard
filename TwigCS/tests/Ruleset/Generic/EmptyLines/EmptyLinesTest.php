@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace TwigCS\Tests\Ruleset\Generic;
+namespace TwigCS\Tests\Ruleset\Generic\EmptyLines;
 
 use TwigCS\Ruleset\Generic\EmptyLinesSniff;
-use TwigCS\Tests\AbstractSniffTest;
+use TwigCS\Tests\Ruleset\AbstractSniffTest;
 
 /**
  * Class EmptyLinesTest
@@ -14,7 +14,7 @@ class EmptyLinesTest extends AbstractSniffTest
 {
     public function testSniff(): void
     {
-        $this->checkGenericSniff(new EmptyLinesSniff(), [
+        $this->checkSniff(new EmptyLinesSniff(), [
             [3 => 1],
         ]);
     }

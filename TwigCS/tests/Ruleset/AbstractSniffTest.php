@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TwigCS\Tests;
+namespace TwigCS\Tests\Ruleset;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -13,6 +13,7 @@ use TwigCS\Ruleset\Ruleset;
 use TwigCS\Runner\Fixer;
 use TwigCS\Runner\Linter;
 use TwigCS\Sniff\SniffInterface;
+use TwigCS\Tests\TestHelper;
 use TwigCS\Token\Tokenizer;
 
 /**
@@ -21,7 +22,7 @@ use TwigCS\Token\Tokenizer;
 abstract class AbstractSniffTest extends TestCase
 {
     /**
-     * Should call $this->checkGenericSniff(new Sniff(), [...]);
+     * Should call $this->checkSniff(new Sniff(), [...]);
      */
     abstract public function testSniff(): void;
 
@@ -29,7 +30,7 @@ abstract class AbstractSniffTest extends TestCase
      * @param SniffInterface $sniff
      * @param array          $expects
      */
-    protected function checkGenericSniff(SniffInterface $sniff, array $expects): void
+    protected function checkSniff(SniffInterface $sniff, array $expects): void
     {
         $env = new StubbedEnvironment();
         $tokenizer = new Tokenizer($env);
@@ -39,23 +40,24 @@ abstract class AbstractSniffTest extends TestCase
         try {
             $class = new ReflectionClass(get_called_class());
             $className = $class->getShortName();
-            $file = __DIR__.'/Fixtures/'.$className.'.twig';
+            $directory = dirname($class->getFileName());
+            $file = "$directory/$className.twig";
 
             $ruleset->addSniff($sniff);
             $report = $linter->run([$file], $ruleset);
         } catch (Exception $e) {
-            $this->fail($e->getMessage());
+            self::fail($e->getMessage());
 
             return;
         }
 
-        $fixedFile = __DIR__.'/Fixtures/'.$className.'.fixed.twig';
+        $fixedFile = "$directory/$className.fixed.twig";
         if (file_exists($fixedFile)) {
             $fixer = new Fixer($ruleset, $tokenizer);
             $sniff->enableFixer($fixer);
             $fixer->fixFile($file);
 
-            $diff = $fixer->generateDiff($fixedFile);
+            $diff = TestHelper::generateDiff($fixer->getContents(), $fixedFile);
             if ('' !== $diff) {
                 self::fail($diff);
             }
@@ -77,6 +79,6 @@ abstract class AbstractSniffTest extends TestCase
 
             $messagePositions[] = [$message->getLine() => $message->getLinePosition()];
         }
-        self::assertEquals($expects, $messagePositions);
+        self::assertSame($expects, $messagePositions);
     }
 }
