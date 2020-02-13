@@ -22,21 +22,21 @@ use Twig\TwigTest;
 class StubbedEnvironment extends Environment
 {
     /**
-     * @var TwigFilter[]
+     * @var array<TwigFilter|null>
      */
     protected $stubFilters = [];
 
     /**
-     * @var TwigFunction[]
+     * @var array<TwigFunction|null>
      */
     protected $stubFunctions = [];
 
     /**
-     * @var TwigTest[]
+     * @var array<TwigTest|null>
      */
     protected $stubTests = [
-        'divisible' => false, // Allow 'divisible by'
-        'same'      => false, // Allow 'same as'
+        'divisible' => null, // Allow 'divisible by'
+        'same'      => null, // Allow 'same as'
     ];
 
     public function __construct()
@@ -57,11 +57,11 @@ class StubbedEnvironment extends Environment
     /**
      * @param string $name
      *
-     * @return TwigFilter
+     * @return TwigFilter|null
      */
     public function getFilter($name): ?TwigFilter
     {
-        if (!isset($this->stubFilters[$name])) {
+        if (!array_key_exists($name, $this->stubFilters)) {
             $this->stubFilters[$name] = new TwigFilter('stub');
         }
 
@@ -71,11 +71,11 @@ class StubbedEnvironment extends Environment
     /**
      * @param string $name
      *
-     * @return TwigFunction
+     * @return TwigFunction|null
      */
     public function getFunction($name): ?TwigFunction
     {
-        if (!isset($this->stubFunctions[$name])) {
+        if (!array_key_exists($name, $this->stubFunctions)) {
             $this->stubFunctions[$name] = new TwigFunction('stub');
         }
 
@@ -85,11 +85,11 @@ class StubbedEnvironment extends Environment
     /**
      * @param string $name
      *
-     * @return TwigTest
+     * @return TwigTest|null
      */
     public function getTest($name): ?TwigTest
     {
-        if (!isset($this->stubTests[$name])) {
+        if (!array_key_exists($name, $this->stubTests)) {
             $this->stubTests[$name] = new TwigTest('stub');
         }
 
