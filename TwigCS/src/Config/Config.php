@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TwigCS\Config;
 
 use Exception;
-use Symfony\Component\Finder\Finder;
 
 /**
  * TwigCS configuration data.
@@ -15,74 +14,41 @@ class Config
     /**
      * @var array
      */
-    public static $defaultConfig = [
-        'exclude'          => [],
-        'pattern'          => '*.twig',
-        'paths'            => [],
-        'workingDirectory' => '',
-    ];
+    protected $paths = [];
 
     /**
-     * @var array
+     * @param array $paths
      */
-    protected $config = [];
-
-    /**
-     * @param array $config
-     */
-    public function __construct(array $config = [])
+    public function __construct(array $paths = [])
     {
-        $this->config = array_merge($this::$defaultConfig, $config);
+        $this->paths = $paths;
     }
 
     /**
-     * @return Finder
+     * @return array
      *
      * @throws Exception
      */
-    public function findFiles(): Finder
+    public function findFiles(): array
     {
-        $paths = $this->get('paths');
-        $exclude = $this->get('exclude');
-        $workingDir = $this->get('workingDirectory');
-
-        // Build the finder.
-        $files = Finder::create()
-            ->in($workingDir)
-            ->name($this->config['pattern'])
-            ->files();
-
-        // Include all matching paths.
-        foreach ($paths as $path) {
-            // Trim absolute path
-            if (substr($path, 0, strlen($workingDir)) === $workingDir) {
-                $path = ltrim(substr($path, strlen($workingDir)), '/');
+        $files = [];
+        foreach ($this->paths as $path) {
+            if (is_dir($path)) {
+                $flags = \RecursiveDirectoryIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS;
+                $directoryIterator = new \RecursiveDirectoryIterator($path, $flags);
+            } else {
+                $directoryIterator = new \RecursiveArrayIterator([$path]);
             }
 
-            $files->path($path);
-        }
+            $filter = new TwigFileFilter($directoryIterator);
+            $iterator = new \RecursiveIteratorIterator($filter);
 
-        // Exclude all matching paths.
-        if ($exclude) {
-            $files->exclude($exclude);
+            /** @var \SplFileInfo $file */
+            foreach ($iterator as $file) {
+                $files[] = $file->getRealPath();
+            }
         }
 
         return $files;
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     *
-     * @throws Exception
-     */
-    public function get(string $key)
-    {
-        if (!isset($this->config[$key])) {
-            throw new Exception(sprintf('Configuration key "%s" does not exist', $key));
-        }
-
-        return $this->config[$key];
     }
 }

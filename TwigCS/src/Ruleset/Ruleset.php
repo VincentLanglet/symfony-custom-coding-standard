@@ -6,7 +6,6 @@ namespace TwigCS\Ruleset;
 
 use Exception;
 use SplFileInfo;
-use Symfony\Component\Finder\Finder;
 use TwigCS\Sniff\SniffInterface;
 
 /**
@@ -48,14 +47,16 @@ class Ruleset
      */
     public function addStandard(string $standardName = 'Generic'): Ruleset
     {
-        try {
-            $finder = Finder::create()->in(__DIR__.'/'.$standardName)->files();
-        } catch (Exception $e) {
+        if (!is_dir(__DIR__.'/'.$standardName)) {
             throw new Exception(sprintf('The standard "%s" is not found.', $standardName));
         }
 
+        $flags = \RecursiveDirectoryIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS;
+        $directoryIterator = new \RecursiveDirectoryIterator(__DIR__.'/'.$standardName, $flags);
+        $iterator = new \RecursiveIteratorIterator($directoryIterator);
+
         /** @var SplFileInfo $file */
-        foreach ($finder as $file) {
+        foreach ($iterator as $file) {
             $class = __NAMESPACE__.'\\'.$standardName.'\\'.$file->getBasename('.php');
 
             if (class_exists($class)) {

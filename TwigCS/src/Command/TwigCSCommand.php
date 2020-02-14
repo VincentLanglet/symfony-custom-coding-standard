@@ -32,25 +32,11 @@ class TwigCSCommand extends Command
             ->setDescription('Lints a template and outputs encountered errors')
             ->setDefinition([
                 new InputOption(
-                    'exclude',
-                    'e',
-                    InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                    'Excludes, based on regex, paths of files and folders from parsing',
-                    ['vendor/']
-                ),
-                new InputOption(
                     'level',
                     'l',
                     InputOption::VALUE_OPTIONAL,
                     'Allowed values are notice, warning or error',
                     'notice'
-                ),
-                new InputOption(
-                    'working-dir',
-                    'd',
-                    InputOption::VALUE_OPTIONAL,
-                    'Run as if this was started in <working-dir> instead of the current working directory',
-                    getcwd()
                 ),
                 new InputOption(
                     'fix',
@@ -78,16 +64,10 @@ class TwigCSCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $paths = $input->getArgument('paths');
-        $exclude = $input->getOption('exclude');
         $level = $input->getOption('level');
-        $currentDir = $input->getOption('working-dir');
         $fix = $input->getOption('fix');
 
-        $config = new Config([
-            'paths'            => $paths,
-            'exclude'          => $exclude,
-            'workingDirectory' => $currentDir,
-        ]);
+        $config = new Config($paths);
 
         // Get the rules to apply.
         $ruleset = new Ruleset();
