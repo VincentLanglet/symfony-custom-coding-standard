@@ -55,7 +55,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    protected function checkSpaceAfter(int $tokenPosition, array $tokens, int $expected): void
+    private function checkSpaceAfter(int $tokenPosition, array $tokens, int $expected): void
     {
         $token = $tokens[$tokenPosition];
 
@@ -94,7 +94,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      *
      * @throws Exception
      */
-    protected function checkSpaceBefore(int $tokenPosition, array $tokens, int $expected): void
+    private function checkSpaceBefore(int $tokenPosition, array $tokens, int $expected): void
     {
         $token = $tokens[$tokenPosition];
 

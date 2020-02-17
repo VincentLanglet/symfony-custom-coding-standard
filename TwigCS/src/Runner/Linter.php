@@ -86,7 +86,7 @@ class Linter
      *
      * @throws Exception
      */
-    public function fix(iterable $files, Ruleset $ruleset): void
+    protected function fix(iterable $files, Ruleset $ruleset): void
     {
         $fixer = new Fixer($ruleset, $this->tokenizer);
 
@@ -113,7 +113,7 @@ class Linter
      *
      * @return bool
      */
-    public function processTemplate(string $file, Ruleset $ruleset, Report $report): bool
+    protected function processTemplate(string $file, Ruleset $ruleset, Report $report): bool
     {
         $twigSource = new Source(file_get_contents($file), $file);
 

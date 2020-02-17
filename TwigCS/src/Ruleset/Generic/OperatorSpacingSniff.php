@@ -81,6 +81,11 @@ class OperatorSpacingSniff extends AbstractSpacingSniff
             return true;
         }
 
+        if ($this->isTokenMatching($previousToken, Token::BLOCK_TAG_TYPE)) {
+            // {% if -2 ... %}
+            return true;
+        }
+
         return false;
     }
 }

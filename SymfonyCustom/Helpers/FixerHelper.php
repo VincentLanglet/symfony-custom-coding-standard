@@ -7,11 +7,9 @@ namespace SymfonyCustom\Helpers;
 use PHP_CodeSniffer\Files\File;
 
 /**
- * class FixerHelper
- *
- * @internal
+ * Class FixerHelper
  */
-class FixerHelper
+class FixerHelper extends AbstractHelper
 {
     /**
      * @param File $phpcsFile

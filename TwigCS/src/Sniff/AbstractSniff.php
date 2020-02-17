@@ -48,13 +48,29 @@ abstract class AbstractSniff implements SniffInterface
     }
 
     /**
+     * @param array $stream
+     */
+    public function processFile(array $stream): void
+    {
+        foreach ($stream as $index => $token) {
+            $this->process($index, $stream);
+        }
+    }
+
+    /**
+     * @param int     $tokenPosition
+     * @param Token[] $stream
+     */
+    abstract protected function process(int $tokenPosition, array $stream): void;
+
+    /**
      * @param Token        $token
      * @param int|array    $type
      * @param string|array $value
      *
      * @return bool
      */
-    public function isTokenMatching(Token $token, $type, $value = []): bool
+    protected function isTokenMatching(Token $token, $type, $value = []): bool
     {
         if (!is_array($type)) {
             $type = [$type];
@@ -74,7 +90,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @return int|false
      */
-    public function findNext($type, array $tokens, int $start, bool $exclude = false)
+    protected function findNext($type, array $tokens, int $start, bool $exclude = false)
     {
         $i = 0;
 
@@ -97,7 +113,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @return int|false
      */
-    public function findPrevious($type, array $tokens, int $start, bool $exclude = false)
+    protected function findPrevious($type, array $tokens, int $start, bool $exclude = false)
     {
         $i = 0;
 
@@ -118,7 +134,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    public function addWarning(string $message, Token $token): void
+    protected function addWarning(string $message, Token $token): void
     {
         $this->addMessage(Report::MESSAGE_TYPE_WARNING, $message, $token);
     }
@@ -129,7 +145,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    public function addError(string $message, Token $token): void
+    protected function addError(string $message, Token $token): void
     {
         $this->addMessage(Report::MESSAGE_TYPE_ERROR, $message, $token);
     }
@@ -142,7 +158,7 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    public function addFixableWarning(string $message, Token $token): bool
+    protected function addFixableWarning(string $message, Token $token): bool
     {
         return $this->addFixableMessage(Report::MESSAGE_TYPE_WARNING, $message, $token);
     }
@@ -155,40 +171,10 @@ abstract class AbstractSniff implements SniffInterface
      *
      * @throws Exception
      */
-    public function addFixableError(string $message, Token $token): bool
+    protected function addFixableError(string $message, Token $token): bool
     {
         return $this->addFixableMessage(Report::MESSAGE_TYPE_ERROR, $message, $token);
     }
-
-    /**
-     * @param Token $token
-     *
-     * @return string|null
-     */
-    public function stringifyValue(Token $token): ?string
-    {
-        if ($token->getType() === Token::STRING_TYPE) {
-            return $token->getValue();
-        }
-
-        return '\''.$token->getValue().'\'';
-    }
-
-    /**
-     * @param array $stream
-     */
-    public function processFile(array $stream): void
-    {
-        foreach ($stream as $index => $token) {
-            $this->process($index, $stream);
-        }
-    }
-
-    /**
-     * @param int     $tokenPosition
-     * @param Token[] $stream
-     */
-    abstract protected function process(int $tokenPosition, array $stream): void;
 
     /**
      * @param int    $messageType

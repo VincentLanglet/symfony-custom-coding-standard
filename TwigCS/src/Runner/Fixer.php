@@ -173,89 +173,11 @@ class Fixer
     }
 
     /**
-     * @param string $filePath File path to diff the file against.
-     *
-     * @return string
-     */
-    public function generateDiff(string $filePath): string
-    {
-        $cwd = getcwd().DIRECTORY_SEPARATOR;
-        if (strpos($filePath, $cwd) === 0) {
-            $filename = substr($filePath, strlen($cwd));
-        } else {
-            $filename = $filePath;
-        }
-
-        $contents = $this->getContents();
-
-        $tempName = tempnam(sys_get_temp_dir(), 'phpcs-fixer');
-        $fixedFile = fopen($tempName, 'w');
-        fwrite($fixedFile, $contents);
-
-        // We must use something like shell_exec() because whitespace at the end
-        // of lines is critical to diff files.
-        $filename = escapeshellarg($filename);
-        $cmd = "diff -u -L$filename -LPHP_CodeSniffer $filename \"$tempName\"";
-
-        $diff = shell_exec($cmd);
-
-        fclose($fixedFile);
-        if (is_file($tempName) === true) {
-            unlink($tempName);
-        }
-
-        $diffLines = null !== $diff ? explode(PHP_EOL, $diff) : [];
-        if (count($diffLines) === 1) {
-            // Seems to be required for cygwin.
-            $diffLines = explode("\n", $diff);
-        }
-
-        $diff = [];
-        foreach ($diffLines as $line) {
-            if (isset($line[0]) === true) {
-                switch ($line[0]) {
-                    case '-':
-                        $diff[] = "\033[31m$line\033[0m";
-                        break;
-                    case '+':
-                        $diff[] = "\033[32m$line\033[0m";
-                        break;
-                    default:
-                        $diff[] = $line;
-                }
-            }
-        }
-
-        $diff = implode(PHP_EOL, $diff);
-
-        return $diff;
-    }
-
-    /**
      * @return string
      */
     public function getContents(): string
     {
-        $contents = implode($this->tokens);
-
-        return $contents;
-    }
-
-    /**
-     * This function takes changesets into account so should be used
-     * instead of directly accessing the token array.
-     *
-     * @param int $tokenPosition
-     *
-     * @return string
-     */
-    public function getTokenContent(int $tokenPosition): string
-    {
-        if ($this->inChangeset && isset($this->changeset[$tokenPosition])) {
-            return $this->changeset[$tokenPosition];
-        }
-
-        return $this->tokens[$tokenPosition];
+        return implode($this->tokens);
     }
 
     /**
@@ -372,24 +294,6 @@ class Fixer
      *
      * @return bool
      */
-    public function revertToken(int $tokenPosition): bool
-    {
-        if (!isset($this->fixedTokens[$tokenPosition])) {
-            return false;
-        }
-
-        $this->tokens[$tokenPosition] = $this->fixedTokens[$tokenPosition];
-        unset($this->fixedTokens[$tokenPosition]);
-        $this->numFixes--;
-
-        return true;
-    }
-
-    /**
-     * @param int $tokenPosition
-     *
-     * @return bool
-     */
     public function addNewline(int $tokenPosition): bool
     {
         $current = $this->getTokenContent($tokenPosition);
@@ -433,5 +337,40 @@ class Fixer
         $current = $this->getTokenContent($tokenPosition);
 
         return $this->replaceToken($tokenPosition, $content.$current);
+    }
+
+    /**
+     * This function takes changesets into account so should be used
+     * instead of directly accessing the token array.
+     *
+     * @param int $tokenPosition
+     *
+     * @return string
+     */
+    protected function getTokenContent(int $tokenPosition): string
+    {
+        if ($this->inChangeset && isset($this->changeset[$tokenPosition])) {
+            return $this->changeset[$tokenPosition];
+        }
+
+        return $this->tokens[$tokenPosition];
+    }
+
+    /**
+     * @param int $tokenPosition
+     *
+     * @return bool
+     */
+    protected function revertToken(int $tokenPosition): bool
+    {
+        if (!isset($this->fixedTokens[$tokenPosition])) {
+            return false;
+        }
+
+        $this->tokens[$tokenPosition] = $this->fixedTokens[$tokenPosition];
+        unset($this->fixedTokens[$tokenPosition]);
+        $this->numFixes--;
+
+        return true;
     }
 }
