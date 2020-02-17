@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c3fb3b063c69322b250dd6086fdbd87",
+    "content-hash": "69d470b84515679782c7faf031dcbab0",
     "packages": [
         {
             "name": "psr/container",
@@ -181,55 +181,6 @@
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
             "time": "2019-12-17T13:20:22+00:00"
-        },
-        {
-            "name": "symfony/finder",
-            "version": "v5.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/finder.git",
-                "reference": "17874dd8ab9a19422028ad56172fb294287a701b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/17874dd8ab9a19422028ad56172fb294287a701b",
-                "reference": "17874dd8ab9a19422028ad56172fb294287a701b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Finder\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Finder Component",
-            "homepage": "https://symfony.com",
-            "time": "2019-11-18T17:27:11+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

@@ -40,15 +40,15 @@ class Linter
     }
 
     /**
-     * @param iterable $files
-     * @param Ruleset  $ruleset
-     * @param bool     $fix
+     * @param array   $files
+     * @param Ruleset $ruleset
+     * @param bool    $fix
      *
      * @return Report
      *
      * @throws Exception
      */
-    public function run(iterable $files, Ruleset $ruleset, bool $fix = false): Report
+    public function run(array $files, Ruleset $ruleset, bool $fix = false): Report
     {
         $report = new Report();
 
