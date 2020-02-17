@@ -37,7 +37,7 @@ class Config
                 $flags = \RecursiveDirectoryIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS;
                 $directoryIterator = new \RecursiveDirectoryIterator($path, $flags);
             } else {
-                $directoryIterator = new \RecursiveArrayIterator([$path]);
+                $directoryIterator = new \RecursiveArrayIterator([new \SplFileInfo($path)]);
             }
 
             $filter = new TwigFileFilter($directoryIterator);
