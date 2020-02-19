@@ -8,14 +8,6 @@ namespace TwigCS\Config;
 class TwigFileFilter extends \RecursiveFilterIterator
 {
     /**
-     * @param \RecursiveIterator $iterator
-     */
-    public function __construct(\RecursiveIterator $iterator)
-    {
-        parent::__construct($iterator);
-    }
-
-    /**
      * @return bool
      */
     public function accept()
