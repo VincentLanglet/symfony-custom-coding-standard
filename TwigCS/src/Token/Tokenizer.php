@@ -631,13 +631,20 @@ class Tokenizer
     {
         $currentToken = $this->code[$this->cursor];
 
-        if (':' === $currentToken) {
-            $lastBracket = end($this->bracketsAndTernary);
-            if (false !== $lastBracket && '?' === $lastBracket[0]) {
+        $lastBracket = end($this->bracketsAndTernary);
+        if (false !== $lastBracket && '?' === $lastBracket[0]) {
+            if (':' === $currentToken) {
                 // This is a ternary instead
                 $this->lexOperator($currentToken);
 
                 return;
+            }
+            if (false !== strpos(',)]}', $currentToken)) {
+                // Because {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
+                do {
+                    array_pop($this->bracketsAndTernary);
+                    $lastBracket = end($this->bracketsAndTernary);
+                } while ('?' === $lastBracket[0]);
             }
         }
 
@@ -649,10 +656,6 @@ class Tokenizer
             }
 
             $bracket = array_pop($this->bracketsAndTernary);
-            if ('?' === $bracket[0]) {
-                // Because {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
-                $bracket = array_pop($this->bracketsAndTernary);
-            }
             if (strtr($bracket[0], '([{', ')]}') !== $currentToken) {
                 throw new Exception(sprintf('Unclosed "%s"', $bracket[0]));
             }
