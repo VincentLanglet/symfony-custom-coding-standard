@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace SymfonyCustom\Sniffs\NamingConventions;
 
+use PHP_CodeSniffer\Exceptions\DeepExitException;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
-use PHP_CodeSniffer\Util\Common;
 use SymfonyCustom\Helpers\SniffHelper;
 
 /**
@@ -14,43 +14,101 @@ use SymfonyCustom\Helpers\SniffHelper;
  */
 class ValidTypeHintSniff implements Sniff
 {
-    private const TEXT = '[\\\\a-z0-9]';
-    private const OPENER = '\<|\[|\{|\(';
-    private const MIDDLE = '\,|\:|\=\>';
-    private const CLOSER = '\>|\]|\}|\)';
-    private const SEPARATOR = '\&|\|';
-
-    /*
+    /**
      * <simple> is any non-array, non-generic, non-alternated type, eg `int` or `\Foo`
      * <array> is array of <simple>, eg `int[]` or `\Foo[]`
-     * <generic> is generic collection type, like `array<string, int>`, `Collection<Item>` and more complex like `Collection<int, \null|SubCollection<string>>`
-     * <type> is <simple>, <array> or <generic> type, like `int`, `bool[]` or `Collection<ItemKey, ItemVal>`
+     * <generic> is generic collection type, like `array<string, int>`, `Collection<Item>` or more complex`
+     * <object> is array key => value type, like `array{type: string, name: string, value: mixed}`
+     * <type> is <simple>, <array>, <object>, <generic> type
      * <types> is one or more types alternated via `|`, like `int|bool[]|Collection<ItemKey, ItemVal>`
      */
     private const REGEX_TYPES = '
     (?<types>
         (?<type>
             (?<array>
-                (?&simple)(\[\])*
+                (?&notArray)(?:
+                    \s*\[\s*\]
+                )+
             )
             |
-            (?<simple>
-                [@$?]?[\\\\\w]+
-            )
-            |
-            (?<generic>
-                (?<genericName>(?&simple))
-                <
-                    (?:(?<genericKey>(?&types)),\s*)?(?<genericValue>(?&types)|(?&generic))
-                >
+            (?<notArray>
+                (?<multiple>
+                    \(\s*(?<mutipleContent>
+                        (?&types)
+                    )\s*\)
+                )
+                |
+                (?<generic>
+                    (?<genericName>
+                        (?&simple)
+                    )
+                    \s*<\s*
+                        (?<genericContent>
+                            (?:(?&types)\s*,\s*)*
+                            (?&types)
+                        )
+                    \s*>
+                )
+                |
+                (?<object>
+                    array\s*{\s*
+                        (?<objectContent>
+                            (?:
+                                (?<objectKeyValue>
+                                    (?:\w+\s*\??:\s*)?
+                                    (?&types)
+                                )
+                                \s*,\s*
+                            )*
+                            (?&objectKeyValue)
+                        )
+                    \s*}
+                )
+                |
+                (?<simple>
+                    \\\\?\w+(?:\\\\\w+)*
+                    |
+                    \$this
+                )
             )
         )
         (?:
-            \|
-            (?:(?&simple)|(?&array)|(?&generic))
+            \s*[\|&]\s*(?&type)
         )*
     )
     ';
+
+    /**
+     * False if the type is not a reserved keyword and the check can't be case insensitive
+     **/
+    private const TYPES = [
+        'array'    => true,
+        'bool'     => true,
+        'callable' => true,
+        'false'    => true,
+        'float'    => true,
+        'int'      => true,
+        'iterable' => true,
+        'mixed'    => false,
+        'null'     => true,
+        'number'   => false,
+        'object'   => true,
+        'resource' => false,
+        'self'     => true,
+        'static'   => true,
+        'string'   => true,
+        'true'     => true,
+        'void'     => true,
+        '$this'    => true,
+    ];
+
+    private const ALIAS_TYPES = [
+        'boolean'  => 'bool',
+        'integer'  => 'int',
+        'double'   => 'float',
+        'real'     => 'float',
+        'callback' => 'callable',
+    ];
 
     /**
      * @return array
@@ -68,80 +126,166 @@ class ValidTypeHintSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS_WITH_TYPE)) {
-            $matchingResult = preg_match(
-                '{^'.self::REGEX_TYPES.'(?:[ \t].*)?$}sx',
-                $tokens[$stackPtr + 2]['content'],
-                $matches
+        if (!in_array($tokens[$stackPtr]['content'], SniffHelper::TAGS_WITH_TYPE)) {
+            return;
+        }
+
+        $matchingResult = preg_match(
+            '{^'.self::REGEX_TYPES.'(?:[\s\t].*)?$}six',
+            $tokens[$stackPtr + 2]['content'],
+            $matches
+        );
+
+        $content = 1 === $matchingResult ? $matches['types'] : '';
+        $endOfContent = substr($tokens[$stackPtr + 2]['content'], strlen($content));
+
+        try {
+            $suggestedType = $this->getValidTypes($content);
+        } catch (DeepExitException $exception) {
+            $phpcsFile->addError(
+                $exception->getMessage(),
+                $stackPtr + 2,
+                'Exception'
             );
 
-            $content = 1 === $matchingResult ? $matches['types'] : '';
-            $endOfContent = preg_replace('/'.preg_quote($content, '/').'/', '', $tokens[$stackPtr + 2]['content'], 1);
+            return;
+        }
 
-            $suggestedType = $this->getValidTypes($content);
+        if ($content !== $suggestedType) {
+            $fix = $phpcsFile->addFixableError(
+                'For type-hinting in PHPDocs, use %s instead of %s',
+                $stackPtr + 2,
+                'Invalid',
+                [$suggestedType, $content]
+            );
 
-            if ($content !== $suggestedType) {
-                $fix = $phpcsFile->addFixableError(
-                    'For type-hinting in PHPDocs, use %s instead of %s',
-                    $stackPtr + 2,
-                    'Invalid',
-                    [$suggestedType, $content]
-                );
-
-                if ($fix) {
-                    $phpcsFile->fixer->replaceToken($stackPtr + 2, $suggestedType.$endOfContent);
-                }
+            if ($fix) {
+                $phpcsFile->fixer->replaceToken($stackPtr + 2, $suggestedType.$endOfContent);
             }
         }
-    }
-
-    /**
-     * @param string $content
-     *
-     * @return array
-     */
-    private function getTypes(string $content): array
-    {
-        $types = [];
-        while ('' !== $content && false !== $content) {
-            preg_match('{^'.self::REGEX_TYPES.'$}x', $content, $matches);
-
-            $types[] = $matches['type'];
-            $content = substr($content, strlen($matches['type']) + 1);
-        }
-
-        return $types;
     }
 
     /**
      * @param string $content
      *
      * @return string
+     *
+     * @throws DeepExitException
      */
     private function getValidTypes(string $content): string
     {
-        $types = $this->getTypes($content);
+        $content = preg_replace('/\s/', '', $content);
 
-        foreach ($types as $index => $type) {
-            $type = str_replace(' ', '', $type);
+        $types = [];
+        $separators = [];
+        while ('' !== $content && false !== $content) {
+            preg_match('{^'.self::REGEX_TYPES.'$}ix', $content, $matches);
 
-            preg_match('{^'.self::REGEX_TYPES.'$}x', $type, $matches);
-            if (isset($matches['generic'])) {
-                $validType = $this->getValidType($matches['genericName']).'<';
-
-                if ('' !== $matches['genericKey']) {
-                    $validType .= $this->getValidTypes($matches['genericKey']).', ';
-                }
-
-                $validType .= $this->getValidTypes($matches['genericValue']).'>';
+            if (isset($matches['array']) && '' !== $matches['array']) {
+                $validType = $this->getValidTypes(substr($matches['array'], 0, -2)).'[]';
+            } elseif (isset($matches['multiple']) && '' !== $matches['multiple']) {
+                $validType = '('.$this->getValidTypes($matches['mutipleContent']).')';
+            } elseif (isset($matches['generic']) && '' !== $matches['generic']) {
+                $validType = $this->getValidGenericType($matches['genericName'], $matches['genericContent']);
+            } elseif (isset($matches['object']) && '' !== $matches['object']) {
+                $validType = $this->getValidObjectType($matches['objectContent']);
             } else {
-                $validType = $this->getValidType($type);
+                $validType = $this->getValidType($matches['type']);
             }
 
-            $types[$index] = $validType;
+            $types[] = $validType;
+
+            $separators[] = substr($content, strlen($matches['type']), 1);
+            $content = substr($content, strlen($matches['type']) + 1);
         }
 
-        return implode('|', $types);
+        // Remove last separator since it's an empty string
+        array_pop($separators);
+
+        $uniqueSeparators = array_unique($separators);
+        switch (count($uniqueSeparators)) {
+            case 0:
+                return implode('', $types);
+            case 1:
+                return implode($uniqueSeparators[0], $this->orderTypes($types));
+            default:
+                throw new DeepExitException(
+                    'Union and intersection types must be grouped with parenthesis when used in the same expression'
+                );
+        }
+    }
+
+    /**
+     * @param array $types
+     *
+     * @return array
+     */
+    private function orderTypes(array $types): array
+    {
+        $types = array_unique($types);
+        usort($types, function ($type1, $type2) {
+            if ('null' === $type1) {
+                return 1;
+            }
+
+            if ('null' === $type2) {
+                return -1;
+            }
+
+            return 0;
+        });
+
+        return $types;
+    }
+
+    /**
+     * @param string $genericName
+     * @param string $genericContent
+     *
+     * @return string
+     *
+     * @throws DeepExitException
+     */
+    private function getValidGenericType(string $genericName, string $genericContent): string
+    {
+        $validType = $this->getValidType($genericName).'<';
+
+        while ('' !== $genericContent && false !== $genericContent) {
+            preg_match('{^'.self::REGEX_TYPES.',?}ix', $genericContent, $matches);
+
+            $validType .= $this->getValidTypes($matches['types']).', ';
+            $genericContent = substr($genericContent, strlen($matches['types']) + 1);
+        }
+
+        return preg_replace('/,\s$/', '>', $validType);
+    }
+
+    /**
+     * @param string $objectContent
+     *
+     * @return string
+     *
+     * @throws DeepExitException
+     */
+    private function getValidObjectType(string $objectContent): string
+    {
+        $validType = 'array{';
+
+        while ('' !== $objectContent && false !== $objectContent) {
+            $split = preg_split('/(\??:|,)/', $objectContent, 2, PREG_SPLIT_DELIM_CAPTURE);
+
+            if (isset($split[1]) && ',' !== $split[1]) {
+                $validType .= $split[0].$split[1].' ';
+                $objectContent = $split[2];
+            }
+
+            preg_match('{^'.self::REGEX_TYPES.',?}ix', $objectContent, $matches);
+
+            $validType .= $this->getValidTypes($matches['types']).', ';
+            $objectContent = substr($objectContent, strlen($matches['types']) + 1);
+        }
+
+        return preg_replace('/,\s$/', '}', $validType);
     }
 
     /**
@@ -151,20 +295,16 @@ class ValidTypeHintSniff implements Sniff
      */
     private function getValidType(string $typeName): string
     {
-        if ('[]' === substr($typeName, -2)) {
-            return $this->getValidType(substr($typeName, 0, -2)).'[]';
-        }
-
         $lowerType = strtolower($typeName);
-        switch ($lowerType) {
-            case 'bool':
-            case 'boolean':
-                return 'bool';
-            case 'int':
-            case 'integer':
-                return 'int';
+        if (isset(self::TYPES[$lowerType])) {
+            return self::TYPES[$lowerType] ? $lowerType : $typeName;
         }
 
-        return Common::suggestType($typeName);
+        // This can't be case insensitive since this is not reserved keyword
+        if (isset(self::ALIAS_TYPES[$typeName])) {
+            return self::ALIAS_TYPES[$typeName];
+        }
+
+        return $typeName;
     }
 }

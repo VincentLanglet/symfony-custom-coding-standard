@@ -1,47 +1,68 @@
 <?php
 
-echo (bool) $a;
-echo (int) $a;
-echo (float) $a;
-echo ( float ) $a;
-
-/**
- * @param bool  $a
- * @param int   $b
- * @param float $c
- *
- * @return bool
- * @return int
- * @return float
- */
-
-/** @var bool $a */
-/** @var int $b */
-/** @var float $c */
-
 // Only PHPDoc comments are checked
 /* @var boolean $a */
+/** @var boolean $a */
 
 /**
- * @param boolean $a
- * @param Boolean $a
- * @param integer $b
- * @param double  $c
- * @param real    $c
+ * Check simple type
  *
- * @return boolean
- * @return Boolean
- * @return integer
- * @return double
- * @return real
+ * @param boolean $a
+ * @param integer $b
+ * @param double $c
+ * @param real $c
  */
 
-/** @var boolean $a */
-/** @var Boolean $a */
-/** @var integer $b */
-/** @var double $c */
-/** @var real $c */
+/**
+ * Don't care about case for reserved keyword
+ *
+ * @return BOOL $a
+ * @return boolean $a
+ * @return Boolean $a
+ */
 
-/** @method integer|string  */
-/** @method array<integer,boolean>|integer[]|array<integer> truc */
-/** @method array<integer, boolean|null>|integer[]|array<array<integer>> truc */
+/**
+ * Works with different tags
+ *
+ * @method integer someFunction()
+ * @property integer $integer
+ * @property-read integer $integer
+ * @property-write integer $integer
+ * @throws integer
+ */
+
+/**
+ * Union et intersection types
+ *
+ * @param integer|(string|boolean)
+ * @param integer&string|boolean This syntax is not valid
+ * @param (integer&string)|boolean
+ * @param (integer|((string|boolean)))
+ */
+
+/**
+ * Array, generic and object types
+ *
+ * @param array<integer,boolean>|integer[]|array<integer> foo
+ * @param Generator<integer, string, string, boolean> bar
+ * @param Generator<array<integer>, array<integer>, array<integer>, array<integer>> baz
+ * @param array<integer[][][]>[]|boolean
+ * @param array{0: integer, 1?: integer}
+ * @param array{integer, integer}
+ * @param array{foo: integer, bar: string}
+ */
+
+/**
+ * Handle space (Last one is a comment, correctly not replaced)
+ *
+ * @param array < integer , integer | boolean > | integer [ ] | array < array < integer > > integer
+ * @param array { integer: integer, boolean?: boolean } integer
+ */
+
+/**
+ * null type should be the last one
+ *
+ * @param null|int
+ * @param string[]|null|int[]
+ * @param Foo<integer|null|string, boolean|null|string>|null|int[]
+ */

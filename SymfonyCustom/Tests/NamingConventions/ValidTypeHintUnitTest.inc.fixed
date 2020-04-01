@@ -1,47 +1,68 @@
 <?php
 
-echo (bool) $a;
-echo (int) $a;
-echo (float) $a;
-echo ( float ) $a;
-
-/**
- * @param bool  $a
- * @param int   $b
- * @param float $c
- *
- * @return bool
- * @return int
- * @return float
- */
-
-/** @var bool $a */
-/** @var int $b */
-/** @var float $c */
-
 // Only PHPDoc comments are checked
 /* @var boolean $a */
+/** @var bool $a */
 
 /**
- * @param bool $a
+ * Check simple type
+ *
  * @param bool $a
  * @param int $b
- * @param float  $c
- * @param float    $c
- *
- * @return bool
- * @return bool
- * @return int
- * @return float
- * @return float
+ * @param float $c
+ * @param float $c
  */
 
-/** @var bool $a */
-/** @var bool $a */
-/** @var int $b */
-/** @var float $c */
-/** @var float $c */
+/**
+ * Don't care about case for reserved keyword
+ *
+ * @return bool $a
+ * @return bool $a
+ * @return Boolean $a
+ */
 
-/** @method int|string  */
-/** @method array<int, bool>|int[]|array<int> truc */
-/** @method array<int, bool|null>|int[]|array<array<int>> truc */
+/**
+ * Works with different tags
+ *
+ * @method int someFunction()
+ * @property int $integer
+ * @property-read int $integer
+ * @property-write int $integer
+ * @throws int
+ */
+
+/**
+ * Union et intersection types
+ *
+ * @param int|(string|bool)
+ * @param integer&string|boolean This syntax is not valid
+ * @param (int&string)|bool
+ * @param (int|((string|bool)))
+ */
+
+/**
+ * Array, generic and object types
+ *
+ * @param array<int, bool>|int[]|array<int> foo
+ * @param Generator<int, string, string, bool> bar
+ * @param Generator<array<int>, array<int>, array<int>, array<int>> baz
+ * @param array<int[][][]>[]|bool
+ * @param array{0: int, 1?: int}
+ * @param array{int, int}
+ * @param array{foo: int, bar: string}
+ */
+
+/**
+ * Handle space (Last one is a comment, correctly not replaced)
+ *
+ * @param array<int, int|bool>|int[]|array<array<int>> integer
+ * @param array{integer: int, boolean?: bool} integer
+ */
+
+/**
+ * null type should be the last one
+ *
+ * @param int|null
+ * @param string[]|int[]|null
+ * @param Foo<int|string|null, bool|string|null>|int[]|null
+ */
