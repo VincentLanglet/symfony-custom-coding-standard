@@ -12,6 +12,9 @@ use TwigCS\Tests\Ruleset\AbstractSniffTest;
  */
 class EmptyLinesTest extends AbstractSniffTest
 {
+    /**
+     * @return void
+     */
     public function testSniff(): void
     {
         $this->checkSniff(new EmptyLinesSniff(), [

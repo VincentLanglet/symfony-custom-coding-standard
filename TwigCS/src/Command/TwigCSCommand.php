@@ -25,6 +25,9 @@ use TwigCS\Token\Tokenizer;
  */
 class TwigCSCommand extends Command
 {
+    /**
+     * @return void
+     */
     protected function configure(): void
     {
         $this

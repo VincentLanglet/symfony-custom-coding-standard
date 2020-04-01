@@ -19,11 +19,14 @@ class FunctionCommentUnitTest extends AbstractSniffUnitTest
         return [
             5   => 1,
             10  => 1,
-            43  => 1,
-            48  => 1,
-            76  => 2,
-            83  => 1,
-            125 => 1,
+            31  => 1,
+            41  => 1,
+            47  => 1,
+            52  => 1,
+            82  => 2,
+            89  => 1,
+            95  => 1,
+            124 => 1,
         ];
     }
 

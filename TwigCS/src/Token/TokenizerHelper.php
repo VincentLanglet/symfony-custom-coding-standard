@@ -24,6 +24,8 @@ class TokenizerHelper
     /**
      * @param Environment $env
      * @param array       $options
+     *
+     * @return void
      */
     public function __construct(Environment $env, array $options = [])
     {

@@ -28,6 +28,8 @@ class ValidClassNameSniff implements Sniff
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
+     *
+     * @return void
      */
     public function process(File $phpcsFile, $stackPtr): void
     {
@@ -84,6 +86,8 @@ class ValidClassNameSniff implements Sniff
      * @param int      $stackPtr
      * @param int|bool $name
      * @param string   $prefix
+     *
+     * @return void
      */
     private function checkPrefix(File $phpcsFile, int $stackPtr, $name, string $prefix): void
     {
@@ -103,6 +107,8 @@ class ValidClassNameSniff implements Sniff
      * @param int      $stackPtr
      * @param int|bool $name
      * @param string   $suffix
+     *
+     * @return void
      */
     private function checkSuffix(File $phpcsFile, int $stackPtr, $name, string $suffix): void
     {

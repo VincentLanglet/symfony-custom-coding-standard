@@ -23,12 +23,16 @@ abstract class AbstractSniffTest extends TestCase
 {
     /**
      * Should call $this->checkSniff(new Sniff(), [...]);
+     *
+     * @return void
      */
     abstract public function testSniff(): void;
 
     /**
      * @param SniffInterface $sniff
      * @param array          $expects
+     *
+     * @return void
      */
     protected function checkSniff(SniffInterface $sniff, array $expects): void
     {

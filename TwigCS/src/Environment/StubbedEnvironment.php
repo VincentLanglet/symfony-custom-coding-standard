@@ -39,6 +39,9 @@ class StubbedEnvironment extends Environment
         'same'      => null, // Allow 'same as'
     ];
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct(new ArrayLoader());

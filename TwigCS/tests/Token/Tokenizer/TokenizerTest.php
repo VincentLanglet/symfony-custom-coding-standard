@@ -20,6 +20,8 @@ class TokenizerTest extends TestCase
      * @param string $filePath
      * @param array  $expectedTokenTypes
      *
+     * @return void
+     *
      * @throws \Exception
      *
      * @dataProvider tokenizeDataProvider

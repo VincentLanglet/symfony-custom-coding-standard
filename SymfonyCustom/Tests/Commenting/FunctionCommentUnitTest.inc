@@ -38,6 +38,10 @@ function functionTestWithCallBack($tab)
 
 class classToTestIndentation
 {
+    function __construct() // do not ignore
+    {
+    }
+
     /**
      * @param string $test Test Argument
      */
@@ -56,6 +60,8 @@ class classToTestIndentation
 
     /**
      * @param array $tab Test Argument
+     *
+     * @return void
      */
     function functionTestWithCallBack($tab)
     {
@@ -66,7 +72,7 @@ class classToTestIndentation
 }
 
 /**
- * #{@inheritdoc}
+ * {@inheritdoc}
  */
 function functionTestInherit($test)
 {
@@ -79,32 +85,21 @@ function testToNotIgnore1($test)
 }
 
 /**
- * @param string $test should not be ignore
+ * @param int $test Test argument
  */
 function testToNotIgnore2($test)
 {
     return 42;
 }
 
-function testToIgnore1()
-{
-    $test = 42;
-}
-function testToIgnore2()
-{
-    $test = 42;
-}
-
-function toIgnore1()
-{
-    $test = 42;
-}
-function toIgnore2()
+function toNotIgnore()
 {
     $test = 42;
 }
 
 /**
+ * @return void
+ *
  * @throws Exception
  */
 function throwTest()
@@ -113,6 +108,8 @@ function throwTest()
 }
 
 /**
+ * @return void
+ *
  * @throws Exception|RuntimeException
  */
 function throwTest2()
@@ -121,6 +118,8 @@ function throwTest2()
 }
 
 /**
+ * @return void
+ *
  * @throws Exception
  * @throws RuntimeException
  */

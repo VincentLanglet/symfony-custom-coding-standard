@@ -16,6 +16,8 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
+     * @return void
+     *
      * @throws Exception
      */
     public function process(int $tokenPosition, array $tokens): void
@@ -52,6 +54,8 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      * @param int     $tokenPosition
      * @param Token[] $tokens
      * @param int     $expected
+     *
+     * @return void
      *
      * @throws Exception
      */
@@ -91,6 +95,8 @@ abstract class AbstractSpacingSniff extends AbstractSniff
      * @param int     $tokenPosition
      * @param Token[] $tokens
      * @param int     $expected
+     *
+     * @return void
      *
      * @throws Exception
      */

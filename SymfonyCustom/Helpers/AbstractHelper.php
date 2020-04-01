@@ -9,6 +9,9 @@ namespace SymfonyCustom\Helpers;
  */
 abstract class AbstractHelper
 {
+    /**
+     * @return void
+     */
     private function __construct()
     {
     }

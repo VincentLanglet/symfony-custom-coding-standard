@@ -17,6 +17,8 @@ class EmptyLinesSniff extends AbstractSniff
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
+     * @return void
+     *
      * @throws Exception
      */
     public function process(int $tokenPosition, array $tokens): void
