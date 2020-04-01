@@ -95,6 +95,8 @@ class Report
 
     /**
      * @param string $file
+     *
+     * @return void
      */
     public function addFile(string $file): void
     {

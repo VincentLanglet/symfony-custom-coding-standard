@@ -109,6 +109,8 @@ class Fixer
 
     /**
      * @param array $tokens
+     *
+     * @return void
      */
     public function startFile(array $tokens): void
     {
@@ -182,6 +184,8 @@ class Fixer
 
     /**
      * Start recording actions for a changeset.
+     *
+     * @return void
      */
     public function beginChangeset(): void
     {
@@ -195,6 +199,8 @@ class Fixer
 
     /**
      * Stop recording actions for a changeset, and apply logged changes.
+     *
+     * @return void
      */
     public function endChangeset(): void
     {
@@ -227,6 +233,8 @@ class Fixer
 
     /**
      * Stop recording actions for a changeset, and discard logged changes.
+     *
+     * @return void
      */
     public function rollbackChangeset(): void
     {

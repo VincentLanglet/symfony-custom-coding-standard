@@ -86,6 +86,8 @@ class Token
      * @param int         $position
      * @param string      $filename
      * @param string|null $value
+     *
+     * @return void
      */
     public function __construct(
         int $type,

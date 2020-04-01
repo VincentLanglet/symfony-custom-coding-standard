@@ -32,6 +32,8 @@ class Linter
     /**
      * @param Environment $env
      * @param Tokenizer   $tokenizer
+     *
+     * @return void
      */
     public function __construct(Environment $env, Tokenizer $tokenizer)
     {
@@ -83,6 +85,8 @@ class Linter
     /**
      * @param iterable $files
      * @param Ruleset  $ruleset
+     *
+     * @return void
      *
      * @throws Exception
      */
@@ -160,6 +164,8 @@ class Linter
     /**
      * @param Report      $report
      * @param string|null $file
+     *
+     * @return void
      */
     protected function setErrorHandler(Report $report, string $file = null): void
     {

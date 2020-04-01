@@ -52,6 +52,8 @@ class SniffViolation
      * @param string   $message
      * @param string   $filename
      * @param int|null $line
+     *
+     * @return void
      */
     public function __construct(int $level, string $message, string $filename, int $line = null)
     {

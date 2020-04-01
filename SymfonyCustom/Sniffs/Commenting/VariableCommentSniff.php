@@ -15,6 +15,8 @@ class VariableCommentSniff extends AbstractVariableSniff
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
+     *
+     * @return void
      */
     public function processMemberVar(File $phpcsFile, $stackPtr): void
     {
@@ -115,6 +117,8 @@ class VariableCommentSniff extends AbstractVariableSniff
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
+     *
+     * @return void
      */
     protected function processVariable(File $phpcsFile, $stackPtr): void
     {
@@ -123,6 +127,8 @@ class VariableCommentSniff extends AbstractVariableSniff
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
+     *
+     * @return void
      */
     protected function processVariableInString(File $phpcsFile, $stackPtr): void
     {

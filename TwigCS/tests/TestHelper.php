@@ -9,6 +9,9 @@ namespace TwigCS\Tests;
  */
 class TestHelper
 {
+    /**
+     * @return void
+     */
     private function __construct()
     {
     }

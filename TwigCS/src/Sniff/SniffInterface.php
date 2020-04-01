@@ -18,21 +18,29 @@ interface SniffInterface
      * Messages will be added to the given `$report` object.
      *
      * @param Report $report
+     *
+     * @return void
      */
     public function enableReport(Report $report): void;
 
     /**
      * @param Fixer $fixer
+     *
+     * @return void
      */
     public function enableFixer(Fixer $fixer): void;
 
     /**
      * It usually is disabled when the processing is over, it will reset the sniff internal values for next check.
+     *
+     * @return void
      */
     public function disable(): void;
 
     /**
      * @param Token[] $stream
+     *
+     * @return void
      */
     public function processFile(array $stream): void;
 }

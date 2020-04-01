@@ -28,6 +28,8 @@ class TextFormatter
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @return void
      */
     public function __construct(InputInterface $input, OutputInterface $output)
     {
@@ -37,6 +39,8 @@ class TextFormatter
     /**
      * @param Report      $report
      * @param string|null $level
+     *
+     * @return void
      */
     public function display(Report $report, string $level = null): void
     {

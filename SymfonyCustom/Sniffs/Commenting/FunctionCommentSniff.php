@@ -16,6 +16,8 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
+     *
+     * @return void
      */
     public function process(File $phpcsFile, $stackPtr): void
     {
@@ -68,10 +70,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
             }
         } else {
             // No comment but maybe a method prefix
-            $methodPrefixes = $phpcsFile->findFirstOnLine(
-                Tokens::$methodPrefixes,
-                $stackPtr
-            );
+            $methodPrefixes = $phpcsFile->findFirstOnLine(Tokens::$methodPrefixes, $stackPtr);
 
             if (false !== $methodPrefixes) {
                 $commentStart = $methodPrefixes;
@@ -107,51 +106,47 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
      * @param int      $stackPtr
      * @param int|null $commentStart
      * @param bool     $hasComment
+     *
+     * @return void
      */
     protected function processReturn(File $phpcsFile, $stackPtr, $commentStart, $hasComment = true): void
     {
-        // Check for inheritDoc if there is comment
-        if ($hasComment && $this->isInheritDoc($phpcsFile, $stackPtr)) {
+        if (!$hasComment) {
+            $phpcsFile->addError('Missing @return tag in function comment', $stackPtr, 'MissingReturn');
+
+            return;
+        }
+
+        // Check for inheritDoc
+        if ($this->isInheritDoc($phpcsFile, $stackPtr)) {
             return;
         }
 
         $tokens = $phpcsFile->getTokens();
 
-        // Only check for a return comment if a non-void return statement exists
-        if (isset($tokens[$stackPtr]['scope_opener'])) {
-            // Start inside the function
-            $start = $phpcsFile->findNext(
-                T_OPEN_CURLY_BRACKET,
-                $stackPtr,
-                $tokens[$stackPtr]['scope_closer']
-            );
+        $return = null;
+        foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
+            if ('@return' === $tokens[$tag]['content']) {
+                if (null !== $return) {
+                    $error = 'Only 1 @return tag is allowed in a function comment';
+                    $phpcsFile->addError($error, $tag, 'DuplicateReturn');
 
-            for ($i = $start; $i < $tokens[$stackPtr]['scope_closer']; ++$i) {
-                // Skip closures
-                if (T_CLOSURE === $tokens[$i]['code']) {
-                    $i = $tokens[$i]['scope_closer'];
-                    continue;
+                    return;
                 }
 
-                // Found a return not in a closure statement
-                // Run the check on the first which is not only 'return;'
-                if (T_RETURN === $tokens[$i]['code']
-                    && $this->isMatchingReturn($tokens, $i)
-                ) {
-                    if ($hasComment) {
-                        parent::processReturn($phpcsFile, $stackPtr, $commentStart);
-                    } else {
-                        // There is no doc and we need one with @return
-                        $phpcsFile->addError(
-                            'Missing @return tag in function comment',
-                            $stackPtr,
-                            'MissingReturn'
-                        );
-                    }
-
-                    break;
-                }
+                $return = $tag;
             }
+        }
+
+        if (null !== $return) {
+            $content = $tokens[($return + 2)]['content'];
+            if (!$content || T_DOC_COMMENT_STRING !== $tokens[($return + 2)]['code']) {
+                $error = 'Return type missing for @return tag in function comment';
+                $phpcsFile->addError($error, $return, 'MissingReturnType');
+            }
+        } else {
+            $error = 'Missing @return tag in function comment';
+            $phpcsFile->addError($error, $tokens[$commentStart]['comment_closer'], 'MissingReturn');
         }
     }
 
@@ -159,6 +154,8 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
      * @param File $phpcsFile
      * @param int  $stackPtr
      * @param int  $commentStart
+     *
+     * @return void
      */
     protected function processThrows(File $phpcsFile, $stackPtr, $commentStart): void
     {
@@ -181,28 +178,15 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
             }
         }
 
-        if (null !== $throw) {
-            $exception = null;
-            if (T_DOC_COMMENT_STRING === $tokens[$throw + 2]['code']) {
-                $matches = [];
-                preg_match('/([^\s]+)(?:\s+(.*))?/', $tokens[$throw + 2]['content'], $matches);
-                $exception = $matches[1];
-            }
-
-            if (null === $exception) {
-                $phpcsFile->addError(
-                    'Exception type missing for @throws tag in function comment',
-                    $throw,
-                    'InvalidThrows'
-                );
-            }
-        }
+        parent::processThrows($phpcsFile, $stackPtr, $commentStart);
     }
 
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
      * @param int  $commentStart
+     *
+     * @return void
      */
     protected function processParams(File $phpcsFile, $stackPtr, $commentStart): void
     {
@@ -226,21 +210,6 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
 
         $content = $phpcsFile->getTokensAsString($start, ($end - $start));
 
-        return preg_match('#{@inheritdoc}#i', $content) === 1;
-    }
-
-    /**
-     * @param array $tokens
-     * @param int   $returnPos
-     *
-     * @return bool
-     */
-    private function isMatchingReturn(array $tokens, int $returnPos): bool
-    {
-        do {
-            $returnPos++;
-        } while (T_WHITESPACE === $tokens[$returnPos]['code']);
-
-        return T_SEMICOLON !== $tokens[$returnPos]['code'];
+        return preg_match('#@inheritdoc|{@inheritdoc}#i', $content) === 1;
     }
 }

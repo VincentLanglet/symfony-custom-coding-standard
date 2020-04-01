@@ -24,6 +24,8 @@ class BlankLineBeforeReturnSniff implements Sniff
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
+     *
+     * @return void
      */
     public function process(File $phpcsFile, $stackPtr): void
     {

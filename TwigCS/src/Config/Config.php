@@ -18,6 +18,8 @@ class Config
 
     /**
      * @param array $paths
+     *
+     * @return void
      */
     public function __construct(array $paths = [])
     {

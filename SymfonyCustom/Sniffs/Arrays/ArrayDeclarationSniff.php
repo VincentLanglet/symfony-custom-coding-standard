@@ -28,8 +28,10 @@ class ArrayDeclarationSniff implements Sniff
     }
 
     /**
-     * @param File $phpcsFile The current file being checked.
+     * @param File $phpcsFile
      * @param int  $stackPtr
+     *
+     * @return void
      */
     public function process(File $phpcsFile, $stackPtr): void
     {
@@ -92,6 +94,8 @@ class ArrayDeclarationSniff implements Sniff
      * @param int  $stackPtr
      * @param int  $start
      * @param int  $end
+     *
+     * @return void
      */
     public function processSingleLineArray(File $phpcsFile, int $stackPtr, int $start, int $end): void
     {
@@ -216,6 +220,8 @@ class ArrayDeclarationSniff implements Sniff
      * @param int  $stackPtr
      * @param int  $start
      * @param int  $end
+     *
+     * @return void
      */
     public function processMultiLineArray(File $phpcsFile, int $stackPtr, int $start, int $end): void
     {

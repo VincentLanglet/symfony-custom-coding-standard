@@ -15,6 +15,8 @@ class FixerHelper extends AbstractHelper
      * @param File $phpcsFile
      * @param int  $fromPtr
      * @param int  $toPtr
+     *
+     * @return void
      */
     public static function removeAll(File $phpcsFile, int $fromPtr, int $toPtr): void
     {
@@ -37,6 +39,8 @@ class FixerHelper extends AbstractHelper
      * @param int  $fromPtr
      * @param int  $fromLine
      * @param int  $toLine
+     *
+     * @return void
      */
     public static function removeLines(File $phpcsFile, int $fromPtr, int $fromLine, int $toLine): void
     {
@@ -61,6 +65,8 @@ class FixerHelper extends AbstractHelper
      * @param int        $stackPtr
      * @param int        $expected
      * @param int|string $found
+     *
+     * @return void
      */
     public static function fixWhitespaceAfter(
         File $phpcsFile,
@@ -92,6 +98,8 @@ class FixerHelper extends AbstractHelper
      * @param int        $stackPtr
      * @param int        $expected
      * @param int|string $found
+     *
+     * @return void
      */
     public static function fixWhitespaceBefore(
         File $phpcsFile,

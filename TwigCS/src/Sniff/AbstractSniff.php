@@ -27,6 +27,8 @@ abstract class AbstractSniff implements SniffInterface
 
     /**
      * @param Report $report
+     *
+     * @return void
      */
     public function enableReport(Report $report): void
     {
@@ -35,12 +37,17 @@ abstract class AbstractSniff implements SniffInterface
 
     /**
      * @param Fixer $fixer
+     *
+     * @return void
      */
     public function enableFixer(Fixer $fixer): void
     {
         $this->fixer = $fixer;
     }
 
+    /**
+     * @return void
+     */
     public function disable(): void
     {
         $this->report = null;
@@ -49,6 +56,8 @@ abstract class AbstractSniff implements SniffInterface
 
     /**
      * @param array $stream
+     *
+     * @return void
      */
     public function processFile(array $stream): void
     {
@@ -60,6 +69,8 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @param int     $tokenPosition
      * @param Token[] $stream
+     *
+     * @return void
      */
     abstract protected function process(int $tokenPosition, array $stream): void;
 
@@ -132,6 +143,8 @@ abstract class AbstractSniff implements SniffInterface
      * @param string $message
      * @param Token  $token
      *
+     * @return void
+     *
      * @throws Exception
      */
     protected function addWarning(string $message, Token $token): void
@@ -142,6 +155,8 @@ abstract class AbstractSniff implements SniffInterface
     /**
      * @param string $message
      * @param Token  $token
+     *
+     * @return void
      *
      * @throws Exception
      */
@@ -180,6 +195,8 @@ abstract class AbstractSniff implements SniffInterface
      * @param int    $messageType
      * @param string $message
      * @param Token  $token
+     *
+     * @return void
      *
      * @throws Exception
      */

@@ -25,6 +25,8 @@ class UnusedUseSniff implements Sniff
     /**
      * @param File $phpcsFile
      * @param int  $stackPtr
+     *
+     * @return void
      */
     public function process(File $phpcsFile, $stackPtr): void
     {
@@ -180,6 +182,8 @@ class UnusedUseSniff implements Sniff
      * @param File $phpcsFile
      * @param int  $from
      * @param int  $to
+     *
+     * @return void
      */
     private function removeUse(File $phpcsFile, int $from, int $to): void
     {
