@@ -140,10 +140,10 @@ class Linter
         // Tokenizer.
         try {
             $stream = $this->tokenizer->tokenize($twigSource);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $sniffViolation = new SniffViolation(
                 Report::MESSAGE_TYPE_FATAL,
-                sprintf('Unable to tokenize file: %s', $e->getMessage()),
+                sprintf('Unable to tokenize file: %s', $exception->getMessage()),
                 $file
             );
 

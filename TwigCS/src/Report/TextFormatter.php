@@ -104,13 +104,13 @@ class TextFormatter
     }
 
     /**
-     * @param string $template
-     * @param int    $line
-     * @param int    $context
+     * @param string   $template
+     * @param int|null $line
+     * @param int      $context
      *
      * @return array
      */
-    protected function getContext(string $template, int $line, int $context): array
+    protected function getContext(string $template, ?int $line, int $context): array
     {
         $lines = explode("\n", $template);
 
