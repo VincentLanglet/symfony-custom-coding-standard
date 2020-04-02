@@ -145,7 +145,7 @@ class Fixer
             try {
                 $twigSource = new Source($contents, 'TwigCS');
                 $stream = $this->tokenizer->tokenize($twigSource);
-            } catch (Exception $e) {
+            } catch (Exception $exception) {
                 return false;
             }
 

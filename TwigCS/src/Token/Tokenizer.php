@@ -705,6 +705,11 @@ class Tokenizer
                     array_pop($this->bracketsAndTernary);
                     $lastBracket = end($this->bracketsAndTernary);
                 } while ('?' === $lastBracket[0]);
+
+                // This is maybe the end of the variable, start again.
+                $this->lexVariable();
+
+                return;
             }
         }
 

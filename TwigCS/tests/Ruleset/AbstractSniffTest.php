@@ -49,8 +49,8 @@ abstract class AbstractSniffTest extends TestCase
 
             $ruleset->addSniff($sniff);
             $report = $linter->run([$file], $ruleset);
-        } catch (Exception $e) {
-            self::fail($e->getMessage());
+        } catch (Exception $exception) {
+            self::fail($exception->getMessage());
 
             return;
         }
