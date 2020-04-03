@@ -15,70 +15,6 @@ use SymfonyCustom\Helpers\SniffHelper;
 class ValidTypeHintSniff implements Sniff
 {
     /**
-     * <simple> is any non-array, non-generic, non-alternated type, eg `int` or `\Foo`
-     * <array> is array of <simple>, eg `int[]` or `\Foo[]`
-     * <generic> is generic collection type, like `array<string, int>`, `Collection<Item>` or more complex`
-     * <object> is array key => value type, like `array{type: string, name: string, value: mixed}`
-     * <type> is <simple>, <array>, <object>, <generic> type
-     * <types> is one or more types alternated via `|`, like `int|bool[]|Collection<ItemKey, ItemVal>`
-     */
-    private const REGEX_TYPES = '
-    (?<types>
-        (?<type>
-            (?<array>
-                (?&notArray)(?:
-                    \s*\[\s*\]
-                )+
-            )
-            |
-            (?<notArray>
-                (?<multiple>
-                    \(\s*(?<mutipleContent>
-                        (?&types)
-                    )\s*\)
-                )
-                |
-                (?<generic>
-                    (?<genericName>
-                        (?&simple)
-                    )
-                    \s*<\s*
-                        (?<genericContent>
-                            (?:(?&types)\s*,\s*)*
-                            (?&types)
-                        )
-                    \s*>
-                )
-                |
-                (?<object>
-                    array\s*{\s*
-                        (?<objectContent>
-                            (?:
-                                (?<objectKeyValue>
-                                    (?:\w+\s*\??:\s*)?
-                                    (?&types)
-                                )
-                                \s*,\s*
-                            )*
-                            (?&objectKeyValue)
-                        )
-                    \s*}
-                )
-                |
-                (?<simple>
-                    \\\\?\w+(?:\\\\\w+)*
-                    |
-                    \$this
-                )
-            )
-        )
-        (?:
-            \s*[\|&]\s*(?&type)
-        )*
-    )
-    ';
-
-    /**
      * False if the type is not a reserved keyword and the check can't be case insensitive
      **/
     private const TYPES = [
@@ -132,17 +68,10 @@ class ValidTypeHintSniff implements Sniff
             return;
         }
 
-        $matchingResult = preg_match(
-            '{^'.self::REGEX_TYPES.'(?:[\s\t].*)?$}six',
-            $tokens[$stackPtr + 2]['content'],
-            $matches
-        );
-
-        $content = 1 === $matchingResult ? $matches['types'] : '';
-        $endOfContent = substr($tokens[$stackPtr + 2]['content'], strlen($content));
+        [$type, $space, $description] = SniffHelper::parseTypeHint($tokens[$stackPtr + 2]['content']);
 
         try {
-            $suggestedType = $this->getValidTypes($content);
+            $suggestedType = $this->getValidTypes($type);
         } catch (DeepExitException $exception) {
             $phpcsFile->addError(
                 $exception->getMessage(),
@@ -153,16 +82,16 @@ class ValidTypeHintSniff implements Sniff
             return;
         }
 
-        if ($content !== $suggestedType) {
+        if ($type !== $suggestedType) {
             $fix = $phpcsFile->addFixableError(
                 'For type-hinting in PHPDocs, use %s instead of %s',
                 $stackPtr + 2,
                 'Invalid',
-                [$suggestedType, $content]
+                [$suggestedType, $type]
             );
 
             if ($fix) {
-                $phpcsFile->fixer->replaceToken($stackPtr + 2, $suggestedType.$endOfContent);
+                $phpcsFile->fixer->replaceToken($stackPtr + 2, $suggestedType.$space.$description);
             }
         }
     }
@@ -181,7 +110,7 @@ class ValidTypeHintSniff implements Sniff
         $types = [];
         $separators = [];
         while ('' !== $content && false !== $content) {
-            preg_match('{^'.self::REGEX_TYPES.'$}ix', $content, $matches);
+            preg_match('{^'.SniffHelper::REGEX_TYPES.'$}ix', $content, $matches);
 
             if (isset($matches['array']) && '' !== $matches['array']) {
                 $validType = $this->getValidTypes(substr($matches['array'], 0, -2)).'[]';
@@ -253,7 +182,7 @@ class ValidTypeHintSniff implements Sniff
         $validType = $this->getValidType($genericName).'<';
 
         while ('' !== $genericContent && false !== $genericContent) {
-            preg_match('{^'.self::REGEX_TYPES.',?}ix', $genericContent, $matches);
+            preg_match('{^'.SniffHelper::REGEX_TYPES.',?}ix', $genericContent, $matches);
 
             $validType .= $this->getValidTypes($matches['types']).', ';
             $genericContent = substr($genericContent, strlen($matches['types']) + 1);
@@ -281,7 +210,7 @@ class ValidTypeHintSniff implements Sniff
                 $objectContent = $split[2];
             }
 
-            preg_match('{^'.self::REGEX_TYPES.',?}ix', $objectContent, $matches);
+            preg_match('{^'.SniffHelper::REGEX_TYPES.',?}ix', $objectContent, $matches);
 
             $validType .= $this->getValidTypes($matches['types']).', ';
             $objectContent = substr($objectContent, strlen($matches['types']) + 1);

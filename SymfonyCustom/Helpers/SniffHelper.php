@@ -57,6 +57,70 @@ class SniffHelper extends AbstractHelper
     ];
 
     /**
+     * <simple> is any non-array, non-generic, non-alternated type, eg `int` or `\Foo`
+     * <array> is array of <simple>, eg `int[]` or `\Foo[]`
+     * <generic> is generic collection type, like `array<string, int>`, `Collection<Item>` or more complex`
+     * <object> is array key => value type, like `array{type: string, name: string, value: mixed}`
+     * <type> is <simple>, <array>, <object>, <generic> type
+     * <types> is one or more types alternated via `|`, like `int|bool[]|Collection<ItemKey, ItemVal>`
+     */
+    public const REGEX_TYPES = '
+    (?<types>
+        (?<type>
+            (?<array>
+                (?&notArray)(?:
+                    \s*\[\s*\]
+                )+
+            )
+            |
+            (?<notArray>
+                (?<multiple>
+                    \(\s*(?<mutipleContent>
+                        (?&types)
+                    )\s*\)
+                )
+                |
+                (?<generic>
+                    (?<genericName>
+                        (?&simple)
+                    )
+                    \s*<\s*
+                        (?<genericContent>
+                            (?:(?&types)\s*,\s*)*
+                            (?&types)
+                        )
+                    \s*>
+                )
+                |
+                (?<object>
+                    array\s*{\s*
+                        (?<objectContent>
+                            (?:
+                                (?<objectKeyValue>
+                                    (?:\w+\s*\??:\s*)?
+                                    (?&types)
+                                )
+                                \s*,\s*
+                            )*
+                            (?&objectKeyValue)
+                        )
+                    \s*}
+                )
+                |
+                (?<simple>
+                    \\\\?\w+(?:\\\\\w+)*
+                    |
+                    \$this
+                )
+            )
+        )
+        (?:
+            \s*[\|&]\s*(?&type)
+        )*
+    )
+    ';
+
+    /**
      * @param File $phpcsFile
      * @param int  $stackPtr
      *
@@ -121,5 +185,21 @@ class SniffHelper extends AbstractHelper
         }
 
         return true;
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return array
+     */
+    public static function parseTypeHint(string $content): array
+    {
+        preg_match(
+            '{^'.SniffHelper::REGEX_TYPES.'(?<space>[\s\t]*)?(?<description>.*)?$}six',
+            $content,
+            $matches
+        );
+
+        return [$matches['types'] ?? '', $matches['space'] ?? '', $matches['description'] ?? ''];
     }
 }

@@ -6,6 +6,7 @@ namespace SymfonyCustom\Sniffs\Commenting;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\AbstractVariableSniff;
+use SymfonyCustom\Helpers\SniffHelper;
 
 /**
  * Parses and verifies the variable doc comment.
@@ -97,11 +98,8 @@ class VariableCommentSniff extends AbstractVariableSniff
             return;
         }
 
-        $content = explode(' ', $tokens[$string]['content']);
-        $newContent = array_filter($content, function ($value) use ($tokens, $stackPtr) {
-            return 0 === preg_match('/^\$/', $value);
-        });
-        if (count($newContent) < count($content)) {
+        [$type, $space, $description] = SniffHelper::parseTypeHint($tokens[$string]['content']);
+        if (preg_match('/^\$\S+/', $description)) {
             $fix = $phpcsFile->addFixableError(
                 '@var annotations should not contain variable name',
                 $foundVar,
@@ -109,7 +107,12 @@ class VariableCommentSniff extends AbstractVariableSniff
             );
 
             if ($fix) {
-                $phpcsFile->fixer->replaceToken($string, implode(' ', $newContent));
+                $description = preg_replace('/^\$\S+/', '', $description);
+                if ('' !== $description) {
+                    $phpcsFile->fixer->replaceToken($string, $type.$space.$description);
+                } else {
+                    $phpcsFile->fixer->replaceToken($string, $type);
+                }
             }
         }
     }
