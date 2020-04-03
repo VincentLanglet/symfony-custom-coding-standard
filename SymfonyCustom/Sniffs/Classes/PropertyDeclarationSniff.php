@@ -17,7 +17,7 @@ class PropertyDeclarationSniff implements Sniff
      */
     public function register(): array
     {
-        return [T_CLASS];
+        return [T_CLASS, T_ANON_CLASS];
     }
 
     /**
@@ -35,16 +35,26 @@ class PropertyDeclarationSniff implements Sniff
             $end = $tokens[$stackPtr]['scope_closer'];
         }
 
-        $scope = $phpcsFile->findNext(T_FUNCTION, $stackPtr, $end);
+        $function = $phpcsFile->findNext(T_FUNCTION, $stackPtr, $end);
+        if (false === $function) {
+            return;
+        }
 
-        $wantedTokens = [T_PUBLIC, T_PROTECTED, T_PRIVATE];
+        $wantedTokens = [T_PUBLIC, T_PROTECTED, T_PRIVATE, T_ANON_CLASS];
+        $scope = $phpcsFile->findNext($wantedTokens, $function + 1, $end);
 
-        while ($scope) {
-            $scope = $phpcsFile->findNext($wantedTokens, $scope + 1, $end);
+        while (false !== $scope) {
+            if (T_ANON_CLASS === $tokens[$scope]['code']) {
+                $scope = $tokens[$scope]['scope_closer'];
 
-            if ($scope && T_VARIABLE === $tokens[$scope + 2]['code']) {
+                continue;
+            }
+
+            if (T_VARIABLE === $tokens[$scope + 2]['code']) {
                 $phpcsFile->addError('Declare class properties before methods', $scope, 'Invalid');
             }
+
+            $scope = $phpcsFile->findNext($wantedTokens, $scope + 1, $end);
         }
     }
 }
