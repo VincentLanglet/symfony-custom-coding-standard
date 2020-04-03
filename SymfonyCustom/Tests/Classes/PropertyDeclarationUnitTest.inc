@@ -44,3 +44,19 @@ class MoreBar
         };
     }
 }
+
+class BarWithConst
+{
+    public function functionTest() {
+
+    }
+
+    const FOO = 1;
+}
+
+class BarWithConst2
+{
+    public $foo;
+
+    const FOO = 1;
+}

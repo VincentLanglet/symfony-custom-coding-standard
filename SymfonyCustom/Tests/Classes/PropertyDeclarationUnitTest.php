@@ -19,6 +19,8 @@ class PropertyDeclarationUnitTest extends AbstractSniffUnitTest
         return [
             9  => 1,
             43 => 1,
+            54 => 1,
+            61 => 1,
         ];
     }
 

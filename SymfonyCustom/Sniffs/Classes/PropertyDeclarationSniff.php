@@ -28,19 +28,27 @@ class PropertyDeclarationSniff implements Sniff
      */
     public function process(File $phpcsFile, $stackPtr): void
     {
-        $tokens = $phpcsFile->getTokens();
+        $this->processProperty($phpcsFile, $stackPtr);
+        $this->processFunction($phpcsFile, $stackPtr);
+    }
 
-        $end = null;
-        if (isset($tokens[$stackPtr]['scope_closer'])) {
-            $end = $tokens[$stackPtr]['scope_closer'];
-        }
+    /**
+     * @param File $phpcsFile
+     * @param int  $stackPtr
+     *
+     * @return void
+     */
+    private function processFunction(File $phpcsFile, int $stackPtr): void
+    {
+        $tokens = $phpcsFile->getTokens();
+        $end = $tokens[$stackPtr]['scope_closer'] ?? null;
 
         $function = $phpcsFile->findNext(T_FUNCTION, $stackPtr, $end);
         if (false === $function) {
             return;
         }
 
-        $wantedTokens = [T_PUBLIC, T_PROTECTED, T_PRIVATE, T_ANON_CLASS];
+        $wantedTokens = [T_CONST, T_PUBLIC, T_PROTECTED, T_PRIVATE, T_ANON_CLASS];
         $scope = $phpcsFile->findNext($wantedTokens, $function + 1, $end);
 
         while (false !== $scope) {
@@ -50,8 +58,57 @@ class PropertyDeclarationSniff implements Sniff
                 continue;
             }
 
-            if (T_VARIABLE === $tokens[$scope + 2]['code']) {
-                $phpcsFile->addError('Declare class properties before methods', $scope, 'Invalid');
+            if (T_CONST === $tokens[$scope]['code']) {
+                $phpcsFile->addError('Declare class constants before methods', $scope, 'ConstBeforeFunction');
+            } elseif (T_VARIABLE === $tokens[$scope + 2]['code']) {
+                $phpcsFile->addError('Declare class properties before methods', $scope, 'PropertyBeforeFunction');
+            }
+
+            $scope = $phpcsFile->findNext($wantedTokens, $scope + 1, $end);
+        }
+    }
+
+    /**
+     * @param File $phpcsFile
+     * @param int  $stackPtr
+     *
+     * @return void
+     */
+    private function processProperty(File $phpcsFile, int $stackPtr): void
+    {
+        $tokens = $phpcsFile->getTokens();
+        $end = $tokens[$stackPtr]['scope_closer'] ?? null;
+
+        $wantedTokens = [T_PUBLIC, T_PROTECTED, T_PRIVATE, T_ANON_CLASS];
+        $scope = $phpcsFile->findNext($wantedTokens, $stackPtr + 1, $end);
+
+        while (false !== $scope && T_VARIABLE !== $tokens[$scope + 2]['code']) {
+            if (T_ANON_CLASS === $tokens[$scope]['code']) {
+                $scope = $tokens[$scope]['scope_closer'];
+
+                continue;
+            }
+
+            $scope = $phpcsFile->findNext($wantedTokens, $scope + 1, $end);
+        }
+
+        if (false === $scope) {
+            return;
+        }
+        $property = $scope + 2;
+
+        $wantedTokens = [T_CONST, T_ANON_CLASS];
+        $scope = $phpcsFile->findNext($wantedTokens, $property + 1, $end);
+
+        while (false !== $scope) {
+            if (T_ANON_CLASS === $tokens[$scope]['code']) {
+                $scope = $tokens[$scope]['scope_closer'];
+
+                continue;
+            }
+
+            if (T_CONST === $tokens[$scope]['code']) {
+                $phpcsFile->addError('Declare class property before const', $scope, 'ConstBeforeProperty');
             }
 
             $scope = $phpcsFile->findNext($wantedTokens, $scope + 1, $end);
