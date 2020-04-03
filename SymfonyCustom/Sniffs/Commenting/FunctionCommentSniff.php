@@ -7,6 +7,7 @@ namespace SymfonyCustom\Sniffs\Commenting;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Standards\PEAR\Sniffs\Commenting\FunctionCommentSniff as PEARFunctionCommentSniff;
 use PHP_CodeSniffer\Util\Tokens;
+use SymfonyCustom\Helpers\SniffHelper;
 
 /**
  * SymfonyCustom standard customization to PEARs FunctionCommentSniff.
@@ -143,6 +144,21 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
             if (!$content || T_DOC_COMMENT_STRING !== $tokens[($return + 2)]['code']) {
                 $error = 'Return type missing for @return tag in function comment';
                 $phpcsFile->addError($error, $return, 'MissingReturnType');
+            }
+
+            [$type, $space, $description] = SniffHelper::parseTypeHint($content);
+            if (preg_match('/^\$\S+/', $description)) {
+                $error = '@return annotations should not contain variable name';
+                $fix = $phpcsFile->addFixableError($error, $return, 'NamedReturn');
+
+                if ($fix) {
+                    $description = preg_replace('/^\$\S+/', '', $description);
+                    if ('' !== $description) {
+                        $phpcsFile->fixer->replaceToken($return + 2, $type.$space.$description);
+                    } else {
+                        $phpcsFile->fixer->replaceToken($return + 2, $type);
+                    }
+                }
             }
         } else {
             $error = 'Missing @return tag in function comment';
