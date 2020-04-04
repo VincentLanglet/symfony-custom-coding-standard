@@ -42,7 +42,7 @@ class TextFormatter
      *
      * @return void
      */
-    public function display(Report $report, string $level = null): void
+    public function display(Report $report, ?string $level = null): void
     {
         foreach ($report->getFiles() as $file) {
             $fileMessages = $report->getMessages([

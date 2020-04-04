@@ -43,52 +43,52 @@ class Tokenizer
     /**
      * @var int
      */
-    protected $cursor = 0;
+    private $cursor = 0;
 
     /**
      * @var int|null
      */
-    protected $end;
+    private $end;
 
     /**
      * @var int
      */
-    protected $line = 1;
+    private $line = 1;
 
     /**
      * @var int
      */
-    protected $currentPosition = 0;
+    private $currentPosition = 0;
 
     /**
      * @var Token[]
      */
-    protected $tokens = [];
+    private $tokens = [];
 
     /**
      * @var array
      */
-    protected $tokenPositions = [];
+    private $tokenPositions = [];
 
     /**
      * @var array[]
      */
-    protected $state = [];
+    private $state = [];
 
     /**
      * @var array
      */
-    protected $bracketsAndTernary = [];
+    private $bracketsAndTernary = [];
 
     /**
      * @var string|null
      */
-    protected $code;
+    private $code;
 
     /**
      * @var string|null
      */
-    protected $filename;
+    private $filename;
 
     /**
      * @param Environment $env

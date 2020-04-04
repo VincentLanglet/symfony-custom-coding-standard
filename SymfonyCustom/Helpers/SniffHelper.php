@@ -13,36 +13,49 @@ use PHP_CodeSniffer\Util\Tokens;
 class SniffHelper extends AbstractHelper
 {
     public const TAGS = [
-        '@api',
-        '@author',
-        '@category',
-        '@copyright',
-        '@covers',
-        '@dataProvider',
-        '@deprecated',
-        '@example',
+        '@required', // Symfony
+
         '@filesource',
-        '@global',
-        '@ignore',
-        '@internal',
-        '@license',
-        '@link',
-        '@method',
+        '@source',
+        '@category',
         '@package',
-        '@param',
+        '@subpackage',
+        '@author',
+        '@created',
+        '@copyright',
+        '@license',
+        '@version',
+        '@since',
+
+        '@api',
+        '@internal',
+        '@deprecated',
+        '@ignore',
+        '@todo',
+
+        '@example',
+        '@link',
+        '@see',
+
+        '@global',
+        '@name',
         '@property',
         '@property-read',
         '@property-write',
-        '@return',
-        '@see',
-        '@since',
-        '@source',
-        '@subpackage',
-        '@throws',
-        '@todo',
+        '@method',
         '@uses',
+
         '@var',
-        '@version',
+        '@param',
+        '@return',
+        '@throws',
+
+        '@abstract',
+        '@final',
+        '@public',
+        '@protected',
+        '@private',
+        '@static',
     ];
 
     public const TAGS_WITH_TYPE = [
@@ -195,7 +208,7 @@ class SniffHelper extends AbstractHelper
     public static function parseTypeHint(string $content): array
     {
         preg_match(
-            '{^'.SniffHelper::REGEX_TYPES.'(?<space>[\s\t]*)?(?<description>.*)?$}six',
+            '{^'.self::REGEX_TYPES.'(?<space>[\s\t]*)?(?<description>.*)?$}six',
             $content,
             $matches
         );

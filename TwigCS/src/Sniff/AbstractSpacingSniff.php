@@ -75,7 +75,7 @@ abstract class AbstractSpacingSniff extends AbstractSniff
             $count = 0;
         }
 
-        if ($expected !== $count) {
+        if ($expected === $count) {
             $fix = $this->addFixableError(
                 sprintf('Expecting %d whitespace after "%s"; found %d', $expected, $token->getValue(), $count),
                 $token

@@ -144,10 +144,10 @@ class ArrayDeclarationSniff implements Sniff
 
             if (1 !== $spaceBefore) {
                 $fix = $phpcsFile->addFixableError(
-                    'Expected 1 space between "%s" and double arrow; %s found',
+                    'Expected 1 space before double arrow; %s found',
                     $nextArrow,
                     'SpaceBeforeDoubleArrow',
-                    [$tokens[$nextArrow - 1]['content'], $spaceBefore]
+                    [$spaceBefore]
                 );
 
                 if ($fix) {
@@ -163,10 +163,10 @@ class ArrayDeclarationSniff implements Sniff
 
             if (1 !== $spaceAfter) {
                 $fix = $phpcsFile->addFixableError(
-                    'Expected 1 space between double arrow and "%s"; %s found',
+                    'Expected 1 space after double arrow; %s found',
                     $nextArrow,
                     'SpaceAfterDoubleArrow',
-                    [$tokens[$nextArrow + 1]['content'], $spaceAfter]
+                    [$spaceAfter]
                 );
 
                 if ($fix) {
@@ -188,10 +188,10 @@ class ArrayDeclarationSniff implements Sniff
 
                 if (1 !== $spaceAfter) {
                     $fix = $phpcsFile->addFixableError(
-                        'Expected 1 space between comma and "%s"; %s found',
+                        'Expected 1 space after comma; %s found',
                         $comma,
                         'SpaceAfterComma',
-                        [$tokens[$comma + 1]['content'], $spaceAfter]
+                        [$spaceAfter]
                     );
 
                     if ($fix) {
@@ -200,11 +200,17 @@ class ArrayDeclarationSniff implements Sniff
                 }
 
                 if (T_WHITESPACE === $tokens[$comma - 1]['code']) {
+                    if ($tokens[$comma - 1]['content'] === $phpcsFile->eolChar) {
+                        $spaceLength = 'newline';
+                    } else {
+                        $spaceLength = $tokens[$comma - 1]['length'];
+                    }
+
                     $fix = $phpcsFile->addFixableError(
-                        'Expected 0 spaces between "%s" and comma; %s found',
+                        'Expected 0 spaces before comma; %s found',
                         $comma,
                         'SpaceBeforeComma',
-                        [$tokens[$comma - 2]['content'], $tokens[$comma - 1]['length']]
+                        [$spaceLength]
                     );
 
                     if ($fix) {
@@ -357,10 +363,10 @@ class ArrayDeclarationSniff implements Sniff
                     }
 
                     $fix = $phpcsFile->addFixableError(
-                        'Expected 0 spaces between "%s" and comma; %s found',
+                        'Expected 0 space before comma; %s found',
                         $nextToken,
                         'SpaceBeforeComma',
-                        [$tokens[$nextToken - 2]['content'], $spaceLength]
+                        [$spaceLength]
                     );
                     if ($fix) {
                         $phpcsFile->fixer->replaceToken($nextToken - 1, '');

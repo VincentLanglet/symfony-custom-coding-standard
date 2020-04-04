@@ -55,7 +55,7 @@ class SniffViolation
      *
      * @return void
      */
-    public function __construct(int $level, string $message, string $filename, int $line = null)
+    public function __construct(int $level, string $message, string $filename, ?int $line = null)
     {
         $this->level = $level;
         $this->message = $message;
