@@ -6,9 +6,9 @@
     <arg name="extensions" value="php,inc"/>
     <exclude-pattern>*/vendor/*</exclude-pattern>
 
-    <!-- ************** -->
+    <!-- *************** -->
     <!-- ***  PSR12  *** -->
-    <!-- ************** -->
+    <!-- *************** -->
 
     <!-- Include the PSR-12 (so PSR-1) standard without the file length limit -->
     <rule ref="PSR12">
@@ -18,26 +18,131 @@
     </rule>
     <!-- Instead of PSR12.ControlStructures.ControlStructureSpacing -->
     <rule ref="PSR2.ControlStructures.ControlStructureSpacing"/>
-    <!-- Instead of PSR12.Operators.OperatorSpacing-->
+    <!-- Instead of PSR12.Operators.OperatorSpacing -->
     <rule ref="Squiz.WhiteSpace.OperatorSpacing">
         <properties>
             <property name="ignoreNewlines" value="true"/>
         </properties>
     </rule>
-    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
 
-    <!-- Change warning to error -->
-    <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
-        <type>error</type>
+    <!-- Force control structures indentation with 4 spaces -->
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <properties>
+            <!-- turned off for both comment and phpDoc by PSR2 -> turning back on for phpDoc -->
+            <property name="ignoreIndentationTokens" type="array">
+                <element value="T_COMMENT"/>
+            </property>
+        </properties>
     </rule>
 
-    <!-- Override SuperfluousWhitespace to not ignore blank lines -->
+    <!-- Forbid superfluous whitespaces -->
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
         <properties>
+            <!-- turned on by PSR2 -> turning back off -->
             <property name="ignoreBlankLines" value="false"/>
         </properties>
     </rule>
 
+    <!-- Disallow else if in favor of elseif -->
+    <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
+        <!-- change warning to error -->
+        <type>error</type>
+    </rule>
+
+    <!-- **************** -->
+    <!-- ***  CUSTOM  *** -->
+    <!-- **************** -->
+
+    <rule ref="SymfonyCustom.Commenting.FunctionComment">
+        <exclude name="SymfonyCustom.Commenting.FunctionComment.MissingParamComment"/>
+    </rule>
+
+    <!-- ************** -->
+    <!-- ***  MORE  *** -->
+    <!-- ************** -->
+
+    <!-- Forbid `array(...)` -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <!-- Forbid duplicate classes -->
+    <rule ref="Generic.Classes.DuplicateClassName"/>
+    <!-- Forbid assignment in condition -->
+    <rule ref="Generic.CodeAnalysis.AssignmentInCondition">
+        <type>error</type>
+    </rule>
+    <!-- Forbid superfluous semi-colon -->
+    <rule ref="Generic.CodeAnalysis.EmptyPHPStatement">
+        <type>error</type>
+    </rule>
+    <!-- Forbid empty statements -->
+    <rule ref="Generic.CodeAnalysis.EmptyStatement">
+        <!-- But allow empty catch -->
+        <exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedCatch"/>
+    </rule>
+    <!-- Forbid final methods in final classes -->
+    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <!-- Forbid useless empty method overrides -->
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+    <!-- Forbid inline HTML in PHP code -->
+    <rule ref="Generic.Files.InlineHTML"/>
+    <!-- Force whitespace after a type cast -->
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <!-- Forbid whitespace after `!` -->
+    <rule ref="Generic.Formatting.SpaceAfterNot">
+        <properties>
+            <property name="spacing" value="0" />
+        </properties>
+    </rule>
+    <!-- Forbid PHP 4 constructors -->
+    <rule ref="Generic.NamingConventions.ConstructorName"/>
+    <!-- Forbid any content before opening tag -->
+    <rule ref="Generic.PHP.CharacterBeforePHPOpeningTag"/>
+    <!-- Forbid deprecated functions -->
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <!-- Forbid shorthand PHP open tags `<?=` -->
+    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+    <!-- Forbid alias functions, i.e. `sizeof()`, `delete()` -->
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array">
+                <element key="chop" value="rtrim"/>
+                <element key="close" value="closedir"/>
+                <element key="compact" value="null"/>
+                <element key="delete" value="unset"/>
+                <element key="doubleval" value="floatval"/>
+                <element key="extract" value="null"/>
+                <element key="fputs" value="fwrite"/>
+                <element key="ini_alter" value="ini_set"/>
+                <element key="is_double" value="is_float"/>
+                <element key="is_integer" value="is_int"/>
+                <element key="is_long" value="is_int"/>
+                <element key="is_null" value="null"/>
+                <element key="is_real" value="is_float"/>
+                <element key="is_writeable" value="is_writable"/>
+                <element key="join" value="implode"/>
+                <element key="key_exists" value="array_key_exists"/>
+                <element key="pos" value="current"/>
+                <element key="settype" value="null"/>
+                <element key="show_source" value="highlight_file"/>
+                <element key="sizeof" value="count"/>
+                <element key="strchr" value="strstr"/>
+            </property>
+        </properties>
+    </rule>
+    <!-- Forbid useless inline string concatenation -->
+    <rule ref="Generic.Strings.UnnecessaryStringConcat">
+        <!-- But multiline is useful for readability -->
+        <properties>
+            <property name="allowMultiline" value="true"/>
+        </properties>
+    </rule>
+    <!-- Forbid backtick operator -->
+    <rule ref="Generic.PHP.BacktickOperator"/>
+    <!-- Force PHP 7 param and return types to be lowercased -->
+    <rule ref="Generic.PHP.LowerCaseType"/>
+    <!-- Forbid `php_sapi_name()` function -->
+    <rule ref="Generic.PHP.SAPIUsage"/>
+    <!-- Require there be no space between increment/decrement operator and its operand -->
+    <rule ref="Generic.WhiteSpace.IncrementDecrementSpacing"/>
     <!-- Override ScopeIndent to check phpDoc comments indent-->
     <rule ref="Generic.WhiteSpace.ScopeIndent">
         <properties>
@@ -46,26 +151,61 @@
             </property>
         </properties>
     </rule>
-
-    <!-- ************** -->
-    <!-- ***  MORE  *** -->
-    <!-- ************** -->
-
-    <!-- Whitespace -->
-    <rule ref="Generic.Formatting.SpaceAfterCast"/>
-    <rule ref="Generic.Formatting.SpaceAfterNot">
-        <properties>
-            <property name="spacing" value="0" />
-        </properties>
-    </rule>
+    <!-- Forbid space after the `...` operator -->
     <rule ref="Generic.WhiteSpace.SpreadOperatorSpacingAfter"/>
+    <!-- Forbid comments starting with # -->
+    <rule ref="PEAR.Commenting.InlineComment"/>
+    <!-- Forbid spaces around square brackets -->
     <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
+    <!-- Forbid class being in a file with different name -->
+    <rule ref="Squiz.Classes.ClassFileName"/>
+    <!-- Force `self::` for self-reference, force lower-case self, forbid spaces around `::` -->
+    <rule ref="Squiz.Classes.SelfMemberReference"/>
+    <!-- Force phpDoc alignment -->
+    <rule ref="Squiz.Commenting.DocCommentAlignment">
+        <!-- Allow extra spaces after star, i.e. for indented annotations -->
+        <exclude name="Squiz.Commenting.DocCommentAlignment.SpaceAfterStar"/>
+    </rule>
+    <!-- Require an explanation inside empty catch -->
+    <rule ref="Squiz.Commenting.EmptyCatchComment"/>
+    <!-- Force camelCase variables -->
+    <rule ref="Squiz.NamingConventions.ValidVariableName">
+        <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+        <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
+    </rule>
+    <!-- Forbid `AND` and `OR`, require `&&` and `||` -->
+    <rule ref="Squiz.Operators.ValidLogicalOperators"/>
+    <!-- Forbid functions inside functions -->
+    <rule ref="Squiz.PHP.InnerFunctions"/>
+    <!-- Require PHP function calls in lowercase -->
+    <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
+    <!-- Forbid multiple assignments -->
+    <rule ref="Squiz.PHP.DisallowMultipleAssignments"/>
+    <!-- Forbid dead code -->
+    <rule ref="Squiz.PHP.NonExecutableCode">
+        <type>error</type>
+    </rule>
+    <!-- Forbid `$this` inside static function -->
+    <rule ref="Squiz.Scope.StaticThisUsage"/>
+    <!-- Require class function to have scope modifiers -->
+    <rule ref="Squiz.Scope.MemberVarScope"/>
+    <!-- Forbid whitespace before and after concatenation -->
     <rule ref="Squiz.Strings.ConcatenationSpacing">
         <properties>
-            <property name="ignoreNewlines" value="true" />
+            <property name="ignoreNewlines" value="true"/>
         </properties>
     </rule>
+    <!-- Forbid strings in `"` unless necessary -->
+    <rule ref="Squiz.Strings.DoubleQuoteUsage">
+        <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
+    </rule>
+    <!-- Forbid braces around string in `echo` -->
+    <rule ref="Squiz.Strings.EchoedStrings"/>
+    <!-- Forbid spaces in type casts -->
+    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
+    <!-- Forbid blank line after function opening brace -->
     <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+    <!-- Require 1 line before and after function, except at the top and bottom -->
     <rule ref="Squiz.WhiteSpace.FunctionSpacing">
         <properties>
             <property name="spacingBeforeFirst" value="0"/>
@@ -73,63 +213,22 @@
             <property name="spacingAfterLast" value="0"/>
         </properties>
     </rule>
+    <!-- Require space after language constructs -->
+    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+    <!-- Require space around logical operators -->
+    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+    <!-- Require 1 line before and after class properties, except at the top -->
     <rule ref="Squiz.WhiteSpace.MemberVarSpacing">
         <properties>
             <property name="spacingBeforeFirst" value="0"/>
         </properties>
     </rule>
+    <!-- Forbid spaces around `->` operator -->
     <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
         <properties>
             <property name="ignoreNewlines" value="true"/>
         </properties>
     </rule>
+    <!-- Forbid spaces before semicolon `;` -->
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
-
-    <!-- Disallow -->
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-    <rule ref="Generic.CodeAnalysis.AssignmentInCondition">
-        <type>error</type>
-    </rule>
-    <rule ref="Generic.CodeAnalysis.EmptyPHPStatement">
-        <type>error</type>
-    </rule>
-    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
-    <rule ref="Generic.PHP.BacktickOperator"/>
-    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
-    <rule ref="Generic.PHP.ForbiddenFunctions"/>
-    <rule ref="PEAR.Commenting.InlineComment"/>
-    <rule ref="Squiz.PHP.DisallowMultipleAssignments"/>
-    <rule ref="Squiz.PHP.DiscouragedFunctions"/>
-    <rule ref="Squiz.PHP.Eval"/>
-    <rule ref="Squiz.PHP.NonExecutableCode">
-        <type>error</type>
-    </rule>
-    <rule ref="Squiz.Operators.ValidLogicalOperators"/>
-
-    <!-- Others -->
-    <rule ref="Generic.Strings.UnnecessaryStringConcat">
-        <properties>
-            <property name="allowMultiline" value="true"/>
-        </properties>
-    </rule>
-    <rule ref="Squiz.Classes.ClassFileName"/>
-    <rule ref="Squiz.Commenting.DocCommentAlignment">
-        <exclude name="Squiz.Commenting.DocCommentAlignment.SpaceAfterStar"/>
-    </rule>
-    <rule ref="Squiz.Commenting.EmptyCatchComment"/>
-    <rule ref="Squiz.NamingConventions.ValidVariableName">
-        <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
-        <exclude name="Squiz.NamingConventions.ValidVariableName.ContainsNumbers"/>
-    </rule>
-    <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
-    <rule ref="Squiz.Scope.MemberVarScope"/>
-    <rule ref="Squiz.Strings.DoubleQuoteUsage">
-        <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
-    </rule>
-    <rule ref="Squiz.Strings.EchoedStrings"/>
-
-    <!-- Custom -->
-    <rule ref="SymfonyCustom.Commenting.FunctionComment">
-        <exclude name="SymfonyCustom.Commenting.FunctionComment.MissingParamComment"/>
-    </rule>
 </ruleset>
