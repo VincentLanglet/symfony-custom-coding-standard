@@ -195,7 +195,7 @@ class SniffHelper extends AbstractHelper
     public static function parseTypeHint(string $content): array
     {
         preg_match(
-            '{^'.SniffHelper::REGEX_TYPES.'(?<space>[\s\t]*)?(?<description>.*)?$}six',
+            '{^'.self::REGEX_TYPES.'(?<space>[\s\t]*)?(?<description>.*)?$}six',
             $content,
             $matches
         );
