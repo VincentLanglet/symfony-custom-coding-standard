@@ -8,7 +8,7 @@ use TwigCS\Sniff\AbstractSpacingSniff;
 use TwigCS\Token\Token;
 
 /**
- * Ensure there is one space before and after an operator
+ * Ensure there is one space before and after an operator except for '..'
  */
 class OperatorSpacingSniff extends AbstractSpacingSniff
 {
@@ -21,35 +21,43 @@ class OperatorSpacingSniff extends AbstractSpacingSniff
     protected function shouldHaveSpaceBefore(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
+        if (!$this->isTokenMatching($token, Token::OPERATOR_TYPE)) {
+            return null;
+        }
 
-        $isMinus = $this->isTokenMatching($token, Token::OPERATOR_TYPE, '-');
-        $isPlus = $this->isTokenMatching($token, Token::OPERATOR_TYPE, '+');
-
-        if ($isMinus || $isPlus) {
+        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, ['-', '+'])) {
             return $this->isUnary($tokenPosition, $tokens) ? null : 1;
         }
 
-        return $this->isTokenMatching($token, Token::OPERATOR_TYPE) && '..' !== $token->getValue() ? 1 : null;
+        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, '..')) {
+            return 0;
+        }
+
+        return 1;
     }
 
     /**
      * @param int     $tokenPosition
      * @param Token[] $tokens
      *
-     * @return bool
+     * @return int|null
      */
     protected function shouldHaveSpaceAfter(int $tokenPosition, array $tokens): ?int
     {
         $token = $tokens[$tokenPosition];
+        if (!$this->isTokenMatching($token, Token::OPERATOR_TYPE)) {
+            return null;
+        }
 
-        $isMinus = $this->isTokenMatching($token, Token::OPERATOR_TYPE, '-');
-        $isPlus = $this->isTokenMatching($token, Token::OPERATOR_TYPE, '+');
-
-        if ($isMinus || $isPlus) {
+        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, ['-', '+'])) {
             return $this->isUnary($tokenPosition, $tokens) ? 0 : 1;
         }
 
-        return $this->isTokenMatching($token, Token::OPERATOR_TYPE) && '..' !== $token->getValue() ? 1 : null;
+        if ($this->isTokenMatching($token, Token::OPERATOR_TYPE, '..')) {
+            return 0;
+        }
+
+        return 1;
     }
 
     /**
