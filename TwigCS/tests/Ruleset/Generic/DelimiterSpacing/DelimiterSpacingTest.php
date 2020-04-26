@@ -18,10 +18,10 @@ class DelimiterSpacingTest extends AbstractSniffTest
     public function testSniff(): void
     {
         $this->checkSniff(new DelimiterSpacingSniff(), [
-            [12 => 1],
-            [12 => 12],
-            [12 => 15],
-            [12 => 25],
+            [15 => 1],
+            [15 => 12],
+            [15 => 15],
+            [15 => 25],
         ]);
     }
 }
