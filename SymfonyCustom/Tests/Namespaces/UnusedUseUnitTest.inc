@@ -150,3 +150,24 @@ function ($a)
 {
     return null;
 }
+
+namespace PhpDoc;
+
+use Some\Key;
+use Some\Key2;
+use Some\Value;
+use Some\Value2;
+use Some\Foo;
+use Some\Bar;
+use Some\Baz;
+
+/**
+ * @param array{Key: Value, Key2: Value2} $a
+ * @param Foo&Bar&Baz $a
+ *
+ * @return null
+ */
+function ($a)
+{
+    return null;
+}
