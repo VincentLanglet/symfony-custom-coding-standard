@@ -94,7 +94,8 @@ class TokenParser extends AbstractTokenParser
                 return false;
             }
 
-            if ($token->getType() === Token::NAME_TYPE
+            if (
+                $token->getType() === Token::NAME_TYPE
                 && $token->getValue() === 'end'.$this->name
             ) {
                 return true;

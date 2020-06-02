@@ -13,11 +13,16 @@
     <!-- Include the PSR-12 (so PSR-1) standard without the file length limit -->
     <rule ref="PSR12">
         <exclude name="Generic.Files.LineLength"/>
-        <exclude name="PSR12.ControlStructures.ControlStructureSpacing"/>
         <exclude name="PSR12.Operators.OperatorSpacing"/>
     </rule>
-    <!-- Instead of PSR12.ControlStructures.ControlStructureSpacing -->
-    <rule ref="PSR2.ControlStructures.ControlStructureSpacing"/>
+
+    <!-- Restrict the placement of the boolean operator -->
+    <rule ref="PSR12.ControlStructures.BooleanOperatorPlacement">
+        <properties>
+            <property name="allowOnly" value="first"/>
+        </properties>
+    </rule>
+
     <!-- Instead of PSR12.Operators.OperatorSpacing -->
     <rule ref="Squiz.WhiteSpace.OperatorSpacing">
         <properties>

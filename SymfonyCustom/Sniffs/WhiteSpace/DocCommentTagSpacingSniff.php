@@ -31,7 +31,8 @@ class DocCommentTagSpacingSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (isset($tokens[$stackPtr - 1])
+        if (
+            isset($tokens[$stackPtr - 1])
             && $tokens[$stackPtr]['line'] === $tokens[$stackPtr - 1]['line']
         ) {
             if (T_DOC_COMMENT_WHITESPACE !== $tokens[$stackPtr - 1]['code']) {
@@ -66,7 +67,8 @@ class DocCommentTagSpacingSniff implements Sniff
             }
         }
 
-        if (isset($tokens[$stackPtr + 1])
+        if (
+            isset($tokens[$stackPtr + 1])
             && $tokens[$stackPtr]['line'] === $tokens[$stackPtr + 1]['line']
             && T_DOC_COMMENT_WHITESPACE === $tokens[$stackPtr + 1]['code']
             && 1 < $tokens[$stackPtr + 1]['length']

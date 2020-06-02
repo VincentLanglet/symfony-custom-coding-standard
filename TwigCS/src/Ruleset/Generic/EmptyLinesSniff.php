@@ -27,7 +27,8 @@ class EmptyLinesSniff extends AbstractSniff
 
         if ($this->isTokenMatching($token, Token::EOL_TYPE)) {
             $i = 0;
-            while (isset($tokens[$tokenPosition - ($i + 1)])
+            while (
+                isset($tokens[$tokenPosition - ($i + 1)])
                 && $this->isTokenMatching($tokens[$tokenPosition - ($i + 1)], Token::EOL_TYPE)
             ) {
                 $i++;

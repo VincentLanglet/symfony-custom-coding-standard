@@ -90,7 +90,8 @@ class AlphabeticallySortedUseSniff implements Sniff
 
         $use = $phpcsFile->findNext(T_USE, $start + 1, $end);
         while (false !== $use && T_USE === $tokens[$use]['code']) {
-            if (!SniffHelper::isGlobalUse($phpcsFile, $use)
+            if (
+                !SniffHelper::isGlobalUse($phpcsFile, $use)
                 || (null !== $end
                     && (!isset($tokens[$use]['conditions'][$scopePtr])
                         || $tokens[$use]['level'] !== $tokens[$scopePtr]['level'] + 1))

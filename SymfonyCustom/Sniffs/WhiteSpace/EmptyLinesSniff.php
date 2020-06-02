@@ -31,7 +31,8 @@ class EmptyLinesSniff implements Sniff
         $tokens = $phpcsFile->getTokens();
 
         // Special case for the first line
-        if (isset($tokens[$stackPtr - 1])
+        if (
+            isset($tokens[$stackPtr - 1])
             && T_OPEN_TAG === $tokens[$stackPtr - 1]['code']
             && $tokens[$stackPtr]['content'] === $phpcsFile->eolChar
             && isset($tokens[$stackPtr + 1])
@@ -49,7 +50,8 @@ class EmptyLinesSniff implements Sniff
         }
 
         // General case
-        if ($tokens[$stackPtr]['content'] === $phpcsFile->eolChar
+        if (
+            $tokens[$stackPtr]['content'] === $phpcsFile->eolChar
             && isset($tokens[$stackPtr + 1])
             && $tokens[$stackPtr + 1]['content'] === $phpcsFile->eolChar
             && isset($tokens[$stackPtr + 2])

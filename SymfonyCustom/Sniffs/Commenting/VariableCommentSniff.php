@@ -32,7 +32,8 @@ class VariableCommentSniff extends AbstractVariableSniff
         ];
 
         $commentEnd = $phpcsFile->findPrevious($ignore, $stackPtr - 1, null, true);
-        if (false === $commentEnd
+        if (
+            false === $commentEnd
             || (T_DOC_COMMENT_CLOSE_TAG !== $tokens[$commentEnd]['code']
             && T_COMMENT !== $tokens[$commentEnd]['code'])
         ) {
