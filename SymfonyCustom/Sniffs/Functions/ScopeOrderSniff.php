@@ -63,7 +63,8 @@ class ScopeOrderSniff implements Sniff
                     $tokens[$function]['parenthesis_opener']
                 );
 
-                if ($scope
+                if (
+                    $scope
                     && $name
                     && !in_array(
                         $tokens[$name]['content'],

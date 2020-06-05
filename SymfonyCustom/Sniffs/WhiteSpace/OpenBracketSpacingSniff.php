@@ -31,7 +31,8 @@ class OpenBracketSpacingSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (isset($tokens[$stackPtr + 1])
+        if (
+            isset($tokens[$stackPtr + 1])
             && T_WHITESPACE === $tokens[$stackPtr + 1]['code']
             && false === strpos($tokens[$stackPtr + 1]['content'], $phpcsFile->eolChar)
         ) {

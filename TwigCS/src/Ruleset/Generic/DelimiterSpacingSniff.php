@@ -22,7 +22,8 @@ class DelimiterSpacingSniff extends AbstractSpacingSniff
     {
         $token = $tokens[$tokenPosition];
 
-        if ($this->isTokenMatching($token, Token::VAR_END_TYPE)
+        if (
+            $this->isTokenMatching($token, Token::VAR_END_TYPE)
             || $this->isTokenMatching($token, Token::BLOCK_END_TYPE)
             || $this->isTokenMatching($token, Token::COMMENT_END_TYPE)
         ) {
@@ -42,7 +43,8 @@ class DelimiterSpacingSniff extends AbstractSpacingSniff
     {
         $token = $tokens[$tokenPosition];
 
-        if ($this->isTokenMatching($token, Token::VAR_START_TYPE)
+        if (
+            $this->isTokenMatching($token, Token::VAR_START_TYPE)
             || $this->isTokenMatching($token, Token::BLOCK_START_TYPE)
             || $this->isTokenMatching($token, Token::COMMENT_START_TYPE)
         ) {

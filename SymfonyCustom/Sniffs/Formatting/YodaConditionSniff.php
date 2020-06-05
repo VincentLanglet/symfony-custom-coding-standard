@@ -54,11 +54,12 @@ class YodaConditionSniff implements Sniff
             }
 
             // If this is a function call or something, we are OK.
-            if (in_array(
-                $tokens[$i]['code'],
-                [T_CONSTANT_ENCAPSED_STRING, T_CLOSE_PARENTHESIS, T_OPEN_PARENTHESIS, T_RETURN],
-                true
-            )
+            if (
+                in_array(
+                    $tokens[$i]['code'],
+                    [T_CONSTANT_ENCAPSED_STRING, T_CLOSE_PARENTHESIS, T_OPEN_PARENTHESIS, T_RETURN],
+                    true
+                )
             ) {
                 return;
             }

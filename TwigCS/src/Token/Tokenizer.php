@@ -283,7 +283,8 @@ class Tokenizer
      */
     protected function getTokenPosition(int $offset = 0): ?array
     {
-        if (count($this->tokenPositions) === 0
+        if (
+            count($this->tokenPositions) === 0
             || !isset($this->tokenPositions[$this->currentPosition + $offset])
         ) {
             return null;
@@ -433,7 +434,8 @@ class Tokenizer
     {
         if (preg_match($this->regexes['interpolation_start'], $this->code, $match, 0, $this->cursor)) {
             $this->lexStartInterpolation();
-        } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor)
+        } elseif (
+            preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor)
             && strlen($match[0]) > 0
         ) {
             $this->pushToken(Token::STRING_TYPE, $match[0]);
@@ -462,7 +464,8 @@ class Tokenizer
     {
         $bracket = end($this->bracketsAndTernary);
 
-        if ($this->options['interpolation'][0] === $bracket[0]
+        if (
+            $this->options['interpolation'][0] === $bracket[0]
             && preg_match($this->regexes['interpolation_end'], $this->code, $match, 0, $this->cursor)
         ) {
             array_pop($this->bracketsAndTernary);

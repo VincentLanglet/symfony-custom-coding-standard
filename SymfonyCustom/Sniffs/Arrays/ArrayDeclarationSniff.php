@@ -287,7 +287,8 @@ class ArrayDeclarationSniff implements Sniff
                     $nextToken = $tokens[$nextToken]['scope_closer'];
                     continue 2;
                 case T_OPEN_PARENTHESIS:
-                    if (!isset($tokens[$nextToken]['parenthesis_owner'])
+                    if (
+                        !isset($tokens[$nextToken]['parenthesis_owner'])
                         || $tokens[$nextToken]['parenthesis_owner'] !== $stackPtr
                     ) {
                         $nextToken = $tokens[$nextToken]['parenthesis_closer'];
@@ -296,7 +297,8 @@ class ArrayDeclarationSniff implements Sniff
                     break;
             }
 
-            if (!in_array($tokens[$nextToken]['code'], [T_DOUBLE_ARROW, T_COMMA])
+            if (
+                !in_array($tokens[$nextToken]['code'], [T_DOUBLE_ARROW, T_COMMA])
                 && $nextToken !== $end - 1
             ) {
                 continue;
@@ -347,7 +349,8 @@ class ArrayDeclarationSniff implements Sniff
                     $indices[] = ['value' => $valueContent];
                 }
 
-                if (T_COMMA === $tokens[$nextToken]['code']
+                if (
+                    T_COMMA === $tokens[$nextToken]['code']
                     && T_WHITESPACE === $tokens[$nextToken - 1]['code']
                 ) {
                     if ($tokens[$nextToken - 1]['content'] === $phpcsFile->eolChar) {

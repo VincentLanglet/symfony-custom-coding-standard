@@ -67,7 +67,8 @@ class BlankLineBeforeReturnSniff implements Sniff
             if ($fix) {
                 $phpcsFile->fixer->beginChangeset();
                 $i = 1;
-                while (T_WHITESPACE === $tokens[$stackPtr - $i]['code']
+                while (
+                    T_WHITESPACE === $tokens[$stackPtr - $i]['code']
                     || $this->isComment($tokens[$stackPtr - $i])
                 ) {
                     $i++;

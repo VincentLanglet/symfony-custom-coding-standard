@@ -55,7 +55,8 @@ class UnusedUseSniff implements Sniff
             }
 
             $comma = $phpcsFile->findNext(T_COMMA, $from + 1, $to);
-            if (false === $comma
+            if (
+                false === $comma
                 || !$phpcsFile->findNext(Tokens::$emptyTokens, $comma + 1, $to, true)
             ) {
                 $fix = $phpcsFile->addFixableError(
@@ -159,7 +160,8 @@ class UnusedUseSniff implements Sniff
                         $from = $stackPtr;
                     } else {
                         $from = $phpcsFile->findNext(Tokens::$emptyTokens, $prev + 1, null, true);
-                        if (T_STRING === $tokens[$from]['code']
+                        if (
+                            T_STRING === $tokens[$from]['code']
                             && in_array(strtolower($tokens[$from]['content']), ['const', 'function'], true)
                         ) {
                             $from = $phpcsFile->findNext(Tokens::$emptyTokens, $from + 1, null, true);
@@ -192,7 +194,8 @@ class UnusedUseSniff implements Sniff
         $phpcsFile->fixer->beginChangeset();
 
         // Remote whitespaces before in the same line
-        if (T_WHITESPACE === $tokens[$from - 1]['code']
+        if (
+            T_WHITESPACE === $tokens[$from - 1]['code']
             && $tokens[$from - 1]['line'] === $tokens[$from]['line']
             && $tokens[$from - 2]['line'] !== $tokens[$from]['line']
         ) {
@@ -243,7 +246,8 @@ class UnusedUseSniff implements Sniff
 
         $type = 'class';
         $next = $phpcsFile->findNext(Tokens::$emptyTokens, $usePtr + 1, null, true);
-        if (T_STRING === $tokens[$next]['code']
+        if (
+            T_STRING === $tokens[$next]['code']
             && in_array(strtolower($tokens[$next]['content']), ['const', 'function'], true)
         ) {
             $type = strtolower($tokens[$next]['content']);
@@ -309,7 +313,8 @@ class UnusedUseSniff implements Sniff
 
             $match = null;
 
-            if (($isStringToken
+            if (
+                ($isStringToken
                     && (('const' !== $type && strtolower($tokens[$classUsed]['content']) === $searchName)
                         || ('const' === $type && $tokens[$classUsed]['content'] === $searchName)))
                 || ('class' === $type
@@ -346,7 +351,8 @@ class UnusedUseSniff implements Sniff
                         return true;
                     }
                 } elseif (T_DOC_COMMENT_STRING === $tokens[$classUsed]['code']) {
-                    if (T_DOC_COMMENT_TAG === $tokens[$beforeUsage]['code']
+                    if (
+                        T_DOC_COMMENT_TAG === $tokens[$beforeUsage]['code']
                         && in_array($tokens[$beforeUsage]['content'], SniffHelper::TAGS_WITH_TYPE, true)
                     ) {
                         return true;
@@ -406,19 +412,23 @@ class UnusedUseSniff implements Sniff
 
         $beforeCode = $tokens[$beforePtr]['code'];
 
-        if (in_array(
-            $beforeCode,
-            [T_NS_SEPARATOR, T_OBJECT_OPERATOR, T_DOUBLE_COLON, T_FUNCTION, T_CONST, T_AS, T_INSTEADOF],
-            true
-        )) {
+        if (
+            in_array(
+                $beforeCode,
+                [T_NS_SEPARATOR, T_OBJECT_OPERATOR, T_DOUBLE_COLON, T_FUNCTION, T_CONST, T_AS, T_INSTEADOF],
+                true
+            )
+        ) {
             return null;
         }
 
-        if (in_array(
-            $beforeCode,
-            [T_NEW, T_NULLABLE, T_EXTENDS, T_IMPLEMENTS, T_INSTANCEOF],
-            true
-        )) {
+        if (
+            in_array(
+                $beforeCode,
+                [T_NEW, T_NULLABLE, T_EXTENDS, T_IMPLEMENTS, T_INSTANCEOF],
+                true
+            )
+        ) {
             return 'class';
         }
 
@@ -459,17 +469,20 @@ class UnusedUseSniff implements Sniff
             return 'function';
         }
 
-        if (in_array(
-            $afterCode,
-            [T_DOUBLE_COLON, T_VARIABLE, T_ELLIPSIS, T_NS_SEPARATOR, T_OPEN_CURLY_BRACKET],
-            true
-        )) {
+        if (
+            in_array(
+                $afterCode,
+                [T_DOUBLE_COLON, T_VARIABLE, T_ELLIPSIS, T_NS_SEPARATOR, T_OPEN_CURLY_BRACKET],
+                true
+            )
+        ) {
             return 'class';
         }
 
         if (T_COLON === $beforeCode) {
             $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, $beforePtr - 1, null, true);
-            if (false !== $prev
+            if (
+                false !== $prev
                 && T_CLOSE_PARENTHESIS === $tokens[$prev]['code']
                 && isset($tokens[$prev]['parenthesis_owner'])
                 && T_FUNCTION === $tokens[$tokens[$prev]['parenthesis_owner']]['code']
