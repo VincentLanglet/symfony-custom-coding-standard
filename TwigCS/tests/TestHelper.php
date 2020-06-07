@@ -25,7 +25,7 @@ class TestHelper
     public static function generateDiff(string $contents, string $filePath): string
     {
         $cwd = getcwd().DIRECTORY_SEPARATOR;
-        if (strpos($filePath, $cwd) === 0) {
+        if (0 === strpos($filePath, $cwd)) {
             $filename = substr($filePath, strlen($cwd));
         } else {
             $filename = $filePath;
@@ -43,19 +43,19 @@ class TestHelper
         $diff = shell_exec($cmd);
 
         fclose($fixedFile);
-        if (is_file($tempName) === true) {
+        if (true === is_file($tempName)) {
             unlink($tempName);
         }
 
         $diffLines = null !== $diff ? explode(PHP_EOL, $diff) : [];
-        if (count($diffLines) === 1) {
+        if (1 === count($diffLines)) {
             // Seems to be required for cygwin.
             $diffLines = explode("\n", $diff);
         }
 
         $diff = [];
         foreach ($diffLines as $line) {
-            if (isset($line[0]) === true) {
+            if (true === isset($line[0])) {
                 switch ($line[0]) {
                     case '-':
                         $diff[] = "\033[31m$line\033[0m";

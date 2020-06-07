@@ -226,6 +226,6 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
 
         $content = $phpcsFile->getTokensAsString($start, ($end - $start));
 
-        return preg_match('#@inheritdoc|{@inheritdoc}#i', $content) === 1;
+        return 1 === preg_match('#@inheritdoc|{@inheritdoc}#i', $content);
     }
 }

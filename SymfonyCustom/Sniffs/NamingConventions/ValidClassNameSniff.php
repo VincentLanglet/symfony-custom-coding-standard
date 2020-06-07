@@ -57,7 +57,7 @@ class ValidClassNameSniff implements Sniff
             if (T_EXTENDS === $tokens[$stackPtr]['code']) {
                 $extend = $phpcsFile->findNext(T_STRING, $stackPtr);
 
-                if ($extend && substr($tokens[$extend]['content'], -9) === 'Exception') {
+                if ($extend && 'Exception' === substr($tokens[$extend]['content'], -9)) {
                     $class = $phpcsFile->findPrevious(T_CLASS, $stackPtr);
                     $name = $phpcsFile->findNext(T_STRING, $class);
 

@@ -297,7 +297,7 @@ class UnusedUseSniff implements Sniff
             if (false !== $namespacePtr) {
                 $namespace = $this->getNamespace($phpcsFile, $namespacePtr + 1, [T_CURLY_OPEN, T_SEMICOLON]);
 
-                if (strcasecmp($namespace, $useNamespace) === 0) {
+                if (0 === strcasecmp($namespace, $useNamespace)) {
                     $classUsed = false;
                 }
             } elseif (false === $namespacePtr && '' === $useNamespace) {

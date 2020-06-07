@@ -284,7 +284,7 @@ class Tokenizer
     protected function getTokenPosition(int $offset = 0): ?array
     {
         if (
-            count($this->tokenPositions) === 0
+            0 === count($this->tokenPositions)
             || !isset($this->tokenPositions[$this->currentPosition + $offset])
         ) {
             return null;
@@ -371,7 +371,7 @@ class Tokenizer
         $endRegex = $this->regexes['lex_block'];
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
 
-        if (count($this->bracketsAndTernary) === 0 && isset($match[0])) {
+        if (0 === count($this->bracketsAndTernary) && isset($match[0])) {
             $this->pushToken(Token::BLOCK_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
             $this->moveCurrentPosition();
@@ -391,7 +391,7 @@ class Tokenizer
         $endRegex = $this->regexes['lex_variable'];
         preg_match($endRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor);
 
-        if (count($this->bracketsAndTernary) === 0 && isset($match[0])) {
+        if (0 === count($this->bracketsAndTernary) && isset($match[0])) {
             $this->pushToken(Token::VAR_END_TYPE, $match[0][0]);
             $this->moveCursor($match[0][0]);
             $this->moveCurrentPosition();

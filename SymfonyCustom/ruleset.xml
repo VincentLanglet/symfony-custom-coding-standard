@@ -62,6 +62,15 @@
         <exclude name="SymfonyCustom.Commenting.FunctionComment.MissingParamComment"/>
     </rule>
 
+    <!-- ****************** -->
+    <!-- ***  SLEVOMAT  *** -->
+    <!-- ****************** -->
+
+    <config name="installed_paths" value="../../slevomat/coding-standard"/>
+
+    <!-- Require Yoda comparison -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireYodaComparison"/>
+
     <!-- ************** -->
     <!-- ***  MORE  *** -->
     <!-- ************** -->

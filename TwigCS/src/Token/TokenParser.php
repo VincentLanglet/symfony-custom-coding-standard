@@ -51,7 +51,7 @@ class TokenParser extends AbstractTokenParser
     {
         $stream = $this->parser->getStream();
 
-        while ($stream->getCurrent()->getType() !== Token::BLOCK_END_TYPE) {
+        while (Token::BLOCK_END_TYPE !== $stream->getCurrent()->getType()) {
             $stream->next();
         }
 
@@ -90,13 +90,13 @@ class TokenParser extends AbstractTokenParser
         $look = 0;
         $token = $stream->look($look);
         while ($token) {
-            if ($token->getType() === Token::EOF_TYPE) {
+            if (Token::EOF_TYPE === $token->getType()) {
                 return false;
             }
 
             if (
-                $token->getType() === Token::NAME_TYPE
-                && $token->getValue() === 'end'.$this->name
+                Token::NAME_TYPE === $token->getType()
+                && 'end'.$this->name === $token->getValue()
             ) {
                 return true;
             }

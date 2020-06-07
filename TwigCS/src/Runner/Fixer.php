@@ -121,7 +121,7 @@ class Fixer
             return $token->getValue();
         }, $tokens);
 
-        if (preg_match("/\r\n?|\n/", $this->getContents(), $matches) !== 1) {
+        if (1 !== preg_match("/\r\n?|\n/", $this->getContents(), $matches)) {
             // Assume there are no newlines.
             $this->eolChar = "\n";
         } else {
