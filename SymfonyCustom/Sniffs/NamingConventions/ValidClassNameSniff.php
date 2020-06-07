@@ -42,6 +42,7 @@ class ValidClassNameSniff implements Sniff
                 $name = $phpcsFile->findNext(T_STRING, $stackPtr);
 
                 $this->checkSuffix($phpcsFile, $stackPtr, $name, 'Interface');
+
                 break;
             }
 
@@ -50,6 +51,7 @@ class ValidClassNameSniff implements Sniff
                 $name = $phpcsFile->findNext(T_STRING, $stackPtr);
 
                 $this->checkSuffix($phpcsFile, $stackPtr, $name, 'Trait');
+
                 break;
             }
 
@@ -63,6 +65,7 @@ class ValidClassNameSniff implements Sniff
 
                     $this->checkSuffix($phpcsFile, $stackPtr, $name, 'Exception');
                 }
+
                 break;
             }
 
@@ -74,6 +77,7 @@ class ValidClassNameSniff implements Sniff
                 if (false !== $name && T_FUNCTION !== $tokens[$name]['code']) {
                     $this->checkPrefix($phpcsFile, $stackPtr, $name, 'Abstract');
                 }
+
                 break;
             }
 

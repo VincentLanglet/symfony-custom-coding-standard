@@ -144,12 +144,15 @@ class Tokenizer
             switch ($this->getState()) {
                 case self::STATE_BLOCK:
                     $this->lexBlock();
+
                     break;
                 case self::STATE_VAR:
                     $this->lexVariable();
+
                     break;
                 case self::STATE_COMMENT:
                     $this->lexComment();
+
                     break;
                 case self::STATE_DATA:
                     if (null !== $lastToken && $this->cursor === $lastToken['position']) {
@@ -157,12 +160,15 @@ class Tokenizer
                     } else {
                         $this->lexData();
                     }
+
                     break;
                 case self::STATE_DQ_STRING:
                     $this->lexDqString();
+
                     break;
                 case self::STATE_INTERPOLATION:
                     $this->lexInterpolation();
+
                     break;
                 default:
                     throw new Exception('Unhandled state in tokenize', 1);

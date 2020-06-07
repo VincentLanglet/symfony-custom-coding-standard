@@ -68,6 +68,7 @@ class TextFormatter
 
                     if ($no === $message->getLine()) {
                         $formattedText[] = $this->formatErrorMessage($message);
+                        $formattedText[] = $this->formatErrorMessage($message);
                     }
                 }
 

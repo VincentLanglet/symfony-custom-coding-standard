@@ -216,9 +216,9 @@ class Fixer
             $success = $this->replaceToken($tokenPosition, $content);
             if (!$success) {
                 break;
-            } else {
-                $applied[] = $tokenPosition;
             }
+
+            $applied[] = $tokenPosition;
         }
 
         if (!$success) {

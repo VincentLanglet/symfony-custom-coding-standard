@@ -14,6 +14,8 @@
     <rule ref="PSR12">
         <exclude name="Generic.Files.LineLength"/>
         <exclude name="PSR12.Operators.OperatorSpacing"/>
+        <!-- Covered by SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces -->
+        <exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>
     </rule>
 
     <!-- Restrict the placement of the boolean operator -->
@@ -68,8 +70,40 @@
 
     <config name="installed_paths" value="../../slevomat/coding-standard"/>
 
+    <!-- Require no empty line after opening class brace and before ending class brace -->
+    <rule ref="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces">
+        <properties>
+            <property name="linesCountAfterOpeningBrace" value="0"/>
+            <property name="linesCountBeforeClosingBrace" value="0"/>
+        </properties>
+    </rule>
+    <!-- Forbid some annotations -->
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
+        <properties>
+            <property name="forbiddenAnnotations" type="array">
+                <element value="@package"/>
+                <element value="@subpackage"/>
+            </property>
+        </properties>
+    </rule>
+    <!-- Forbid useless elseif/else -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit">
+        <exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed"/>
+    </rule>
+    <!-- Require one blank line before jump statement !-->
+    <rule ref="SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing"/>
     <!-- Require Yoda comparison -->
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireYodaComparison"/>
+    <!-- Forbid `==` and `!=` -->
+    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators"/>
+    <!-- Require use in alphabetically order -->
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses"/>
+    <!-- Forbid unused use -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <property name="searchAnnotations" value="true" />
+        </properties>
+    </rule>
 
     <!-- ************** -->
     <!-- ***  MORE  *** -->

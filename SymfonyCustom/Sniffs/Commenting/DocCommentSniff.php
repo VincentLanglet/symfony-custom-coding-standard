@@ -65,6 +65,7 @@ class DocCommentSniff implements Sniff
                     for ($i = $stackPtr - 1; $i > $previous; $i--) {
                         if ($tokens[$i]['line'] < $tokens[$stackPtr]['line']) {
                             $phpcsFile->fixer->replaceToken($i, '');
+
                             break;
                         }
 

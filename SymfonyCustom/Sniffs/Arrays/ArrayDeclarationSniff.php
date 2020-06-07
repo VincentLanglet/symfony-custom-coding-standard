@@ -109,6 +109,7 @@ class ArrayDeclarationSniff implements Sniff
             // Skip bracketed statements, like function calls.
             if (T_OPEN_PARENTHESIS === $tokens[$i]['code']) {
                 $i = $tokens[$i]['parenthesis_closer'];
+
                 continue;
             }
 
@@ -279,12 +280,15 @@ class ArrayDeclarationSniff implements Sniff
             switch ($tokens[$nextToken]['code']) {
                 case T_ARRAY:
                     $nextToken = $tokens[$tokens[$nextToken]['parenthesis_opener']]['parenthesis_closer'];
+
                     continue 2;
                 case T_OPEN_SHORT_ARRAY:
                     $nextToken = $tokens[$nextToken]['bracket_closer'];
+
                     continue 2;
                 case T_CLOSURE:
                     $nextToken = $tokens[$nextToken]['scope_closer'];
+
                     continue 2;
                 case T_OPEN_PARENTHESIS:
                     if (
@@ -292,8 +296,10 @@ class ArrayDeclarationSniff implements Sniff
                         || $tokens[$nextToken]['parenthesis_owner'] !== $stackPtr
                     ) {
                         $nextToken = $tokens[$nextToken]['parenthesis_closer'];
+
                         continue 2;
                     }
+
                     break;
             }
 
@@ -371,6 +377,7 @@ class ArrayDeclarationSniff implements Sniff
                 }
 
                 $lastToken = $nextToken;
+
                 continue;
             }
 

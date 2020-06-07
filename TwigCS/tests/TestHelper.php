@@ -59,9 +59,11 @@ class TestHelper
                 switch ($line[0]) {
                     case '-':
                         $diff[] = "\033[31m$line\033[0m";
+
                         break;
                     case '+':
                         $diff[] = "\033[32m$line\033[0m";
+
                         break;
                     default:
                         $diff[] = $line;

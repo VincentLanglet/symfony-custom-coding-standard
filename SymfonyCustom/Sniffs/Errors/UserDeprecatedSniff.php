@@ -63,6 +63,7 @@ class UserDeprecatedSniff implements Sniff
                 $stackPtr,
                 'Invalid'
             );
+
             break;
         } while ($opener < $closer);
     }

@@ -50,13 +50,16 @@ class Report
         switch ($sniffViolation->getLevel()) {
             case self::MESSAGE_TYPE_NOTICE:
                 ++$this->totalNotices;
+
                 break;
             case self::MESSAGE_TYPE_WARNING:
                 ++$this->totalWarnings;
+
                 break;
             case self::MESSAGE_TYPE_ERROR:
             case self::MESSAGE_TYPE_FATAL:
                 ++$this->totalErrors;
+
                 break;
         }
 
