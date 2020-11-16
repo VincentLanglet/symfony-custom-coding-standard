@@ -107,7 +107,7 @@ class AlphabeticallySortedUseSniff implements Sniff
 
             $type = 'class';
             if (T_STRING === $tokens[$startOfName]['code']) {
-                $lowerContent = strtolower($tokens[$startOfName]['content']);
+                $lowerContent = mb_strtolower($tokens[$startOfName]['content']);
                 if ('function' === $lowerContent || 'const' === $lowerContent) {
                     $type = $lowerContent;
 

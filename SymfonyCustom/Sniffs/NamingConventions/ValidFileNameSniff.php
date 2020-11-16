@@ -37,7 +37,7 @@ class ValidFileNameSniff implements Sniff
         $filenamePhp = basename($filename, '.php');
         $filenameInc = basename($filename, '.inc');
 
-        if (strlen($filenameInc) < strlen($filenamePhp)) {
+        if (mb_strlen($filenameInc) < mb_strlen($filenamePhp)) {
             $filename = $filenameInc;
         } else {
             $filename = $filenamePhp;

@@ -57,7 +57,7 @@ class ValidClassNameSniff implements Sniff
             if (T_EXTENDS === $tokens[$stackPtr]['code']) {
                 $extend = $phpcsFile->findNext(T_STRING, $stackPtr);
 
-                if ($extend && substr($tokens[$extend]['content'], -9) === 'Exception') {
+                if ($extend && mb_substr($tokens[$extend]['content'], -9) === 'Exception') {
                     $class = $phpcsFile->findPrevious(T_CLASS, $stackPtr);
                     $name = $phpcsFile->findNext(T_STRING, $class);
 
@@ -93,7 +93,7 @@ class ValidClassNameSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (false !== $name && substr($tokens[$name]['content'], 0, strlen($prefix)) !== $prefix) {
+        if (false !== $name && mb_substr($tokens[$name]['content'], 0, mb_strlen($prefix)) !== $prefix) {
             $phpcsFile->addError(
                 "$prefix name is not prefixed with '$prefix'",
                 $stackPtr,
@@ -114,7 +114,7 @@ class ValidClassNameSniff implements Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if (false !== $name && substr($tokens[$name]['content'], -strlen($suffix)) !== $suffix) {
+        if (false !== $name && mb_substr($tokens[$name]['content'], -mb_strlen($suffix)) !== $suffix) {
             $phpcsFile->addError(
                 "$suffix name is not suffixed with '$suffix'",
                 $stackPtr,
