@@ -162,7 +162,7 @@ class UnusedUseSniff implements Sniff
                         $from = $phpcsFile->findNext(Tokens::$emptyTokens, $prev + 1, null, true);
                         if (
                             T_STRING === $tokens[$from]['code']
-                            && in_array(strtolower($tokens[$from]['content']), ['const', 'function'], true)
+                            && in_array(mb_strtolower($tokens[$from]['content']), ['const', 'function'], true)
                         ) {
                             $from = $phpcsFile->findNext(Tokens::$emptyTokens, $from + 1, null, true);
                         }
@@ -248,12 +248,12 @@ class UnusedUseSniff implements Sniff
         $next = $phpcsFile->findNext(Tokens::$emptyTokens, $usePtr + 1, null, true);
         if (
             T_STRING === $tokens[$next]['code']
-            && in_array(strtolower($tokens[$next]['content']), ['const', 'function'], true)
+            && in_array(mb_strtolower($tokens[$next]['content']), ['const', 'function'], true)
         ) {
-            $type = strtolower($tokens[$next]['content']);
+            $type = mb_strtolower($tokens[$next]['content']);
         }
 
-        $searchName = 'const' === $type ? $className : strtolower($className);
+        $searchName = 'const' === $type ? $className : mb_strtolower($className);
 
         $prev = $phpcsFile->findPrevious(
             Tokens::$emptyTokens + [
@@ -292,7 +292,7 @@ class UnusedUseSniff implements Sniff
                 );
             }
 
-            $useNamespace = substr($useNamespace, 0, strrpos($useNamespace, '\\') ?: 0);
+            $useNamespace = mb_substr($useNamespace, 0, mb_strrpos($useNamespace, '\\') ?: 0);
 
             if (false !== $namespacePtr) {
                 $namespace = $this->getNamespace($phpcsFile, $namespacePtr + 1, [T_CURLY_OPEN, T_SEMICOLON]);
@@ -315,7 +315,7 @@ class UnusedUseSniff implements Sniff
 
             if (
                 ($isStringToken
-                    && (('const' !== $type && strtolower($tokens[$classUsed]['content']) === $searchName)
+                    && (('const' !== $type && mb_strtolower($tokens[$classUsed]['content']) === $searchName)
                         || ('const' === $type && $tokens[$classUsed]['content'] === $searchName)))
                 || ('class' === $type
                     && ((T_DOC_COMMENT_STRING === $tokens[$classUsed]['code']

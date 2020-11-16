@@ -113,7 +113,7 @@ class ValidTypeHintSniff implements Sniff
             preg_match('{^'.SniffHelper::REGEX_TYPES.'$}ix', $content, $matches);
 
             if (isset($matches['array']) && '' !== $matches['array']) {
-                $validType = $this->getValidTypes(substr($matches['array'], 0, -2)).'[]';
+                $validType = $this->getValidTypes(mb_substr($matches['array'], 0, -2)).'[]';
             } elseif (isset($matches['multiple']) && '' !== $matches['multiple']) {
                 $validType = '('.$this->getValidTypes($matches['mutipleContent']).')';
             } elseif (isset($matches['generic']) && '' !== $matches['generic']) {
@@ -126,8 +126,8 @@ class ValidTypeHintSniff implements Sniff
 
             $types[] = $validType;
 
-            $separators[] = substr($content, strlen($matches['type']), 1);
-            $content = substr($content, strlen($matches['type']) + 1);
+            $separators[] = mb_substr($content, mb_strlen($matches['type']), 1);
+            $content = mb_substr($content, mb_strlen($matches['type']) + 1);
         }
 
         // Remove last separator since it's an empty string
@@ -185,7 +185,7 @@ class ValidTypeHintSniff implements Sniff
             preg_match('{^'.SniffHelper::REGEX_TYPES.',?}ix', $genericContent, $matches);
 
             $validType .= $this->getValidTypes($matches['types']).', ';
-            $genericContent = substr($genericContent, strlen($matches['types']) + 1);
+            $genericContent = mb_substr($genericContent, mb_strlen($matches['types']) + 1);
         }
 
         return preg_replace('/,\s$/', '>', $validType);
@@ -213,7 +213,7 @@ class ValidTypeHintSniff implements Sniff
             preg_match('{^'.SniffHelper::REGEX_TYPES.',?}ix', $objectContent, $matches);
 
             $validType .= $this->getValidTypes($matches['types']).', ';
-            $objectContent = substr($objectContent, strlen($matches['types']) + 1);
+            $objectContent = mb_substr($objectContent, mb_strlen($matches['types']) + 1);
         }
 
         return preg_replace('/,\s$/', '}', $validType);
@@ -226,7 +226,7 @@ class ValidTypeHintSniff implements Sniff
      */
     private function getValidType(string $typeName): string
     {
-        $lowerType = strtolower($typeName);
+        $lowerType = mb_strtolower($typeName);
         if (isset(self::TYPES[$lowerType])) {
             return self::TYPES[$lowerType] ? $lowerType : $typeName;
         }

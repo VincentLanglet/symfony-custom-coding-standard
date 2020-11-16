@@ -34,7 +34,7 @@ class OpenBracketSpacingSniff implements Sniff
         if (
             isset($tokens[$stackPtr + 1])
             && T_WHITESPACE === $tokens[$stackPtr + 1]['code']
-            && false === strpos($tokens[$stackPtr + 1]['content'], $phpcsFile->eolChar)
+            && false === mb_strpos($tokens[$stackPtr + 1]['content'], $phpcsFile->eolChar)
         ) {
             $error = 'There should be no space after an opening "%s"';
             $fix = $phpcsFile->addFixableError(

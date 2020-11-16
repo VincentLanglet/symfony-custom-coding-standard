@@ -25,8 +25,8 @@ class TestHelper
     public static function generateDiff(string $contents, string $filePath): string
     {
         $cwd = getcwd().DIRECTORY_SEPARATOR;
-        if (strpos($filePath, $cwd) === 0) {
-            $filename = substr($filePath, strlen($cwd));
+        if (mb_strpos($filePath, $cwd) === 0) {
+            $filename = mb_substr($filePath, mb_strlen($cwd));
         } else {
             $filename = $filePath;
         }
