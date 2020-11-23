@@ -10,6 +10,9 @@ use Twig\Source;
 
 /**
  * An override of Twig's Lexer to add whitespace and new line detection.
+ *
+ * Since the regex are using bytes as position, mb_ methods are voluntary not used.
+ * phpcs:disable SymfonyCustom.PHP.EncourageMultiBytes
  */
 class Tokenizer
 {
@@ -193,7 +196,7 @@ class Tokenizer
         $this->bracketsAndTernary = [];
 
         $this->code = str_replace(["\r\n", "\r"], "\n", $source->getCode());
-        $this->end = mb_strlen($this->code);
+        $this->end = strlen($this->code);
         $this->filename = $source->getName();
     }
 
@@ -310,8 +313,8 @@ class Tokenizer
      */
     protected function moveCursor(string $value): void
     {
-        $this->cursor += mb_strlen($value);
-        $this->line += mb_substr_count($value, "\n");
+        $this->cursor += strlen($value);
+        $this->line += substr_count($value, "\n");
     }
 
     /**
@@ -322,7 +325,7 @@ class Tokenizer
      */
     protected function pushToken(int $type, string $value = null): void
     {
-        $tokenPositionInLine = $this->cursor - mb_strrpos(mb_substr($this->code, 0, $this->cursor), PHP_EOL);
+        $tokenPositionInLine = $this->cursor - strrpos(substr($this->code, 0, $this->cursor), PHP_EOL);
         $this->tokens[] = new Token($type, $this->line, $tokenPositionInLine, $this->filename, $value);
     }
 
@@ -350,7 +353,7 @@ class Tokenizer
             $this->lexName($match[0]);
         } elseif (preg_match(self::REGEX_NUMBER, $this->code, $match, 0, $this->cursor)) {
             $this->lexNumber($match[0]);
-        } elseif (false !== mb_strpos(self::PUNCTUATION, $this->code[$this->cursor])) {
+        } elseif (false !== strpos(self::PUNCTUATION, $this->code[$this->cursor])) {
             $this->lexPunctuation();
         } elseif (preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
             $this->lexString($match[0]);
@@ -436,7 +439,7 @@ class Tokenizer
             $this->lexStartInterpolation();
         } elseif (
             preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor)
-            && mb_strlen($match[0]) > 0
+            && strlen($match[0]) > 0
         ) {
             $this->pushToken(Token::STRING_TYPE, $match[0]);
             $this->moveCursor($match[0]);
@@ -500,8 +503,8 @@ class Tokenizer
             $value = $match[0];
 
             // Stop if cursor reaches the next token start.
-            if (0 !== $limit && $limit <= ($this->cursor + mb_strlen($value))) {
-                $value = mb_substr($value, 0, $limit - $this->cursor);
+            if (0 !== $limit && $limit <= ($this->cursor + strlen($value))) {
+                $value = substr($value, 0, $limit - $this->cursor);
             }
 
             // Fixing token start among expressions and comments.
@@ -702,7 +705,7 @@ class Tokenizer
 
                 return;
             }
-            if (false !== mb_strpos(',)]}', $currentToken)) {
+            if (false !== strpos(',)]}', $currentToken)) {
                 // Because {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
                 do {
                     array_pop($this->bracketsAndTernary);
@@ -716,9 +719,9 @@ class Tokenizer
             }
         }
 
-        if (false !== mb_strpos('([{', $currentToken)) {
+        if (false !== strpos('([{', $currentToken)) {
             $this->bracketsAndTernary[] = [$currentToken, $this->line];
-        } elseif (false !== mb_strpos(')]}', $currentToken)) {
+        } elseif (false !== strpos(')]}', $currentToken)) {
             if (0 === count($this->bracketsAndTernary)) {
                 throw new Exception(sprintf('Unexpected "%s"', $currentToken));
             }

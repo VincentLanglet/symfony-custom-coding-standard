@@ -276,6 +276,26 @@ class TokenizerTest extends TestCase
                     44 => Token::EOF_TYPE,
                 ],
             ],
+            [
+                __DIR__.'/TokenizerTest6.twig',
+                [
+                    0  => Token::BLOCK_START_TYPE,
+                    1  => Token::WHITESPACE_TYPE,
+                    2  => Token::BLOCK_TAG_TYPE,
+                    3  => Token::WHITESPACE_TYPE,
+                    4  => Token::NAME_TYPE,
+                    5  => Token::WHITESPACE_TYPE,
+                    6  => Token::BLOCK_END_TYPE,
+                    7  => Token::TEXT_TYPE,
+                    8  => Token::BLOCK_START_TYPE,
+                    9  => Token::WHITESPACE_TYPE,
+                    10 => Token::BLOCK_TAG_TYPE,
+                    11 => Token::WHITESPACE_TYPE,
+                    12 => Token::BLOCK_END_TYPE,
+                    13 => Token::EOL_TYPE,
+                    14 => Token::EOF_TYPE,
+                ],
+            ],
         ];
     }
 }
