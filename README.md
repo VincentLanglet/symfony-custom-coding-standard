@@ -1,7 +1,7 @@
 # Symfony Custom Coding Standard
 
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
-[![CircleCI](https://circleci.com/gh/VincentLanglet/symfony-custom-coding-standard.svg?style=svg)](https://circleci.com/gh/VincentLanglet/symfony-custom-coding-standard)
+[![Actions Status](https://github.com/VincentLanglet/symfony-custom-coding-standard/workflows/Test/badge.svg)](https://github.com/RobDWaller/csp-generator/actions)
 
 Customized coding standards for Symfony projects.
 
