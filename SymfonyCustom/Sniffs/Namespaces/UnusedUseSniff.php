@@ -415,7 +415,16 @@ class UnusedUseSniff implements Sniff
         if (
             in_array(
                 $beforeCode,
-                [T_NS_SEPARATOR, T_OBJECT_OPERATOR, T_DOUBLE_COLON, T_FUNCTION, T_CONST, T_AS, T_INSTEADOF],
+                [
+                    T_NS_SEPARATOR,
+                    T_NULLSAFE_OBJECT_OPERATOR,
+                    T_OBJECT_OPERATOR,
+                    T_DOUBLE_COLON,
+                    T_FUNCTION,
+                    T_CONST,
+                    T_AS,
+                    T_INSTEADOF,
+                ],
                 true
             )
         ) {
