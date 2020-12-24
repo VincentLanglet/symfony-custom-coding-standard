@@ -149,3 +149,15 @@ return [
 ];
 
 [1    =>   2 ,   2=>3,4 => 5];
+
+$array = [
+    'lonnnnnnggggg' => 'good',
+    'short'
+                => 'bad',
+];
+
+$array = [
+    'lonnnnnngggggg' => 'good',
+    $ab .
+    'second' => 'bad',
+];

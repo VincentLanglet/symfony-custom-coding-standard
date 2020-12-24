@@ -391,6 +391,16 @@ class ArrayDeclarationSniff implements Sniff
                 $indexEnd = $phpcsFile->findPrevious(T_WHITESPACE, $nextToken - 1, $start, true);
                 $indexStart = $phpcsFile->findStartOfStatement($indexEnd);
 
+                // Handle multi-lines index.
+                while ($tokens[$indexStart]['line'] !== $tokens[$indexEnd]['line']) {
+                    $indexStart = $phpcsFile->findNext(
+                        Tokens::$emptyTokens,
+                        $indexStart + 1,
+                        $indexEnd + 1,
+                        true
+                    );
+                }
+
                 if ($indexStart === $indexEnd) {
                     $currentEntry['index'] = $indexEnd;
                     $currentEntry['index_content'] = $tokens[$indexEnd]['content'];
