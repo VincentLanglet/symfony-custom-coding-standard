@@ -10,9 +10,12 @@
          stopOnFailure="false"
          bootstrap="./bootstrap.php"
 >
-    <filter>
-        <whitelist>
-            <directory>./vendor/squizlabs/php_codesniffer/src/Standards/SymfonyCustom</directory>
-        </whitelist>
-    </filter>
+    <testsuites>
+        <testsuite name="SymfonyCustom">
+            <file>./vendor/squizlabs/php_codesniffer/tests/Standards/AllSniffs.php</file>
+        </testsuite>
+        <testsuite name="TwigCS">
+            <directory>./TwigCS</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>
