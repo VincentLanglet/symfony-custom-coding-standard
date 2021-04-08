@@ -12,7 +12,7 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 class ConditionalReturnOrThrowUnitTest extends AbstractSniffUnitTest
 {
     /**
-     * @return array
+     * @return array<int, int>
      */
     protected function getErrorList(): array
     {
@@ -24,7 +24,7 @@ class ConditionalReturnOrThrowUnitTest extends AbstractSniffUnitTest
     }
 
     /**
-     * @return array
+     * @return array<int, int>
      */
     protected function getWarningList(): array
     {

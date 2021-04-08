@@ -12,7 +12,7 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 class DocCommentTagSpacingUnitTest extends AbstractSniffUnitTest
 {
     /**
-     * @return array
+     * @return array<int, int>
      */
     protected function getErrorList(): array
     {
@@ -28,7 +28,7 @@ class DocCommentTagSpacingUnitTest extends AbstractSniffUnitTest
     }
 
     /**
-     * @return array
+     * @return array<int, int>
      */
     protected function getWarningList(): array
     {

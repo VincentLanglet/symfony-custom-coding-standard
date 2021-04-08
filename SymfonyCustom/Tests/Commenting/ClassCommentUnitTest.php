@@ -12,7 +12,7 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 class ClassCommentUnitTest extends AbstractSniffUnitTest
 {
     /**
-     * @return array
+     * @return array<int, int>
      */
     protected function getErrorList(): array
     {
@@ -22,7 +22,7 @@ class ClassCommentUnitTest extends AbstractSniffUnitTest
     }
 
     /**
-     * @return array
+     * @return array<int, int>
      */
     protected function getWarningList(): array
     {

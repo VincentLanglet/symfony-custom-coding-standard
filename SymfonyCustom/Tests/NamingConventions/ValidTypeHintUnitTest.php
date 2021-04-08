@@ -12,7 +12,7 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 class ValidTypeHintUnitTest extends AbstractSniffUnitTest
 {
     /**
-     * @return array
+     * @return array<int, int>
      */
     protected function getErrorList(): array
     {
@@ -49,7 +49,7 @@ class ValidTypeHintUnitTest extends AbstractSniffUnitTest
     }
 
     /**
-     * @return array
+     * @return array<int, int>
      */
     protected function getWarningList(): array
     {
