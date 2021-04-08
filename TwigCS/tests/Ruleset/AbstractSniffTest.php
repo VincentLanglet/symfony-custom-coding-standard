@@ -29,8 +29,8 @@ abstract class AbstractSniffTest extends TestCase
     abstract public function testSniff(): void;
 
     /**
-     * @param SniffInterface $sniff
-     * @param array          $expects
+     * @param SniffInterface         $sniff
+     * @param array<array<int, int>> $expects
      *
      * @return void
      */

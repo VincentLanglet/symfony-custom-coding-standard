@@ -17,8 +17,8 @@ use TwigCS\Token\Tokenizer;
 class TokenizerTest extends TestCase
 {
     /**
-     * @param string $filePath
-     * @param array  $expectedTokenTypes
+     * @param string          $filePath
+     * @param array<int, int> $expectedTokenTypes
      *
      * @return void
      *

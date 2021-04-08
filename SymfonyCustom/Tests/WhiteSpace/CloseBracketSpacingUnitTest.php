@@ -12,20 +12,21 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 class CloseBracketSpacingUnitTest extends AbstractSniffUnitTest
 {
     /**
-     * @return array
+     * @return array<int, int>
      */
     protected function getErrorList(): array
     {
         return [
-            3 => 1,
-            5 => 2,
-            7 => 1,
-            9 => 1,
+            3  => 1,
+            5  => 2,
+            7  => 1,
+            9  => 1,
+            11 => 1,
         ];
     }
 
     /**
-     * @return array
+     * @return array<int, int>
      */
     protected function getWarningList(): array
     {
