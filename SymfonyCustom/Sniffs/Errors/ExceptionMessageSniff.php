@@ -29,7 +29,11 @@ class ExceptionMessageSniff implements Sniff
     public function process(File $phpcsFile, $stackPtr): void
     {
         $tokens = $phpcsFile->getTokens();
-        $opener = $phpcsFile->findNext(T_OPEN_PARENTHESIS, $stackPtr);
+        $opener = $phpcsFile->findNext(T_OPEN_PARENTHESIS, $stackPtr, null, false, null, true);
+        if (false === $opener) {
+            return;
+        }
+
         $concat = $phpcsFile->findNext(
             T_STRING_CONCAT,
             $tokens[$opener]['parenthesis_opener'],

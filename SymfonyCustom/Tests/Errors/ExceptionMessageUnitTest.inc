@@ -16,4 +16,9 @@ class Errors
 
         throw new \RuntimeException('Unrecognized option '.$option);
     }
+
+    public function testLast(\Exception $exception)
+    {
+        throw $exception;
+    }
 }
