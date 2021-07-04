@@ -14,8 +14,5 @@
         <testsuite name="SymfonyCustom">
             <file>./vendor/squizlabs/php_codesniffer/tests/Standards/AllSniffs.php</file>
         </testsuite>
-        <testsuite name="TwigCS">
-            <directory>./TwigCS</directory>
-        </testsuite>
     </testsuites>
 </phpunit>

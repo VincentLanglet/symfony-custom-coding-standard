@@ -27,7 +27,6 @@ bin/phpcs -i
 
 ```
 bin/phpcs --standard=SymfonyCustom /path/to/code
-bin/twigcs lint /path/to/code
 ```
 
 5. (optional) Set up PHPStorm

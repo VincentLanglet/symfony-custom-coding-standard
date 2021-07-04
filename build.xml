@@ -31,9 +31,6 @@
         <exec executable="${phpunit.bin}" failonerror="true" >
             <arg value="--testsuite=SymfonyCustom"/>
         </exec>
-        <exec executable="${phpunit.bin}" failonerror="true" >
-            <arg value="--testsuite=TwigCS"/>
-        </exec>
     </target>
 
     <target name="coverage" depends="symlink-cs" description="Run coverage with PHPUnit">

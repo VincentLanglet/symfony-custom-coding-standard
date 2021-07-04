@@ -5,8 +5,7 @@
     "keywords": [
         "Symfony",
         "coding standard",
-        "phpcs",
-        "twigcs"
+        "phpcs"
     ],
     "homepage": "https://github.com/VincentLanglet/Symfony-custom-coding-standard",
     "license": "MIT",
@@ -15,29 +14,15 @@
             "name": "Vincent Langlet"
         }
     ],
-    "bin": ["bin/twigcs"],
     "require": {
         "php": ">=7.2",
         "ext-mbstring": "*",
-        "squizlabs/php_codesniffer": "^3.5.8",
-        "symfony/console": "^4.4 || ^5.0",
-        "symfony/twig-bridge": "^4.4 || ^5.0",
-        "twig/twig": "^2.12 || ^3.0"
+        "squizlabs/php_codesniffer": "^3.6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0"
     },
     "config": {
         "sort-packages": true
-    },
-    "autoload": {
-        "psr-4": {
-            "TwigCS\\": "TwigCS/src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "TwigCS\\Tests\\": "TwigCS/tests/"
-        }
     }
 }
