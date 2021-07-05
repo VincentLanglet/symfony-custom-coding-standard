@@ -9,4 +9,3 @@ Documentation
 -------------
   * [Installation](docs/installation.md)
   * [Php Coding Standard](docs/php.md)
-  * [Twig Coding Standard](docs/twig.md)
