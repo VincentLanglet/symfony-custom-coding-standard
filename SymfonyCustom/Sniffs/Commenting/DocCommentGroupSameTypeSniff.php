@@ -6,6 +6,7 @@ namespace SymfonyCustom\Sniffs\Commenting;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Util\Tokens;
 use SymfonyCustom\Helpers\FixerHelper;
 use SymfonyCustom\Helpers\SniffHelper;
 
@@ -43,7 +44,11 @@ class DocCommentGroupSameTypeSniff implements Sniff
 
             $commentTagLine = $tokens[$commentTag]['line'];
 
-            $previousString = $phpcsFile->findPrevious(T_DOC_COMMENT_STRING, $commentTag, $stackPtr);
+            $previousString = $phpcsFile->findPrevious(
+                array_merge(Tokens::$phpcsCommentTokens, [T_DOC_COMMENT_STRING]),
+                $commentTag,
+                $stackPtr
+            );
             $previousLine = -1;
 
             if (false !== $previousString) {
