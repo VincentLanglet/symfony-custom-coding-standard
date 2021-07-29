@@ -112,14 +112,14 @@ class ValidTypeHintSniff implements Sniff
         while ('' !== $content && false !== $content) {
             preg_match('{^'.SniffHelper::REGEX_TYPES.'$}ix', $content, $matches);
 
-            if (isset($matches['array']) && '' !== $matches['array']) {
-                $validType = $this->getValidTypes(mb_substr($matches['array'], 0, -2)).'[]';
-            } elseif (isset($matches['multiple']) && '' !== $matches['multiple']) {
+            if (isset($matches['multiple']) && '' !== $matches['multiple']) {
                 $validType = '('.$this->getValidTypes($matches['mutipleContent']).')';
-            } elseif (isset($matches['generic']) && '' !== $matches['generic']) {
-                $validType = $this->getValidGenericType($matches['genericName'], $matches['genericContent']);
             } elseif (isset($matches['object']) && '' !== $matches['object']) {
                 $validType = $this->getValidObjectType($matches['objectContent']);
+            } elseif (isset($matches['generic']) && '' !== $matches['generic']) {
+                $validType = $this->getValidGenericType($matches['genericName'], $matches['genericContent']);
+            } elseif (isset($matches['array']) && '' !== $matches['array']) {
+                $validType = $this->getValidTypes(mb_substr($matches['array'], 0, -2)).'[]';
             } else {
                 $validType = $this->getValidType($matches['type']);
             }
@@ -203,11 +203,13 @@ class ValidTypeHintSniff implements Sniff
         $validType = 'array{';
 
         while ('' !== $objectContent && false !== $objectContent) {
-            $split = preg_split('/(\??:|,)/', $objectContent, 2, PREG_SPLIT_DELIM_CAPTURE);
+            if (0 !== mb_strpos($objectContent, 'array{') && 0 !== mb_strpos($objectContent, 'array<')) {
+                $split = preg_split('/(\??:|,)/', $objectContent, 2, PREG_SPLIT_DELIM_CAPTURE);
 
-            if (isset($split[1]) && ',' !== $split[1]) {
-                $validType .= $split[0].$split[1].' ';
-                $objectContent = $split[2];
+                if (isset($split[1]) && ',' !== $split[1]) {
+                    $validType .= $split[0].$split[1].' ';
+                    $objectContent = $split[2];
+                }
             }
 
             preg_match('{^'.SniffHelper::REGEX_TYPES.',?}ix', $objectContent, $matches);
