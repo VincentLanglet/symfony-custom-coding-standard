@@ -7,6 +7,9 @@ namespace SymfonyCustom\Sniffs\NamingConventions;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
+use function mb_strlen;
+use function mb_substr;
+
 /**
  * Throws errors if symfony's naming conventions are not met.
  */

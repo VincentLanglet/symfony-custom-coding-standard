@@ -8,6 +8,8 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 
+use function in_array;
+
 /**
  * Throws errors if there's no blank line before return statements.
  */

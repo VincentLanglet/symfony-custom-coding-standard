@@ -6,6 +6,8 @@ namespace SymfonyCustom\Helpers;
 
 use PHP_CodeSniffer\Files\File;
 
+use function str_repeat;
+
 /**
  * Class FixerHelper
  */

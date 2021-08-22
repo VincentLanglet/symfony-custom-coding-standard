@@ -7,6 +7,8 @@ namespace SymfonyCustom\Sniffs\WhiteSpace;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
+use function in_array;
+
 /**
  * Ensures there are no spaces +/- sign operators.
  */

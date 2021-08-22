@@ -7,6 +7,9 @@ namespace SymfonyCustom\Sniffs\Functions;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
+use function array_keys;
+use function in_array;
+
 /**
  * Throws warnings if properties are declared after methods
  */

@@ -7,6 +7,8 @@ namespace SymfonyCustom\Sniffs\WhiteSpace;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
+use function mb_strpos;
+
 /**
  * Checks that there is no white space after an opening bracket, for "(", "{", and array bracket.
  * Square Brackets are handled by Squiz_Sniffs_Arrays_ArrayBracketSpacingSniff.

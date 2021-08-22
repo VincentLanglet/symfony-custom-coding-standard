@@ -9,6 +9,20 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use SymfonyCustom\Helpers\SniffHelper;
 
+use function array_pop;
+use function array_unique;
+use function count;
+use function implode;
+use function in_array;
+use function mb_strlen;
+use function mb_strpos;
+use function mb_strtolower;
+use function mb_substr;
+use function preg_match;
+use function preg_replace;
+use function preg_split;
+use function usort;
+
 /**
  * Throws errors if PHPDocs type hint are not valid.
  */
@@ -233,7 +247,7 @@ class ValidTypeHintSniff implements Sniff
             return self::TYPES[$lowerType] ? $lowerType : $typeName;
         }
 
-        // This can't be case insensitive since this is not reserved keyword
+        // This can't be case-insensitive since this is not reserved keyword
         if (isset(self::ALIAS_TYPES[$typeName])) {
             return self::ALIAS_TYPES[$typeName];
         }

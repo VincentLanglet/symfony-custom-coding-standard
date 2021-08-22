@@ -7,6 +7,10 @@ namespace SymfonyCustom\Helpers;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Tokens;
 
+use function mb_strtolower;
+use function preg_match;
+use function trim;
+
 /**
  * Class SniffHelper
  */
@@ -185,6 +189,67 @@ class SniffHelper extends AbstractHelper
         }
 
         return true;
+    }
+
+    /**
+     * @param File $phpcsFile
+     * @param int  $scopePtr
+     *
+     * @return array
+     */
+    public static function getUseStatements(File $phpcsFile, int $scopePtr): array
+    {
+        $tokens = $phpcsFile->getTokens();
+
+        $uses = [];
+
+        if (isset($tokens[$scopePtr]['scope_opener'])) {
+            $start = $tokens[$scopePtr]['scope_opener'];
+            $end = $tokens[$scopePtr]['scope_closer'];
+        } else {
+            $start = $scopePtr;
+            $end = null;
+        }
+
+        $use = $phpcsFile->findNext(T_USE, $start + 1, $end);
+        while (false !== $use && T_USE === $tokens[$use]['code']) {
+            if (
+                !self::isGlobalUse($phpcsFile, $use)
+                || (null !== $end
+                    && (!isset($tokens[$use]['conditions'][$scopePtr])
+                        || $tokens[$use]['level'] !== $tokens[$scopePtr]['level'] + 1))
+            ) {
+                $use = $phpcsFile->findNext(Tokens::$emptyTokens, $use + 1, $end, true);
+                continue;
+            }
+
+            // find semicolon as the end of the global use scope
+            $endOfScope = $phpcsFile->findNext(T_SEMICOLON, $use + 1);
+
+            $startOfName = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $use + 1, $endOfScope);
+
+            $type = 'class';
+            if (T_STRING === $tokens[$startOfName]['code']) {
+                $lowerContent = mb_strtolower($tokens[$startOfName]['content']);
+                if ('function' === $lowerContent || 'const' === $lowerContent) {
+                    $type = $lowerContent;
+
+                    $startOfName = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $startOfName + 1, $endOfScope);
+                }
+            }
+
+            $uses[] = [
+                'ptrUse' => $use,
+                'name'   => trim($phpcsFile->getTokensAsString($startOfName, $endOfScope - $startOfName)),
+                'ptrEnd' => $endOfScope,
+                'string' => trim($phpcsFile->getTokensAsString($use, $endOfScope - $use + 1)),
+                'type'   => $type,
+            ];
+
+            $use = $phpcsFile->findNext(Tokens::$emptyTokens, $endOfScope + 1, $end, true);
+        }
+
+        return $uses;
     }
 
     /**

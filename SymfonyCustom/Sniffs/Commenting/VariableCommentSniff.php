@@ -8,6 +8,9 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\AbstractVariableSniff;
 use SymfonyCustom\Helpers\SniffHelper;
 
+use function preg_match;
+use function preg_replace;
+
 /**
  * Parses and verifies the variable doc comment.
  */

@@ -9,6 +9,15 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 use SymfonyCustom\Helpers\SniffHelper;
 
+use function in_array;
+use function mb_strrpos;
+use function mb_strtolower;
+use function mb_substr;
+use function preg_match;
+use function preg_quote;
+use function strcasecmp;
+use function trim;
+
 /**
  * Checks for "use" statements that are not needed in a file.
  */
@@ -300,7 +309,7 @@ class UnusedUseSniff implements Sniff
                 if (strcasecmp($namespace, $useNamespace) === 0) {
                     $classUsed = false;
                 }
-            } elseif (false === $namespacePtr && '' === $useNamespace) {
+            } elseif ('' === $useNamespace) {
                 $classUsed = false;
             }
         }

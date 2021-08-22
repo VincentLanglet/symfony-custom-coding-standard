@@ -10,6 +10,9 @@ use PHP_CodeSniffer\Util\Tokens;
 use SymfonyCustom\Helpers\FixerHelper;
 use SymfonyCustom\Helpers\SniffHelper;
 
+use function array_merge;
+use function in_array;
+
 /**
  * Throws errors if comments are not grouped by type with one blank line between them.
  */

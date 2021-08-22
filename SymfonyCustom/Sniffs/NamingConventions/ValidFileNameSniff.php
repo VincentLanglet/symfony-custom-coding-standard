@@ -7,6 +7,10 @@ namespace SymfonyCustom\Sniffs\NamingConventions;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
+use function basename;
+use function ctype_alnum;
+use function mb_strlen;
+
 /**
  * Checks whether filename contains any other character than alphanumeric and underscores.
  */
