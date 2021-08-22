@@ -10,6 +10,7 @@ use SymfonyCustom\Helpers\SniffHelper;
 
 use function array_filter;
 use function array_map;
+use function get_defined_functions;
 use function in_array;
 use function mb_strtolower;
 
@@ -93,22 +94,29 @@ class ImportInternalFunctionSniff implements Sniff
         }
 
         if (isset($ignore[$tokens[$prevToken]['code']])) {
-            // Not a call to a PHP function.
+            // Not a call to a function.
             return;
         }
 
         $nextToken = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
         if (isset($ignore[$tokens[$nextToken]['code']])) {
-            // Not a call to a PHP function.
+            // Not a call to a function.
             return;
         }
 
         if (T_STRING === $tokens[$stackPtr]['code'] && T_OPEN_PARENTHESIS !== $tokens[$nextToken]['code']) {
-            // Not a call to a PHP function.
+            // Not a call to a function.
             return;
         }
 
         $function = mb_strtolower($tokens[$stackPtr]['content']);
+
+        $internalFunctions = get_defined_functions()['internal'];
+        if (!in_array($function, $internalFunctions)) {
+            // Not a call to a PHP function.
+            return;
+        }
+
         if (!in_array($function, $functionUses)) {
             $phpcsFile->addError(
                 'PHP internal function "%s" must be imported',
