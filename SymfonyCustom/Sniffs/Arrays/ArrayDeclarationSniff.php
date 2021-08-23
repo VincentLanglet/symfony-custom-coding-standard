@@ -9,6 +9,10 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Util\Tokens;
 use SymfonyCustom\Helpers\FixerHelper;
 
+use function count;
+use function in_array;
+use function mb_strlen;
+
 /**
  * A test to ensure that arrays conform to the array coding standard.
  */

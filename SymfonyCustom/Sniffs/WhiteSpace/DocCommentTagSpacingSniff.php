@@ -8,6 +8,8 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use SymfonyCustom\Helpers\SniffHelper;
 
+use function in_array;
+
 /**
  * Checks that there are not 2 empty lines following each other.
  */

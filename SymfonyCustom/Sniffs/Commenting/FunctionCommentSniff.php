@@ -9,6 +9,10 @@ use PHP_CodeSniffer\Standards\PEAR\Sniffs\Commenting\FunctionCommentSniff as PEA
 use PHP_CodeSniffer\Util\Tokens;
 use SymfonyCustom\Helpers\SniffHelper;
 
+use function count;
+use function preg_match;
+use function preg_replace;
+
 /**
  * SymfonyCustom standard customization to PEARs FunctionCommentSniff.
  */

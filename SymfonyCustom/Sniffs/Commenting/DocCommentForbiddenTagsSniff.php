@@ -7,6 +7,8 @@ namespace SymfonyCustom\Sniffs\Commenting;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 
+use function in_array;
+
 /**
  * Throws errors if forbidden tags are met.
  */

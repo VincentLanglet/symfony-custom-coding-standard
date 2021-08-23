@@ -8,6 +8,10 @@ use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use SymfonyCustom\Helpers\FixerHelper;
 
+use function ltrim;
+use function rtrim;
+use function str_repeat;
+
 /**
  * Ensures doc blocks follow basic formatting.
  */
