@@ -19,6 +19,7 @@ class ScopeOrderUnitTest extends AbstractSniffUnitTest
         return [
             9  => 1,
             20 => 1,
+            31 => 1,
         ];
     }
 
