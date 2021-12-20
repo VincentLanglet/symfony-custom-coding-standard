@@ -25,7 +25,7 @@ class ScopeOrderSniff implements Sniff
      */
     public function register(): array
     {
-        return [T_CLASS, T_INTERFACE];
+        return [T_CLASS, T_INTERFACE, T_ANON_CLASS];
     }
 
     /**
@@ -45,18 +45,23 @@ class ScopeOrderSniff implements Sniff
             2 => T_PRIVATE,
         ];
 
+        $end = null;
+        if (isset($tokens[$stackPtr]['scope_closer'])) {
+            $end = $tokens[$stackPtr]['scope_closer'];
+        }
+
         while ($function) {
-            $end = null;
-
-            if (isset($tokens[$stackPtr]['scope_closer'])) {
-                $end = $tokens[$stackPtr]['scope_closer'];
-            }
-
             $function = $phpcsFile->findNext(
-                T_FUNCTION,
+                [T_FUNCTION, T_ANON_CLASS],
                 $function + 1,
                 $end
             );
+
+            if (T_ANON_CLASS === $tokens[$function]['code']) {
+                $function = $tokens[$function]['scope_closer'];
+
+                continue;
+            }
 
             if (isset($tokens[$function]['parenthesis_opener'])) {
                 $scope = $phpcsFile->findPrevious($scopes, $function - 1, $stackPtr);

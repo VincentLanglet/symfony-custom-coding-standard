@@ -20,3 +20,28 @@ class myClass2
     protected function functionProtected2() {}
 }
 
+class Embedded
+{
+    public function test()
+    {
+        $class = new class
+        {
+            private function foo() {}
+
+            protected function bar() {}
+        };
+
+        return new class
+        {
+            protected function foo() {}
+        };
+    }
+
+    public function test2()
+    {
+        return new class
+        {
+            protected function foo() {}
+        };
+    }
+}
