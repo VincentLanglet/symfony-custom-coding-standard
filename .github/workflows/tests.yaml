@@ -14,8 +14,10 @@ jobs:
         strategy:
             matrix:
                 php-version:
+                    - 7.3
                     - 7.4
                     - 8.0
+                    - 8.1
                 dependencies: [highest]
                 include:
                     - php-version: 7.2
@@ -33,14 +35,15 @@ jobs:
                   tools: composer:v2
 
             - name: Install Composer dependencies (PHP 7 ${{ matrix.dependencies }})
-              if: matrix.php-version != '8.0'
+              if: ${{ matrix.php-version < '8.0' }}
               uses: ramsey/composer-install@v1
               with:
                   dependency-versions: ${{ matrix.dependencies }}
                   composer-options: --prefer-dist --prefer-stable
 
+            # For PHP 8.0+, we need to install with ignore platform reqs as PHPUnit 7 is still used.
             - name: Install Composer dependencies (PHP 8 ${{ matrix.dependencies }})
-              if: matrix.php-version == '8.0'
+              if: ${{ matrix.php-version >= '8.0' }}
               uses: ramsey/composer-install@v1
               with:
                   dependency-versions: ${{ matrix.dependencies }}
@@ -53,4 +56,12 @@ jobs:
               run: ant phpcs
 
             - name: Run unit tests with PHPUnit
+              if: ${{ matrix.php-version < '8.1' }}
               run: ant phpunit
+
+            # We need to ignore the config file so that PHPUnit doesn't try to read it.
+            # The config file causes an error on PHP 8.1+ with PHPunit 7, but it's not needed here anyway
+            # as we can pass all required settings in the phpunit command.
+            - name: Run unit tests with PHPUnit (on PHP > 8.1)
+              if: ${{ matrix.php >= '8.1' }}
+              run: vendor/bin/phpunit vendor/squizlabs/php_codesniffer/tests/Standards/AllSniffs.php --no-configuration --bootstrap=bootstrap.php --dont-report-useless-tests
